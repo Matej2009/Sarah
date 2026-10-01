@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hudba a album · SARAH</title>
   <meta name="description" content="Album Sarah (2012) s jedenácti písněmi, repertoár kapely a živá videa hardrockové Sarah z Českých Budějovic.">
-  <meta name="theme-color" content="#0b0a09">
+  <meta name="theme-color" content="#141210">
   <link rel="canonical" href="https://sarahcb.cz/hudba.html">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <meta property="og:type" content="website">
@@ -18,132 +18,122 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://i.ytimg.com">
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&family=Permanent+Marker&family=Great+Vibes&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Great+Vibes&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script>(function(d){var n=navigator,c=n.connection||{},rm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches,lite=!!(c.saveData||/2g/.test(c.effectiveType||"")||(n.deviceMemory&&n.deviceMemory<=2)||(n.hardwareConcurrency&&n.hardwareConcurrency<=2));d.className+=" js"+(lite?" lite":"")+(!rm&&!lite?" motion":"")})(document.documentElement)</script>
 </head>
 <body>
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
-    <path id="sarah-letters" d="M110 23H30Q13 23 13 39Q13 55 30 55H80Q97 55 97 71Q97 87 80 87H0 M138 100V45Q138 23 163 23H197Q222 23 222 45V100 M138 45H222 M163 52V100M197 52V100 M388 100V45Q388 23 413 23H447Q472 23 472 45V100 M388 45H472 M413 52V100M447 52V100 M263 100V10 M263 23H325Q347 23 347 39Q347 55 325 55H263 M312 55L347 100 M513 10V100M597 10V100M513 55H597" fill="none" stroke-linejoin="round"/>
-    <symbol id="sarah-logo" viewBox="-12 -2 634 114">
-      <use href="#sarah-letters" stroke="#f4efe8" stroke-width="44"/>
-      <use href="#sarah-letters" stroke="#0b0a09" stroke-width="33"/>
-      <use href="#sarah-letters" stroke="#f4efe8" stroke-width="26"/>
-    </symbol></defs></svg>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><path id="sl" d="M110 23H30Q13 23 13 39Q13 55 30 55H80Q97 55 97 71Q97 87 80 87H0 M138 100V45Q138 23 163 23H197Q222 23 222 45V100 M138 45H222 M163 52V100M197 52V100 M388 100V45Q388 23 413 23H447Q472 23 472 45V100 M388 45H472 M413 52V100M447 52V100 M263 100V10 M263 23H325Q347 23 347 39Q347 55 325 55H263 M312 55L347 100 M513 10V100M597 10V100M513 55H597"/></defs></svg>
   <a class="skip" href="#main">Přeskočit na obsah</a>
-
-  <header class="nav">
-    <div class="nav__inner">
-      <a class="logo" href="index.html" aria-label="Sarah, úvodní stránka"><svg class="logo__mark" viewBox="-12 -2 634 114" role="img" aria-label="Sarah"><use href="#sarah-logo"/></svg></a>
-      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Otevřít menu"><span></span><span></span></button>
-      <nav class="nav__menu" id="menu" aria-label="Hlavní navigace">
+  <div class="ticker" aria-hidden="true"><div class="ticker__track"></div></div>
+  <header class="head">
+    <div class="head__in">
+      <a class="head__logo" href="index.html" aria-label="Sarah, úvodní stránka"><svg class="logo-svg " viewBox="-12 -2 644 122" role="img" aria-label="Sarah"><use href="#sl" class="lo"/><use href="#sl" class="lm"/><use href="#sl" class="li"/></svg></a>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="nav"><span>Menu</span> ☰</button>
+      <nav class="nav" id="nav" aria-label="Hlavní navigace">
         <a href="index.html">Domů</a>
         <a href="kapela.html">Kapela</a>
         <a href="hudba.html" aria-current="page">Hudba</a>
         <a href="media.html">Foto & video</a>
         <a href="koncerty.html">Koncerty</a>
-        <a class="btn btn--primary" href="kontakt.html">Booking</a>
+        <a class="btn" href="kontakt.html">Booking</a>
       </nav>
     </div>
   </header>
 
   <main id="main">
-    <section class="page-head">
-      <div class="media-bg" aria-hidden="true"><img src="https://i.ytimg.com/vi/8QpXZPaKw-g/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/8QpXZPaKw-g/sddefault.jpg,https://i.ytimg.com/vi/8QpXZPaKw-g/hqdefault.jpg" alt="" fetchpriority="high" decoding="async" width="1280" height="720"></div>
-      <div class="lights" aria-hidden="true"><span></span><span></span></div>
-      <span class="bigword" aria-hidden="true">2012</span>
-      <div class="container">
-        <p class="eyebrow">Hudba</p>
-        <h1 class="h1"><span class="grunge">Písně<br><span class="outline">a album</span></span></h1>
-        <p class="lead">Vlastní tvorba je srdcem kapely. Roztoč desku, pusť si video, nebo přijď na koncert.</p>
+    <section class="phead">
+      <div class="phead__grid">
+        <div class="phead__text">
+          <div class="kicker"><b>01</b><span>Hudba</span></div>
+          <h1 class="display d1">Písně<br><span class="red">a album</span></h1>
+          <p class="lead">Vlastní tvorba je srdcem kapely. Roztoč desku, pusť si video, nebo přijď na koncert.</p>
+        </div>
+        <div class="phead__img"><span class="ht ht--red"><img src="https://i.ytimg.com/vi/8QpXZPaKw-g/hq2.jpg" alt="" fetchpriority="high" decoding="async" width="480" height="360"></span></div>
       </div>
     </section>
 
-    <section class="section">
-      <div class="container record">
-        <div class="vinyl reveal" data-vinyl>
-          <div class="vinyl__disc" title="Roztoč desku"><div class="vinyl__label"><b>SARAH</b><small data-vinyl-track>2012</small></div></div>
-          <div class="vinyl__sleeve" aria-hidden="true"><span class="vinyl__year">ALBUM · 2012</span><span class="vinyl__title grunge">SA<br>RAH</span></div>
+    <section class="sec">
+      <div class="wrap album">
+        <div class="vinyl rv" data-vinyl>
+          <div class="vinyl__disc" title="Chyť a roztoč"><div class="vinyl__label"><b>SARAH</b><small data-vinyl-track>2012</small></div></div>
+          <div class="vinyl__sleeve" aria-hidden="true">
+            <span class="label">LP · 2012 · 11 písní</span>
+            <div><svg class="logo-svg " viewBox="-12 -2 644 122" role="img" aria-label="Sarah"><use href="#sl" class="lo"/><use href="#sl" class="lm"/><use href="#sl" class="li"/></svg><div class="vinyl__sleeve-foot"><span class="label">Hard rock / Č. Budějovice</span></div></div>
+            <span class="vinyl__ring"></span>
+          </div>
         </div>
         <div>
-          <p class="eyebrow reveal">Album · 2012</p>
-          <h2 class="h2 reveal">Sarah</h2>
-          <p class="prose reveal">Jedenáct písní v sestavě Zdeněk Troup, Martin Przeczek, Josef Jakeš a Rosťa Holčapek. Klikni na píseň a deska se roztočí – nebo ji chyť a zascratchuj.</p>
-          <ol class="tracks tracks--cols reveal"><li><button type="button" data-track aria-pressed="false">Srdce-lhář</button></li><li><button type="button" data-track aria-pressed="false">Nechápu</button></li><li><button type="button" data-track aria-pressed="false">Jinej svět</button></li><li><button type="button" data-track aria-pressed="false">Na křídlech černých vran</button></li><li><button type="button" data-track aria-pressed="false">V prázdným těle</button></li><li><button type="button" data-track aria-pressed="false">Tisíce lží</button></li><li><button type="button" data-track aria-pressed="false">Kudy a kam</button></li><li><button type="button" data-track aria-pressed="false">Sobě sám</button></li><li><button type="button" data-track aria-pressed="false">Smíření</button></li><li><button type="button" data-track aria-pressed="false">Kdo z nás to ví</button></li><li><button type="button" data-track aria-pressed="false">Pohřebiště citů</button></li></ol>
-          <blockquote class="press reveal">
-            <p>„Deska připomíná Iron Maiden a Accept – silný zpěv a kytarová sóla. Některé písně mají blízko k Pražskému výběru devadesátých let.“</p>
-            <cite>Shrnutí recenze · <a href="https://ceskobudejovicky.denik.cz/volny-cas/recenze-nova-deska-rockovych-sarah-u-publika-zaboduje-20120611.html" target="_blank" rel="noopener">Českobudějovický deník, červen 2012</a></cite>
+          <p class="label red rv">LP · 2012</p>
+          <h2 class="display d2 rv">Sarah</h2>
+          <p class="rv" style="margin:12px 0 4px">Sestava: Zdeněk Troup, Martin Przeczek, Josef Jakeš, Rosťa Holčapek. Klikni na píseň a deska se roztočí.</p>
+          <ol class="tracks tracks--2 rv"><li><button type="button" data-track aria-pressed="false">Srdce-lhář</button></li><li><button type="button" data-track aria-pressed="false">Nechápu</button></li><li><button type="button" data-track aria-pressed="false">Jinej svět</button></li><li><button type="button" data-track aria-pressed="false">Na křídlech černých vran</button></li><li><button type="button" data-track aria-pressed="false">V prázdným těle</button></li><li><button type="button" data-track aria-pressed="false">Tisíce lží</button></li><li><button type="button" data-track aria-pressed="false">Kudy a kam</button></li><li><button type="button" data-track aria-pressed="false">Sobě sám</button></li><li><button type="button" data-track aria-pressed="false">Smíření</button></li><li><button type="button" data-track aria-pressed="false">Kdo z nás to ví</button></li><li><button type="button" data-track aria-pressed="false">Pohřebiště citů</button></li></ol>
+          <blockquote class="quote rv" style="margin-top:28px">
+            <p>Připomíná Iron Maiden a Accept, silný zpěv a kytarová sóla</p>
+            <cite class="label muted">Shrnutí recenze · <a class="inline-link" href="https://ceskobudejovicky.denik.cz/volny-cas/recenze-nova-deska-rockovych-sarah-u-publika-zaboduje-20120611.html" target="_blank" rel="noopener">Českobudějovický deník, 2012</a></cite>
           </blockquote>
-          <div class="btns reveal" style="margin-top:2rem">
-            <a class="btn btn--primary" href="https://bandzone.cz/sarah" target="_blank" rel="noopener">Poslechnout na Bandzone ↗</a>
-            <button class="btn btn--ghost" type="button" data-riff>🎸 Zahraj riff</button>
+          <div class="btns rv" style="margin-top:28px">
+            <a class="btn btn--red" href="https://bandzone.cz/sarah" target="_blank" rel="noopener">Poslechnout na Bandzone ↗</a>
+            <button class="btn btn--paper" type="button" data-riff>▶ Zahraj riff</button>
           </div>
         </div>
       </div>
     </section>
+    <div class="band" aria-hidden="true"><div class="band__track"><span>Mrazík</span><span>Se mnou nepočítej</span><span>Křídla</span><span>Vlaky</span><span>Srdce-lhář</span><span>Na křídlech černých vran</span><span>Tisíce lží</span><span>Střílej</span><span>Noc vládne nám</span><span>Mrazík</span><span>Se mnou nepočítej</span><span>Křídla</span><span>Vlaky</span><span>Srdce-lhář</span><span>Na křídlech černých vran</span><span>Tisíce lží</span><span>Střílej</span><span>Noc vládne nám</span></div></div>
 
-    <div class="marquee marquee--tilt" aria-hidden="true"><div class="marquee__track"><span>Mrazík</span><span>Se mnou nepočítej</span><span>Křídla</span><span>Vlaky</span><span>Srdce-lhář</span><span>Na křídlech černých vran</span><span>Tisíce lží</span><span>Střílej</span><span>Noc vládne nám</span><span>Sarah</span><span>Mrazík</span><span>Se mnou nepočítej</span><span>Křídla</span><span>Vlaky</span><span>Srdce-lhář</span><span>Na křídlech černých vran</span><span>Tisíce lží</span><span>Střílej</span><span>Noc vládne nám</span><span>Sarah</span></div></div>
-
-    <section class="section section--alt">
-      <div class="container split split--top">
+    <section class="sec sec--alt">
+      <div class="wrap grid-2">
         <div>
-          <p class="eyebrow reveal">Repertoár</p>
-          <h2 class="h2 reveal">Co zazní<br><span class="outline">naživo</span></h2>
-          <p class="prose reveal">Koncert stojí hlavně na vlastních písních – od stálic jako <strong>Mrazík</strong>, <strong>Se mnou nepočítej</strong> nebo <strong>Křídla</strong> po novější věci. Přidáváme covery AC/DC, Metallicy, Accept a Scorpions.</p>
+          <div class="kicker"><b>02</b><span>Repertoár</span></div>
+          <h2 class="display d2 rv">Co zazní<br>naživo</h2>
+          <p class="rv" style="margin-top:16px;max-width:46ch">Koncert stojí na vlastních písních – od stálic jako Mrazík, Se mnou nepočítej nebo Křídla po novější věci. Přidáváme covery AC/DC, Metallicy, Accept a Scorpions.</p>
         </div>
-        <ul class="songs reveal" aria-label="Písně z repertoáru"><li>Mrazík</li><li>Se mnou nepočítej</li><li>Křídla</li><li>Vlaky</li><li>Střílej</li><li>Modrá erekce impotenta</li><li>Noc vládne nám</li><li>Sarah</li><li>Notorik</li><li>Bezdomáč</li><li>Krásnej den</li><li>Milionkrát</li><li>Ta žízeň</li><li>Ještě nespi</li></ul>
+        <ul class="chips rv" aria-label="Písně z repertoáru"><li>Mrazík</li><li>Se mnou nepočítej</li><li>Křídla</li><li>Vlaky</li><li>Střílej</li><li>Modrá erekce impotenta</li><li>Noc vládne nám</li><li>Sarah</li><li>Notorik</li><li>Bezdomáč</li><li>Krásnej den</li><li>Milionkrát</li><li>Ta žízeň</li><li>Ještě nespi</li></ul>
       </div>
     </section>
 
-    <section class="section">
-      <div class="container">
-        <div class="section__head">
-          <div>
-            <p class="eyebrow reveal">Poslech</p>
-            <h2 class="h2 reveal">Naživo</h2>
-          </div>
-          <a class="link-arrow reveal" href="media.html">Foto &amp; video</a>
-        </div>
+    <section class="sec">
+      <div class="wrap">
+        <div class="kicker"><b>03</b><span>Naživo</span></div>
         <div class="videos" data-videos></div>
       </div>
     </section>
-
-    <section class="section cta">
-      <div class="crowd" aria-hidden="true"></div>
-      <div class="container">
-        <p class="eyebrow reveal">Booking</p>
-        <h2 class="h2 reveal"><span class="grunge">Chceš Sarah</span><br><span class="accent">na svou akci?</span></h2>
-        <p class="lead reveal">Kluby, festivaly, letní parkety i soukromé akce. Ozvi se a domluvíme se.</p>
-        <div class="btns reveal">
-          <a class="btn btn--primary" href="kontakt.html">Domluvit koncert</a>
-          <button class="btn btn--ghost" type="button" data-lighter>🔥 Zvednout zapalovač</button>
+    <section class="sec on-dark book">
+      <div class="wrap">
+        <div class="kicker"><b>!!</b><span>Booking</span></div>
+        <h2 class="display d1 rv">Chceš Sarah<br><span class="red">na svou akci?</span></h2>
+        <div class="book__row">
+          <p class="lead rv">Kluby, festivaly, letní parkety i soukromé akce. Přivezeme vlastní hard rock, známé covery a přes třicet let zkušeností na pódiu.</p>
+          <div class="btns rv">
+            <a class="btn btn--red" href="kontakt.html">Domluvit koncert</a>
+            <a class="btn btn--paper" href="https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504" target="_blank" rel="noopener">Napsat na Facebook ↗</a>
+          </div>
         </div>
-        <p class="lighter-count" aria-live="polite"></p>
       </div>
     </section>
 
   </main>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__grid">
-        <div class="footer__about">
-          <a class="logo logo--footer" href="index.html"><svg class="logo__mark" viewBox="-12 -2 634 114" role="img" aria-label="Sarah"><use href="#sarah-logo"/></svg><span class="script">Hard rock</span></a>
-          <p>Hardrocková kapela z Českých Budějovic. Na jihočeské scéně od roku 1992.</p>
-          <p class="footer__egg">Tip: na klávesnici napiš „sarah“.</p>
+  <footer class="foot on-dark">
+    <div class="wrap">
+      <div class="foot__grid">
+        <div class="foot__about">
+          <div class="foot__logo"><svg class="logo-svg logo-svg--light" viewBox="-12 -2 644 122" role="img" aria-label="Sarah"><use href="#sl" class="lo"/><use href="#sl" class="lm"/><use href="#sl" class="li"/></svg></div>
+          <p class="script red" style="font-size:2rem;line-height:1">Hard rock</p>
+          <p class="muted" style="margin-top:12px;max-width:34ch">Hardrocková kapela z Českých Budějovic. Na jihočeské scéně od roku 1992.</p>
         </div>
         <div>
-          <h4>Stránky</h4>
+          <h4 class="label">Stránky</h4>
           <ul>
             <li><a href="kapela.html">Kapela</a></li>
             <li><a href="hudba.html">Hudba</a></li>
             <li><a href="media.html">Foto &amp; video</a></li>
             <li><a href="koncerty.html">Koncerty</a></li>
-            <li><a href="kontakt.html">Booking a kontakt</a></li>
+            <li><a href="kontakt.html">Booking</a></li>
           </ul>
         </div>
         <div>
-          <h4>Sledujte nás</h4>
+          <h4 class="label">Sledujte nás</h4>
           <ul>
             <li><a href="https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504" target="_blank" rel="noopener">Facebook</a></li>
             <li><a href="https://www.facebook.com/p/SARAH-%C4%8CB-p%C5%AFvodn%C3%AD-sestava-1992-61551588285638/" target="_blank" rel="noopener">Facebook · původní sestava</a></li>
@@ -153,13 +143,9 @@
           </ul>
         </div>
       </div>
-      <div class="footer__bottom">
-        <span>© <span data-year>2026</span> Sarah · České Budějovice</span>
-        <span>Hard rock od roku 1992 · hrajeme nahlas</span>
-      </div>
+      <div class="foot__bottom"><span>© <span data-year>2026</span> Sarah · České Budějovice</span><span>Hraj nahlas.</span></div>
     </div>
   </footer>
-
   <script src="script.js" defer></script>
 </body>
 </html>

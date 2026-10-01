@@ -31,16 +31,16 @@ Data jsou nahoře ve `script.js`:
 
 Hlavička a patička jsou v každé stránce stejné – při změně menu upravte všechny.
 
-## Interaktivní prvky
+## Design a interaktivní prvky
 
-- **Zesilovač (úvod)** – knoflík hlasitosti 0–11 (táhnout, kolečko myši, šipky). Na 11 se stránka otřese a vyšlehnou plameny.
-- **Zahraj riff** – kytarový riff syntetizovaný přímo v prohlížeči (Web Audio, žádné soubory), hlasitost podle knoflíku.
-- **Deska** – kliknutím na píseň se roztočí, dá se chytit a „scratchovat“.
-- **Karty členů** – kliknutím se otočí a ukážou bio.
-- **Historie** – posuvná časová osa (táhnout / šipky).
-- **Zapalovače** – v sekci Booking, počet se pamatuje v prohlížeči.
+Styl tištěného koncertního plakátu: papír, černá, jedna červená, písmo Archivo
+(široké řezy ladí s logem) a záběry z videí v „rastrovém“ tiskovém zpracování.
+
+- Logo SARAH je překreslené jako SVG (`#sl` na začátku každé stránky), barvy přes CSS.
+- **Samolepky** v úvodu jdou přetáhnout myší/prstem, červená zahraje riff (Web Audio).
+- **Deska** – kliknutím na píseň se roztočí, dá se chytit a zatočit.
+- **Běžící pruh** nahoře ukazuje další/poslední koncert automaticky z `GIGS`.
 - **Easter egg** – na klávesnici napište „sarah“.
-- Logo SARAH je překreslené jako SVG (sdílený symbol `#sarah-logo` na začátku každé stránky).
 
 ## Výkon
 
