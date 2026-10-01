@@ -16,6 +16,7 @@ CNAME             vlastní doména pro GitHub Pages (sarahcb.cz)
 - **Koncerty:** v `script.js` doplňte položku do pole `GIGS`. Budoucí termíny se
   samy zobrazí nahoře, odehrané se po datu přesunou do „Odehráno“.
 - **Texty, sestava, písně:** přímo v `index.html` (sekce `#kapela`, `#sestava`, `#pisne`).
+- **Fotky:** nahrajte je do `assets/photos/` a přidejte do pole `GALLERY` ve `script.js`, galerie se pak sama zobrazí. Fotku členů vložte do jejich karty v `index.html` (návod je v komentáři u sekce `#sestava`), úvodní fotku změníte u `hero__photo`.
 - **Videa:** v sekci `#videa` změňte `data-yt` a URL obrázku na ID videa z YouTube.
 - **Booking kontakt:** v sekci `#booking` je připravené místo (`TODO`) pro e-mail a telefon.
 
