@@ -1,53 +1,53 @@
 # SARAH — web kapely (sarahcb.cz)
 
 Statický web hardrockové kapely Sarah z Českých Budějovic. Čisté HTML, CSS a JS,
-bez build kroku. Stačí otevřít `index.html` v prohlížeči.
+bez build kroku a bez knihoven. Hostuje se na GitHub Pages z větve `main`.
 
 ```
-index.html        obsah stránky (texty, sestava, písně, videa, booking)
-styles.css        vzhled
-script.js         koncerty (seznam GIGS nahoře v souboru), menu, animace, videa
-assets/           favicon
-CNAME             vlastní doména pro GitHub Pages (sarahcb.cz)
+index.html      Domů
+kapela.html     Příběh a sestava (bio členů)
+hudba.html      Album Sarah (2012), repertoár
+media.html      Videa a galerie s prohlížečem fotek
+koncerty.html   Nadcházející a odehrané koncerty, odpočet
+kontakt.html    Booking a kontakty
+404.html        Chybová stránka
+styles.css      Vzhled všech stránek
+script.js       Data (koncerty, videa, fotky) a chování stránek
+assets/         favicon, assets/photos/ pro vlastní fotky
 ```
 
 ## Jak upravit obsah
 
-- **Koncerty:** v `script.js` doplňte položku do pole `GIGS`. Budoucí termíny se
-  samy zobrazí nahoře, odehrané se po datu přesunou do „Odehráno“.
-- **Texty, sestava, písně:** přímo v `index.html` (sekce `#kapela`, `#sestava`, `#pisne`).
-- **Fotky:** nahrajte je do `assets/photos/` a přidejte do pole `GALLERY` ve `script.js`, galerie se pak sama zobrazí. Fotku členů vložte do jejich karty v `index.html` (návod je v komentáři u sekce `#sestava`), úvodní fotku změníte u `hero__photo`.
-- **Videa:** v sekci `#videa` změňte `data-yt` a URL obrázku na ID videa z YouTube.
-- **Booking kontakt:** v sekci `#booking` je připravené místo (`TODO`) pro e-mail a telefon.
+Data jsou nahoře ve `script.js`:
 
-## Před spuštěním ověřit s kapelou
+- **Koncerty** – pole `GIGS`. Budoucí termín se sám ukáže nahoře i na úvodní stránce
+  (s odpočtem), po datu se přesune do „Odehráno“.
+- **Videa** – pole `VIDEOS` (id z YouTube adresy za `watch?v=`).
+- **Fotky** – nahrajte do `assets/photos/` a přidejte do pole `PHOTOS`. Ideálně JPG
+  šířky 1600 px, do 300 kB. Galerie zatím ukazuje záběry z videí kapely.
+- **Fotky členů** – v `kapela.html` vložte `<img src="assets/photos/jmeno.jpg" alt="">`
+  do příslušného `.member__pic`.
+- **Booking e-mail/telefon** – v `kontakt.html` je připravené místo (`TODO`).
 
-Obsah jsem sestavil z veřejných zdrojů (Bandzone, Facebook, Českobudějovický deník,
-YouTube, GoOut). Zkontrolujte prosím:
+Hlavička a patička jsou v každé stránce stejné – při změně menu upravte všechny.
 
-- aktuální sestavu (Zdeněk Troup, Martin Przeczek, Josef Jakeš, Slávek Franc)
-- rok založení (zdroje uvádějí 1992 i přelom 1992/1993)
-- výběr písní v setlistu
-- koncerty: Jílovice 26. 9. 2026 (s Blamage) a Seven Fest Ševětín 2023
-- booking e-mail / telefon (zatím odkaz jen na Facebook)
-- fotky kapely, které zatím nejsou k dispozici (sestava používá iniciály)
+## Výkon
 
-## Zveřejnění na sarahcb.cz (GitHub Pages)
+Žádné knihovny ani canvas, animace jen přes CSS (opacity/transform). Na slabých
+zařízeních, při úsporném režimu dat nebo při „omezit pohyb“ se animace a dekorace
+vypnou. YouTube se načítá až po kliknutí na video, obrázky líně.
 
-1. Sloučit tuto větev do `main`.
-2. Na GitHubu: **Settings → Pages → Build and deployment → Deploy from a branch**,
-   vybrat `main` a složku `/ (root)`. Vlastní doména `sarahcb.cz` se načte ze souboru `CNAME`.
-   (U soukromého repozitáře vyžaduje GitHub Pages placený tarif. Jinak repozitář
-   zveřejněte, nebo použijte Netlify či Cloudflare Pages.)
-3. U registrátora domény nastavit DNS:
+## Ověřit s kapelou
 
-   | Typ   | Název | Hodnota              |
-   |-------|-------|----------------------|
-   | A     | @     | 185.199.108.153      |
-   | A     | @     | 185.199.109.153      |
-   | A     | @     | 185.199.110.153      |
-   | A     | @     | 185.199.111.153      |
-   | CNAME | www   | matej2009.github.io. |
+Obsah je z veřejných zdrojů (Bandzone, Hardmusicbase, Českobudějovický deník,
+Musicgate, YouTube, Wikipedie). Zkontrolujte hlavně:
 
-   Případné staré A/CNAME záznamy pro `@` a `www` (parkovací stránka registrátora) smažte.
-4. Po propagaci DNS (minuty až hodiny) zapnout v **Settings → Pages** volbu **Enforce HTTPS**.
+- bia členů (Przeczek: Motorband, Bloody Rose, Starý Extract; Franc: Seven 1996–2006;
+  Troup: Kambodža 2022–2024) a doplňte info o Josefu Jakešovi
+- přesné datum Seven Festu 2023 (zatím jen „duben 2023“)
+- repertoár na stránce Hudba
+
+## Doména
+
+DNS u GoDaddy: 4× A záznam `@` → 185.199.108.153 / .109.153 / .110.153 / .111.153,
+CNAME `www` → matej2009.github.io. V Settings → Pages zapnout Enforce HTTPS.

@@ -4,335 +4,199 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SARAH — hard rock z Českých Budějovic</title>
-  <meta name="description" content="Sarah je hardrocková kapela z Českých Budějovic. Na jihočeské scéně od roku 1992. Vlastní písně, koncerty, videa a booking.">
-  <meta name="theme-color" content="#0d0c0b">
+  <meta name="description" content="Sarah je hardrocková kapela z Českých Budějovic. Na jihočeské scéně od roku 1992. Vlastní písně, album Sarah, koncerty a booking.">
+  <meta name="theme-color" content="#0e0d0c">
   <link rel="canonical" href="https://sarahcb.cz/">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SARAH">
   <meta property="og:url" content="https://sarahcb.cz/">
   <meta property="og:title" content="SARAH — hard rock z Českých Budějovic">
-  <meta property="og:description" content="Jihočeský hard rock od roku 1992. Vlastní písně, koncerty a videa.">
-  <meta property="og:image" content="https://i.ytimg.com/vi/8QpXZPaKw-g/hqdefault.jpg">
+  <meta property="og:description" content="Sarah je hardrocková kapela z Českých Budějovic. Na jihočeské scéně od roku 1992. Vlastní písně, album Sarah, koncerty a booking.">
+  <meta property="og:image" content="https://i.ytimg.com/vi/YIDTwOcJh58/hqdefault.jpg">
   <meta property="og:locale" content="cs_CZ">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://i.ytimg.com">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <script>document.documentElement.classList.add("js")</script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "MusicGroup",
-    "name": "Sarah",
-    "alternateName": "Sarah ČB",
-    "genre": "Hard rock",
-    "foundingDate": "1992",
-    "foundingLocation": "České Budějovice",
-    "url": "https://sarahcb.cz/",
-    "sameAs": [
-      "https://bandzone.cz/sarah",
-      "https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504"
-    ]
-  }
-  </script>
+  <script>(function(d){var n=navigator,c=n.connection||{},rm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches,lite=!!(c.saveData||/2g/.test(c.effectiveType||"")||(n.deviceMemory&&n.deviceMemory<=2)||(n.hardwareConcurrency&&n.hardwareConcurrency<=2));d.className+=" js"+(lite?" lite":"")+(!rm&&!lite?" motion":"")})(document.documentElement)</script>
 </head>
 <body>
   <a class="skip" href="#main">Přeskočit na obsah</a>
 
-  <!-- Intro: "zapnutí zesilovače" -->
-  <div class="intro" aria-hidden="true">
-    <div class="intro__inner">
-      <span class="intro__word">SARAH</span>
-      <span class="intro__bar"></span>
-      <span class="intro__meta">ČESKÉ BUDĚJOVICE · OD 1992</span>
-    </div>
-  </div>
-
-  <div class="progress" aria-hidden="true"></div>
-
-  <header class="nav" id="top">
+  <header class="nav">
     <div class="nav__inner">
-      <a class="nav__logo" href="#top" aria-label="Sarah — úvod">SARAH<span>ČB</span></a>
-      <button class="nav__toggle" aria-expanded="false" aria-controls="menu" aria-label="Otevřít menu">
-        <span></span><span></span>
-      </button>
+      <a class="logo" href="index.html" aria-label="Sarah, úvodní stránka">SARAH<span>ČB</span></a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Otevřít menu"><span></span><span></span></button>
       <nav class="nav__menu" id="menu" aria-label="Hlavní navigace">
-        <a href="#kapela">Kapela</a>
-        <a href="#sestava">Sestava</a>
-        <a href="#pisne">Písně</a>
-        <a href="#videa">Videa</a>
-        <a href="#koncerty">Koncerty</a>
-        <a class="nav__cta magnetic" href="#booking">Booking</a>
+        <a href="index.html" aria-current="page">Domů</a>
+        <a href="kapela.html">Kapela</a>
+        <a href="hudba.html">Hudba</a>
+        <a href="media.html">Foto & video</a>
+        <a href="koncerty.html">Koncerty</a>
+        <a class="btn btn--primary" href="kontakt.html">Booking</a>
       </nav>
     </div>
   </header>
 
   <main id="main">
-    <!-- HERO -->
     <section class="hero" aria-label="Úvod">
-      <div class="hero__media" aria-hidden="true">
-        <!-- Až budou fotky: nahraďte src (i data-fallback) za assets/photos/hero.jpg -->
-        <img class="hero__photo" src="https://i.ytimg.com/vi/8QpXZPaKw-g/maxresdefault.jpg"
-             data-fallback="https://i.ytimg.com/vi/8QpXZPaKw-g/hqdefault.jpg" alt="" fetchpriority="high">
+      <div class="media-bg" aria-hidden="true"><img src="https://i.ytimg.com/vi/8QpXZPaKw-g/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/8QpXZPaKw-g/sddefault.jpg,https://i.ytimg.com/vi/8QpXZPaKw-g/hqdefault.jpg" alt="" fetchpriority="high" decoding="async" width="1280" height="720"></div>
+      <div class="lights" aria-hidden="true"><span></span><span></span></div>
+      <div class="container">
+        <p class="eyebrow anim">Hard rock · České Budějovice · od roku 1992</p>
+        <h1 class="hero__title anim" data-echo="SARAH">SARAH</h1>
+        <p class="lead hero__lead anim">Jihočeská hardrocková kapela s více než třiceti lety na pódiích. Vlastní písně, poctivé kytary a koncerty, po kterých zvoní v uších.</p>
+        <div class="btns anim">
+          <a class="btn btn--primary" href="koncerty.html">Koncerty</a>
+          <a class="btn btn--ghost" href="media.html">Pustit video</a>
+        </div>
+        <dl class="hero__stats anim">
+          <div><dt>Založeno</dt><dd>1992</dd></div>
+          <div><dt>Let na scéně</dt><dd data-since="1993">33</dd></div>
+          <div><dt>Album</dt><dd>Sarah ’12</dd></div>
+          <div><dt>Domov</dt><dd>ČB</dd></div>
+        </dl>
       </div>
-      <div class="hero__beams" aria-hidden="true"><span></span><span></span><span></span></div>
-      <canvas class="hero__sparks" aria-hidden="true"></canvas>
-      <div class="hero__spot" aria-hidden="true"></div>
+    </section>
 
-      <div class="hero__inner">
-        <p class="eyebrow hero__eyebrow"><span class="rec"></span>Hard rock&nbsp;/&nbsp;České Budějovice&nbsp;/&nbsp;od&nbsp;1992</p>
-        <h1 class="hero__title" aria-label="Sarah">
-          <span class="hero__letters" aria-hidden="true"><span>S</span><span>A</span><span>R</span><span>A</span><span>H</span></span>
-        </h1>
-        <p class="hero__lead">
-          Jihočeská hardrocková parta, která hraje přes třicet let.
-          Vlastní písně, poctivé kytary a koncerty, po kterých zvoní v uších.
-        </p>
-        <div class="hero__actions">
-          <a class="btn btn--primary magnetic" href="#koncerty"><span>Kde hrajeme</span></a>
-          <a class="btn btn--ghost magnetic" href="#videa">
-            <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-            <span>Pustit video</span>
+    <div class="marquee" aria-hidden="true"><div class="marquee__track"><span>Mrazík</span><span>Se mnou nepočítej</span><span>Křídla</span><span>Vlaky</span><span>Srdce-lhář</span><span>Na křídlech černých vran</span><span>Tisíce lží</span><span>Střílej</span><span>Noc vládne nám</span><span>Sarah</span><span>Mrazík</span><span>Se mnou nepočítej</span><span>Křídla</span><span>Vlaky</span><span>Srdce-lhář</span><span>Na křídlech černých vran</span><span>Tisíce lží</span><span>Střílej</span><span>Noc vládne nám</span><span>Sarah</span></div></div>
+
+    <section class="section">
+      <div class="container split">
+        <div>
+          <p class="eyebrow reveal">Kapela</p>
+          <h2 class="h2 reveal">Budějovický hard rock<br><span class="outline">s tvrdou hlavou</span></h2>
+          <div class="prose reveal">
+            <p>Sarah vznikla na přelomu let 1992 a 1993. Od začátku stavěla na <strong>vlastních písních</strong> – přímočarých rockových věcech s melodickými kytarovými riffy, které vycházejí z metalu osmdesátých let.</p>
+            <p>Za ty roky odehrála stovky koncertů po jižních Čechách i na Moravě, v roce 2012 vydala album <strong>Sarah</strong> a v roce 2023 oslavila třicítku v původní sestavě.</p>
+          </div>
+          <a class="link-arrow reveal" href="kapela.html">Příběh kapely a sestava</a>
+        </div>
+        <figure class="photo photo--tall reveal" data-removable>
+          <img src="https://i.ytimg.com/vi/YIDTwOcJh58/hq2.jpg" alt="Sarah na pódiu v Jílovicích, 2023" loading="lazy" decoding="async" width="480" height="360">
+          <figcaption>Jílovice, září 2023</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section section--tight section--alt">
+      <div class="container">
+        <div class="gigbox reveal" id="gigbox" hidden>
+          <div class="gigbox__date"></div>
+          <div>
+            <p class="gigbox__label"></p>
+            <p class="gigbox__venue"></p>
+            <p class="gigbox__meta"></p>
+          </div>
+          <a class="btn btn--ghost" href="koncerty.html">Všechny koncerty</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container album">
+        <div class="cover reveal" aria-hidden="true">
+          <span class="cover__year">ALBUM · 2012</span>
+          <span class="cover__band">SA<br>RAH</span>
+        </div>
+        <div>
+          <p class="eyebrow reveal">Hudba</p>
+          <h2 class="h2 reveal">Album Sarah</h2>
+          <p class="prose reveal">Jedenáct vlastních písní, silný zpěv a kytarová sóla. Českobudějovický deník desku přirovnal k Iron Maiden, Accept i Pražskému výběru devadesátých let.</p>
+          <ul class="songs reveal" aria-label="Výběr písní">
+            <li>Srdce-lhář</li><li>Nechápu</li><li>Na křídlech černých vran</li><li>Tisíce lží</li><li>Smíření</li>
+          </ul>
+          <p class="reveal" style="margin-top:1.6rem"><a class="link-arrow" href="hudba.html">Celé album a repertoár</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <p class="eyebrow reveal">Naživo</p>
+            <h2 class="h2 reveal">Videa</h2>
+          </div>
+          <a class="link-arrow reveal" href="media.html">Všechna videa a fotky</a>
+        </div>
+        <div class="videos videos--2" data-videos="2"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="tiles">
+          <a class="tile reveal" href="kapela.html" data-removable>
+            <img src="https://i.ytimg.com/vi/YIDTwOcJh58/hq1.jpg" alt="" loading="lazy" decoding="async" width="480" height="360">
+            <span class="tile__kicker">Sestava</span>
+            <span class="tile__title">Kapela</span>
+            <span class="tile__text">Kdo stojí za zvukem Sarah.</span>
+          </a>
+          <a class="tile reveal" href="media.html" data-removable>
+            <img src="https://i.ytimg.com/vi/8QpXZPaKw-g/hq2.jpg" alt="" loading="lazy" decoding="async" width="480" height="360">
+            <span class="tile__kicker">Galerie</span>
+            <span class="tile__title">Foto & video</span>
+            <span class="tile__text">Záběry z koncertů.</span>
+          </a>
+          <a class="tile reveal" href="koncerty.html" data-removable>
+            <img src="https://i.ytimg.com/vi/Vr9Ju-DKftQ/hq2.jpg" alt="" loading="lazy" decoding="async" width="480" height="360">
+            <span class="tile__kicker">Termíny</span>
+            <span class="tile__title">Koncerty</span>
+            <span class="tile__text">Kde nás uslyšíš naživo.</span>
           </a>
         </div>
       </div>
-
-      <dl class="hero__stats">
-        <div><dt>Založeno</dt><dd data-count="1992" data-from="1960">1992</dd></div>
-        <div><dt>Let na scéně</dt><dd data-count-since="1993">33</dd></div>
-        <div><dt>Domov</dt><dd>ČB</dd></div>
-      </dl>
-
-      <a class="hero__scroll" href="#kapela" aria-label="Posunout dolů"><span></span></a>
     </section>
 
-    <!-- MARQUEE ×2 -->
-    <div class="tape" aria-hidden="true">
-      <div class="marquee marquee--a"><div class="marquee__track" data-songs></div></div>
-      <div class="marquee marquee--b"><div class="marquee__track" data-songs data-reverse></div></div>
-    </div>
-
-    <!-- ABOUT / STORY -->
-    <section class="section" id="kapela">
+    <section class="section cta">
       <div class="container">
-        <p class="eyebrow scramble reveal">01 — Kapela</p>
-        <p class="statement" data-words>
-          Od roku 1992 hrajeme budějovický hard rock s tvrdou hlavou.
-          Vlastní písně, hlasité kytary a žádné kompromisy.
-        </p>
-      </div>
-      <div class="container split">
-        <div class="prose reveal">
-          <p>
-            Sarah vznikla na přelomu let 1992 a 1993 v Českých Budějovicích.
-            Od začátku sázela hlavně na vlastní tvorbu. Písně jako
-            <em>Mrazík</em>, <em>Se mnou nepočítej</em>, <em>Křídla</em> nebo
-            <em>Střílej</em> se staly stálicemi jihočeských klubů.
-          </p>
-          <p>
-            Na pódiu se k vlastním věcem přidávají i covery kapel, na kterých jsme vyrostli,
-            od AC/DC a Metallicy po Accept a Scorpions.
-            Fanoušky máme po celých jižních Čechách i na Moravě.
-          </p>
-        </div>
-
-        <ol class="timeline" aria-label="Historie kapely">
-          <li class="timeline__item reveal">
-            <span class="timeline__year">1992/93</span>
-            <h3>Začátek</h3>
-            <p>Zakladatel a zpěvák Zdeněk Troup dává v Budějovicích dohromady kapelu Sarah.</p>
-          </li>
-          <li class="timeline__item reveal">
-            <span class="timeline__year">90.–10. léta</span>
-            <h3>Kluby a vlastní písně</h3>
-            <p>Stovky koncertů po jihu Čech, vlastní repertoár a věrná fanouškovská základna.</p>
-          </li>
-          <li class="timeline__item reveal">
-            <span class="timeline__year">2014</span>
-            <h3>Pauza</h3>
-            <p>Zdeněk Troup z kapely odchází a Sarah na čas utichá.</p>
-          </li>
-          <li class="timeline__item reveal">
-            <span class="timeline__year">2023</span>
-            <h3>Návrat po 30 letech</h3>
-            <p>K třicetinám se kapela schází v&nbsp;původní sestavě. Narozeniny slaví na Seven Festu v&nbsp;Ševětíně.</p>
-          </li>
-          <li class="timeline__item timeline__item--now reveal">
-            <span class="timeline__year">Dnes</span>
-            <h3>Zpátky na pódiích</h3>
-            <p>Sarah zase hraje naživo, od letních parketů po budějovický Highway 61.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- LINEUP -->
-    <section class="section section--alt" id="sestava">
-      <div class="container">
-        <p class="eyebrow scramble reveal">02 — Sestava</p>
-        <h2 class="h2 reveal">Čtyři chlapi,<br><span class="outline">jeden zvuk</span></h2>
-        <!-- Fotka člena: vložte <img class="member__photo" src="assets/photos/jmeno.jpg" alt=""> do .member__badge -->
-        <ul class="members">
-          <li class="member tilt reveal">
-            <div class="member__badge" data-initials="ZT"></div>
-            <span class="member__no">01</span>
-            <h3 class="member__name">Zdeněk Troup</h3>
-            <p class="member__role">zpěv · zakladatel</p>
-          </li>
-          <li class="member tilt reveal">
-            <div class="member__badge" data-initials="MP"></div>
-            <span class="member__no">02</span>
-            <h3 class="member__name">Martin Przeczek</h3>
-            <p class="member__role">kytara</p>
-          </li>
-          <li class="member tilt reveal">
-            <div class="member__badge" data-initials="JJ"></div>
-            <span class="member__no">03</span>
-            <h3 class="member__name">Josef Jakeš</h3>
-            <p class="member__role">baskytara</p>
-          </li>
-          <li class="member tilt reveal">
-            <div class="member__badge" data-initials="SF"></div>
-            <span class="member__no">04</span>
-            <h3 class="member__name">Slávek Franc</h3>
-            <p class="member__role">bicí</p>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- SONGS -->
-    <section class="section" id="pisne">
-      <div class="container split split--reverse">
-        <div>
-          <p class="eyebrow scramble reveal">03 — Písně</p>
-          <h2 class="h2 reveal">Setlist,<br><span class="outline">který znáš</span><br>nazpaměť</h2>
-          <p class="prose reveal">
-            Hrajeme hlavně vlastní věci. Celou nahranou tvorbu najdeš na Bandzone.
-          </p>
-          <a class="btn btn--ghost magnetic reveal" href="https://bandzone.cz/sarah" target="_blank" rel="noopener"><span>Poslechnout na Bandzone ↗</span></a>
-        </div>
-        <div class="setlist reveal" aria-label="Výběr písní">
-          <div class="setlist__head">
-            <span>SARAH</span><span>SETLIST</span>
-          </div>
-          <ol class="setlist__list">
-            <li>Mrazík</li>
-            <li>Se mnou nepočítej</li>
-            <li>Křídla</li>
-            <li>Vlaky</li>
-            <li>Střílej</li>
-            <li>Modrá erekce impotenta</li>
-            <li>Srdce-Lhář</li>
-            <li>Noc vládne nám</li>
-            <li>Tisíce lží</li>
-            <li class="setlist__encore">Sarah</li>
-          </ol>
-          <svg class="setlist__scribble" viewBox="0 0 120 70" aria-hidden="true"><path d="M60 8 C 20 6, 6 30, 14 48 C 24 68, 96 66, 108 42 C 118 20, 84 4, 50 12"/></svg>
+        <p class="eyebrow reveal">Booking</p>
+        <h2 class="h2 reveal">Chceš Sarah<br><span class="accent">na svou akci?</span></h2>
+        <p class="lead reveal">Kluby, festivaly, letní parkety i soukromé akce. Ozvi se a domluvíme se.</p>
+        <div class="btns reveal">
+          <a class="btn btn--primary" href="kontakt.html">Domluvit koncert</a>
+          <a class="btn btn--ghost" href="koncerty.html">Kde hrajeme</a>
         </div>
       </div>
     </section>
 
-    <!-- VIDEOS -->
-    <section class="section section--alt" id="videa">
-      <div class="container">
-        <p class="eyebrow scramble reveal">04 — Videa</p>
-        <h2 class="h2 reveal">Naživo</h2>
-        <div class="videos">
-          <figure class="video reveal">
-            <button class="video__facade tilt" data-yt="8QpXZPaKw-g" aria-label="Přehrát video: Vlaky (2023)">
-              <img src="https://i.ytimg.com/vi/8QpXZPaKw-g/hqdefault.jpg" alt="" loading="lazy">
-              <span class="video__play" aria-hidden="true"></span>
-              <span class="video__tag" aria-hidden="true"><span class="rec"></span>LIVE · 2023</span>
-            </button>
-            <figcaption><strong>Vlaky</strong> · původní sestava po třiceti letech, 2023</figcaption>
-          </figure>
-          <figure class="video reveal">
-            <button class="video__facade tilt" data-yt="Vr9Ju-DKftQ" aria-label="Přehrát video: Sarah naživo">
-              <img src="https://i.ytimg.com/vi/Vr9Ju-DKftQ/hqdefault.jpg" alt="" loading="lazy">
-              <span class="video__play" aria-hidden="true"></span>
-              <span class="video__tag" aria-hidden="true"><span class="rec"></span>LIVE</span>
-            </button>
-            <figcaption><strong>Sarah</strong> · hard rock / České Budějovice</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- GALLERY: zobrazí se sama, jakmile jsou v poli GALLERY ve script.js nějaké fotky -->
-    <section class="section gallery" id="galerie" hidden>
-      <div class="container">
-        <p class="eyebrow scramble reveal">Galerie</p>
-        <h2 class="h2 reveal">Z pódia</h2>
-      </div>
-      <div class="gallery__strip" id="gallery-strip"></div>
-    </section>
-
-    <!-- GIGS -->
-    <section class="section" id="koncerty">
-      <div class="container">
-        <p class="eyebrow scramble reveal">05 — Koncerty</p>
-        <h2 class="h2 reveal">Kde nás<br><span class="outline">uslyšíš</span></h2>
-
-        <div class="countdown reveal" id="countdown" hidden>
-          <p class="countdown__label">Další koncert za</p>
-          <div class="countdown__clock">
-            <div><span data-cd="d">00</span><small>dní</small></div>
-            <div><span data-cd="h">00</span><small>hod</small></div>
-            <div><span data-cd="m">00</span><small>min</small></div>
-            <div><span data-cd="s">00</span><small>sek</small></div>
-          </div>
-        </div>
-
-        <h3 class="gigs__label reveal">Nadcházející</h3>
-        <ul class="gigs" id="gigs-upcoming"></ul>
-        <div class="gigs__empty reveal" id="gigs-empty" hidden>
-          <p>Nové termíny právě domlouváme.</p>
-          <a href="https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504" target="_blank" rel="noopener">Sleduj nás na Facebooku ↗</a>
-        </div>
-
-        <h3 class="gigs__label gigs__label--past reveal">Odehráno</h3>
-        <ul class="gigs gigs--past" id="gigs-past"></ul>
-      </div>
-    </section>
-
-    <!-- BOOKING -->
-    <section class="section booking" id="booking">
-      <div class="booking__lights" aria-hidden="true"></div>
-      <div class="container booking__inner">
-        <p class="eyebrow scramble reveal">06 — Booking</p>
-        <h2 class="booking__title">
-          <span class="fill-on-scroll">Chceš Sarah</span><br>
-          <span class="fill-on-scroll">na svou akci?</span>
-        </h2>
-        <p class="prose reveal">
-          Kluby, festivaly, letní parkety i soukromé akce. Ozvi se a domluvíme se.
-        </p>
-        <div class="booking__links reveal">
-          <!-- TODO: doplnit e-mail a telefon kapely, např.:
-          <a class="btn btn--primary magnetic" href="mailto:booking@sarahcb.cz"><span>booking@sarahcb.cz</span></a> -->
-          <a class="btn btn--primary magnetic" href="https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504" target="_blank" rel="noopener"><span>Napsat na Facebooku ↗</span></a>
-          <a class="btn btn--ghost magnetic" href="https://bandzone.cz/sarah" target="_blank" rel="noopener"><span>Bandzone ↗</span></a>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer class="footer">
-    <div class="footer__big" aria-hidden="true">SARAH</div>
-    <div class="container footer__inner">
-      <a class="nav__logo" href="#top">SARAH<span>ČB</span></a>
-      <ul class="footer__social">
-        <li><a href="https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504" target="_blank" rel="noopener">Facebook</a></li>
-        <li><a href="https://www.facebook.com/p/SARAH-%C4%8CB-p%C5%AFvodn%C3%AD-sestava-1992-61551588285638/" target="_blank" rel="noopener">Facebook · původní sestava</a></li>
-        <li><a href="https://bandzone.cz/sarah" target="_blank" rel="noopener">Bandzone</a></li>
-        <li><a href="https://www.youtube.com/watch?v=8QpXZPaKw-g" target="_blank" rel="noopener">YouTube</a></li>
-        <li><a href="https://goout.net/en/sarah/pzodprf/" target="_blank" rel="noopener">GoOut</a></li>
-      </ul>
-      <p class="footer__copy">© <span id="year">2026</span> Sarah · Hard rock z&nbsp;Českých Budějovic</p>
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__about">
+          <a class="logo" href="index.html">SARAH<span>ČB</span></a>
+          <p>Hardrocková kapela z Českých Budějovic. Na jihočeské scéně od roku 1992.</p>
+        </div>
+        <div>
+          <h4>Stránky</h4>
+          <ul>
+            <li><a href="kapela.html">Kapela</a></li>
+            <li><a href="hudba.html">Hudba</a></li>
+            <li><a href="media.html">Foto &amp; video</a></li>
+            <li><a href="koncerty.html">Koncerty</a></li>
+            <li><a href="kontakt.html">Booking a kontakt</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Sledujte nás</h4>
+          <ul>
+            <li><a href="https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504" target="_blank" rel="noopener">Facebook</a></li>
+            <li><a href="https://www.facebook.com/p/SARAH-%C4%8CB-p%C5%AFvodn%C3%AD-sestava-1992-61551588285638/" target="_blank" rel="noopener">Facebook · původní sestava</a></li>
+            <li><a href="https://bandzone.cz/sarah" target="_blank" rel="noopener">Bandzone</a></li>
+            <li><a href="https://www.youtube.com/watch?v=YIDTwOcJh58" target="_blank" rel="noopener">YouTube</a></li>
+            <li><a href="https://goout.net/en/sarah/pzodprf/" target="_blank" rel="noopener">GoOut</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© <span data-year>2026</span> Sarah · České Budějovice</span>
+        <span>Hard rock od roku 1992</span>
+      </div>
     </div>
   </footer>
 

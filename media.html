@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foto a video · SARAH</title>
+  <meta name="description" content="Živá videa a fotky z koncertů hardrockové kapely Sarah z Českých Budějovic.">
+  <meta name="theme-color" content="#0e0d0c">
+  <link rel="canonical" href="https://sarahcb.cz/media.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SARAH">
+  <meta property="og:url" content="https://sarahcb.cz/media.html">
+  <meta property="og:title" content="Foto a video · SARAH">
+  <meta property="og:description" content="Živá videa a fotky z koncertů hardrockové kapely Sarah z Českých Budějovic.">
+  <meta property="og:image" content="https://i.ytimg.com/vi/YIDTwOcJh58/hqdefault.jpg">
+  <meta property="og:locale" content="cs_CZ">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://i.ytimg.com">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>(function(d){var n=navigator,c=n.connection||{},rm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches,lite=!!(c.saveData||/2g/.test(c.effectiveType||"")||(n.deviceMemory&&n.deviceMemory<=2)||(n.hardwareConcurrency&&n.hardwareConcurrency<=2));d.className+=" js"+(lite?" lite":"")+(!rm&&!lite?" motion":"")})(document.documentElement)</script>
+</head>
+<body>
+  <a class="skip" href="#main">Přeskočit na obsah</a>
+
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="logo" href="index.html" aria-label="Sarah, úvodní stránka">SARAH<span>ČB</span></a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Otevřít menu"><span></span><span></span></button>
+      <nav class="nav__menu" id="menu" aria-label="Hlavní navigace">
+        <a href="index.html">Domů</a>
+        <a href="kapela.html">Kapela</a>
+        <a href="hudba.html">Hudba</a>
+        <a href="media.html" aria-current="page">Foto & video</a>
+        <a href="koncerty.html">Koncerty</a>
+        <a class="btn btn--primary" href="kontakt.html">Booking</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="media-bg" aria-hidden="true"><img src="https://i.ytimg.com/vi/Vr9Ju-DKftQ/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/Vr9Ju-DKftQ/sddefault.jpg,https://i.ytimg.com/vi/Vr9Ju-DKftQ/hqdefault.jpg" alt="" fetchpriority="high" decoding="async" width="1280" height="720"></div>
+      <div class="container">
+        <p class="eyebrow">Foto & video</p>
+        <h1 class="h1">Z pódia</h1>
+        <p class="lead">Živé záznamy a záběry z koncertů. Klikněte na fotku pro zvětšení.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <p class="eyebrow reveal">Videa</p>
+        <h2 class="h2 reveal">Naživo</h2>
+        <div class="videos" data-videos></div>
+        <noscript><p><a href="https://www.youtube.com/watch?v=YIDTwOcJh58">Videa na YouTube</a></p></noscript>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="container">
+        <p class="eyebrow reveal">Galerie</p>
+        <h2 class="h2 reveal">Fotky</h2>
+        <div class="gallery" data-gallery></div>
+        <p class="small" style="margin-top:1.2rem">Máte fotky z našeho koncertu? Pošlete nám je přes <a href="https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504" target="_blank" rel="noopener">Facebook</a>.</p>
+      </div>
+    </section>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Fotka">
+      <figure style="margin:0">
+        <img alt="">
+        <figcaption class="lightbox__cap"></figcaption>
+      </figure>
+      <button class="lightbox__close" type="button" aria-label="Zavřít">✕</button>
+      <button class="lightbox__prev" type="button" aria-label="Předchozí">‹</button>
+      <button class="lightbox__next" type="button" aria-label="Další">›</button>
+    </div>
+
+    <section class="section cta">
+      <div class="container">
+        <p class="eyebrow reveal">Booking</p>
+        <h2 class="h2 reveal">Chceš Sarah<br><span class="accent">na svou akci?</span></h2>
+        <p class="lead reveal">Kluby, festivaly, letní parkety i soukromé akce. Ozvi se a domluvíme se.</p>
+        <div class="btns reveal">
+          <a class="btn btn--primary" href="kontakt.html">Domluvit koncert</a>
+          <a class="btn btn--ghost" href="koncerty.html">Kde hrajeme</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__about">
+          <a class="logo" href="index.html">SARAH<span>ČB</span></a>
+          <p>Hardrocková kapela z Českých Budějovic. Na jihočeské scéně od roku 1992.</p>
+        </div>
+        <div>
+          <h4>Stránky</h4>
+          <ul>
+            <li><a href="kapela.html">Kapela</a></li>
+            <li><a href="hudba.html">Hudba</a></li>
+            <li><a href="media.html">Foto &amp; video</a></li>
+            <li><a href="koncerty.html">Koncerty</a></li>
+            <li><a href="kontakt.html">Booking a kontakt</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Sledujte nás</h4>
+          <ul>
+            <li><a href="https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504" target="_blank" rel="noopener">Facebook</a></li>
+            <li><a href="https://www.facebook.com/p/SARAH-%C4%8CB-p%C5%AFvodn%C3%AD-sestava-1992-61551588285638/" target="_blank" rel="noopener">Facebook · původní sestava</a></li>
+            <li><a href="https://bandzone.cz/sarah" target="_blank" rel="noopener">Bandzone</a></li>
+            <li><a href="https://www.youtube.com/watch?v=YIDTwOcJh58" target="_blank" rel="noopener">YouTube</a></li>
+            <li><a href="https://goout.net/en/sarah/pzodprf/" target="_blank" rel="noopener">GoOut</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© <span data-year>2026</span> Sarah · České Budějovice</span>
+        <span>Hard rock od roku 1992</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

@@ -1,509 +1,320 @@
 /* ==========================================================================
-   KONCERTY — sem přidávejte nové termíny.
+   SARAH — sdílený skript pro všechny stránky.
+   Nahoře jsou data, která se dají snadno upravovat (koncerty, videa, fotky).
+   ========================================================================== */
+
+/* KONCERTY
    date:  "RRRR-MM-DD" (nebo jen "RRRR", když přesné datum neznáme)
    time:  nepovinné, např. "20:00" (použije se i pro odpočet)
    link:  nepovinné, odkaz na vstupenky / událost
-   Budoucí termíny se automaticky zobrazí nahoře (s odpočtem), odehrané dole.
-   ========================================================================== */
+   Budoucí termíny se samy zobrazí nahoře, odehrané se po datu přesunou dolů. */
 const GIGS = [
-  {
-    date: "2026-09-26",
-    venue: "Letní parket Jílovice",
-    city: "Jílovice",
-    note: "s kapelou Blamage",
-  },
-  {
-    date: "2023",
-    venue: "Seven Fest",
-    city: "Ševětín",
-    note: "Oslava 30 let kapely v původní sestavě",
-  },
+  { date: "2026-09-26", venue: "Letní parket Jílovice", city: "Jílovice u Č. Budějovic", note: "s kapelou Blamage" },
+  { date: "2023-09-16", venue: "Jílovice", city: "Jílovice u Č. Budějovic", note: "Původní sestava, 30 let kapely" },
+  { date: "2023-04", venue: "Seven Fest", city: "KD Ševětín", note: "Oslava 30. narozenin kapely" },
 ];
 
-/* ==========================================================================
-   GALERIE — fotky nahrajte do složky assets/photos/ a přidejte je sem, např.:
-   { src: "assets/photos/koncert-1.jpg", alt: "Sarah na Seven Festu 2023" },
-   Dokud je seznam prázdný, sekce galerie se nezobrazí.
-   ========================================================================== */
-const GALLERY = [];
+/* VIDEA z YouTube (id je část adresy za "watch?v=") */
+const VIDEOS = [
+  { id: "YIDTwOcJh58", title: "Křídla", meta: "Jílovice, 16. 9. 2023 · původní sestava" },
+  { id: "8QpXZPaKw-g", title: "Vlaky", meta: "Původní sestava po třiceti letech · 2023" },
+  { id: "Vr9Ju-DKftQ", title: "Sarah naživo", meta: "Hard rock / České Budějovice" },
+];
 
-const SONGS = ["Mrazík", "Se mnou nepočítej", "Křídla", "Vlaky", "Střílej", "Sarah", "Modrá erekce impotenta", "Noc vládne nám"];
+/* FOTKY do galerie. Vlastní fotky nahrajte do assets/photos/ a přidejte sem
+   např. { src: "assets/photos/koncert-1.jpg", caption: "Seven Fest 2023" }.
+   Pod nimi se automaticky zobrazí i záběry z videí kapely. */
+const PHOTOS = [];
+
+/* -------------------------------------------------------------------------- */
 
 const MONTHS = ["led", "úno", "bře", "dub", "kvě", "čvn", "čvc", "srp", "zář", "říj", "lis", "pro"];
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+const MONTHS_FULL = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"];
 const root = document.documentElement;
-const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const yt = (id, kind) => `https://i.ytimg.com/vi/${id}/${kind}.jpg`;
 
-/* --- Intro ---------------------------------------------------------------- */
-function initIntro(onDone) {
-  let seen = false;
-  try { seen = sessionStorage.getItem("sarah-intro") === "1"; } catch (e) { /* storage blocked */ }
-  if (reduceMotion || seen) {
-    root.classList.add("no-intro", "is-loaded", "is-ready");
-    onDone();
-    return;
-  }
-  try { sessionStorage.setItem("sarah-intro", "1"); } catch (e) { /* ignore */ }
-  setTimeout(() => root.classList.add("is-loaded"), 1500);
-  setTimeout(() => { root.classList.add("is-ready"); onDone(); }, 1750);
-}
-
-/* --- Hero photo (YouTube frame with low-res fallback) -------------------- */
-function initHeroPhoto() {
-  const img = document.querySelector(".hero__photo");
-  if (!img) return;
-  const ready = () => {
-    // YouTube returns a 120×90 placeholder when maxres doesn't exist
-    if (img.naturalWidth <= 120 && img.dataset.fallback && img.src !== img.dataset.fallback) {
-      img.src = img.dataset.fallback;
-      return;
-    }
-    img.classList.add("is-loaded");
+/* --- Images: YouTube frames with quality fallback ------------------------- */
+// YouTube answers a missing size with a 120×90 grey placeholder, so check the size.
+function smartImage(img) {
+  const chain = (img.dataset.chain || "").split(",").filter(Boolean);
+  const done = () => img.classList.add("is-loaded");
+  const next = () => {
+    const src = chain.shift();
+    if (src) img.src = src; else img.closest("[data-removable]")?.remove();
   };
-  img.addEventListener("load", ready);
-  img.addEventListener("error", () => {
-    if (img.dataset.fallback && img.src !== img.dataset.fallback) img.src = img.dataset.fallback;
-  });
-  if (img.complete && img.naturalWidth) ready();
+  img.addEventListener("load", () => (img.naturalWidth <= 120 ? next() : done()));
+  img.addEventListener("error", next);
+  if (img.complete && img.naturalWidth > 120) done();
 }
 
-/* --- Gigs + countdown ----------------------------------------------------- */
-function gigDate(gig, endOfDay = true) {
-  if (/^\d{4}$/.test(gig.date)) return new Date(Number(gig.date), 11, 31, 23, 59);
-  const [y, m, d] = gig.date.split("-").map(Number);
-  if (!endOfDay && gig.time) {
-    const [hh, mm] = gig.time.split(":").map(Number);
-    return new Date(y, m - 1, d, hh, mm);
-  }
-  return endOfDay ? new Date(y, m - 1, d, 23, 59) : new Date(y, m - 1, d, 20, 0);
-}
-
-function renderGig(gig) {
-  const li = document.createElement("li");
-  li.className = "gig reveal";
-
-  const date = document.createElement("div");
-  date.className = "gig__date";
-  if (/^\d{4}$/.test(gig.date)) {
-    date.textContent = gig.date;
-  } else {
-    const [y, m, d] = gig.date.split("-").map(Number);
-    date.textContent = `${d}. ${MONTHS[m - 1]}`;
-    const small = document.createElement("small");
-    small.textContent = gig.time ? `${y} · ${gig.time}` : String(y);
-    date.append(small);
-  }
-
-  const venue = document.createElement("div");
-  venue.className = "gig__venue";
-  venue.textContent = gig.venue;
-  const sub = document.createElement("span");
-  sub.textContent = [gig.city, gig.note].filter(Boolean).join(" · ");
-  venue.append(sub);
-
-  li.append(date, venue);
-
-  if (gig.link) {
-    const a = document.createElement("a");
-    a.className = "gig__link";
-    a.href = gig.link;
-    a.target = "_blank";
-    a.rel = "noopener";
-    a.textContent = "Info ↗";
-    li.append(a);
-  }
-  return li;
-}
-
-function renderGigs() {
-  const now = new Date();
-  const sorted = [...GIGS].sort((a, b) => gigDate(a) - gigDate(b));
-  const upcoming = sorted.filter((g) => gigDate(g) >= now);
-  const past = sorted.filter((g) => gigDate(g) < now).reverse();
-
-  const upEl = document.getElementById("gigs-upcoming");
-  const pastEl = document.getElementById("gigs-past");
-  upcoming.forEach((g) => upEl.append(renderGig(g)));
-  past.forEach((g) => pastEl.append(renderGig(g)));
-  document.getElementById("gigs-empty").hidden = upcoming.length > 0;
-  upEl.hidden = upcoming.length === 0;
-
-  const next = upcoming.find((g) => !/^\d{4}$/.test(g.date));
-  if (next) startCountdown(gigDate(next, false));
-}
-
-function startCountdown(target) {
-  const box = document.getElementById("countdown");
-  box.hidden = false;
-  const el = Object.fromEntries([...box.querySelectorAll("[data-cd]")].map((n) => [n.dataset.cd, n]));
-  const pad = (n) => String(n).padStart(2, "0");
-  const tick = () => {
-    const diff = Math.max(0, target - new Date());
-    const s = Math.floor(diff / 1000);
-    el.d.textContent = pad(Math.floor(s / 86400));
-    el.h.textContent = pad(Math.floor((s % 86400) / 3600));
-    el.m.textContent = pad(Math.floor((s % 3600) / 60));
-    el.s.textContent = pad(s % 60);
-  };
-  tick();
-  setInterval(tick, 1000);
-}
-
-/* --- Gallery -------------------------------------------------------------- */
-function initGallery() {
-  if (!GALLERY.length) return;
-  const section = document.getElementById("galerie");
-  const strip = document.getElementById("gallery-strip");
-  GALLERY.forEach((p) => {
-    const fig = document.createElement("figure");
-    const img = document.createElement("img");
-    img.src = p.src;
-    img.alt = p.alt || "";
-    img.loading = "lazy";
-    fig.append(img);
-    strip.append(fig);
-  });
-  section.hidden = false;
-
-  // drag to scroll on desktop
-  let down = false, startX = 0, startScroll = 0;
-  strip.addEventListener("pointerdown", (e) => {
-    if (e.pointerType !== "mouse") return;
-    down = true; startX = e.clientX; startScroll = strip.scrollLeft;
-    strip.classList.add("is-dragging");
-  });
-  window.addEventListener("pointermove", (e) => { if (down) strip.scrollLeft = startScroll - (e.clientX - startX); });
-  window.addEventListener("pointerup", () => { down = false; strip.classList.remove("is-dragging"); });
-}
-
-/* --- Nav ------------------------------------------------------------------ */
+/* --- Header + mobile menu ------------------------------------------------- */
 function initNav() {
-  const toggle = document.querySelector(".nav__toggle");
-  const menu = document.getElementById("menu");
+  const nav = $(".nav");
+  const toggle = $(".nav__toggle");
+  const menu = $("#menu");
+  if (!nav) return;
+
+  if (!nav.classList.contains("nav--solid")) {
+    const onScroll = () => nav.classList.toggle("is-scrolled", window.scrollY > 20);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
 
   const setOpen = (open) => {
     toggle.setAttribute("aria-expanded", String(open));
     toggle.setAttribute("aria-label", open ? "Zavřít menu" : "Otevřít menu");
     menu.classList.toggle("is-open", open);
+    root.classList.toggle("menu-open", open);
   };
-  toggle.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
-  menu.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
+  toggle?.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
-
-  const links = [...menu.querySelectorAll('a[href^="#"]')];
-  const sections = links.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
-  const spy = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      links.forEach((a) => a.classList.toggle("is-active", a.getAttribute("href") === `#${entry.target.id}`));
-    });
-  }, { rootMargin: "-45% 0px -50% 0px" });
-  sections.forEach((s) => spy.observe(s));
 }
 
-/* --- Text scramble -------------------------------------------------------- */
-function scramble(el) {
-  const final = el.textContent;
-  const chars = "ABCDEFGHIJKLMNOPRSTUVZ0123456789#%&*/";
-  let frame = 0;
-  const total = 22;
-  const run = () => {
-    el.textContent = final.split("").map((c, i) => {
-      if (c === " " || i < (frame / total) * final.length) return c;
-      return chars[Math.floor(Math.random() * chars.length)];
-    }).join("");
-    if (++frame <= total) requestAnimationFrame(run);
-    else el.textContent = final;
-  };
-  run();
-}
-
-/* --- Reveal on scroll ----------------------------------------------------- */
-function initReveal() {
-  const items = document.querySelectorAll(".reveal");
-  if (!("IntersectionObserver" in window) || reduceMotion) {
-    items.forEach((el) => el.classList.add("is-visible"));
+/* --- Reveal + pause marquee off-screen ----------------------------------- */
+function initObservers() {
+  if (!("IntersectionObserver" in window)) {
+    root.classList.remove("motion");
     return;
   }
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      el.classList.add("is-visible");
-      if (el.classList.contains("scramble")) scramble(el);
-      if (el.classList.contains("setlist")) {
-        el.querySelectorAll(".setlist__list li").forEach((li, i) => { li.style.transitionDelay = `${200 + i * 70}ms`; });
-      }
-      io.unobserve(el);
-    });
-  }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-
-  // stagger siblings that enter together
-  items.forEach((el) => {
-    const siblings = [...el.parentElement.children].filter((c) => c.classList.contains("reveal"));
-    el.style.transitionDelay = `${Math.min(siblings.indexOf(el), 4) * 90}ms`;
-    io.observe(el);
-  });
-}
-
-/* --- Count-up ------------------------------------------------------------- */
-function countUp() {
-  const year = new Date().getFullYear();
-  document.querySelectorAll("[data-count-since]").forEach((el) => {
-    el.dataset.count = year - Number(el.dataset.countSince);
-    el.dataset.from = 0;
-  });
-  document.querySelectorAll("[data-count]").forEach((el) => {
-    const to = Number(el.dataset.count);
-    const from = Number(el.dataset.from || 0);
-    if (reduceMotion) { el.textContent = to; return; }
-    const start = performance.now() + 700;
-    const dur = 1400;
-    const step = (t) => {
-      const p = clamp((t - start) / dur, 0, 1);
-      const eased = 1 - Math.pow(1 - p, 4);
-      el.textContent = Math.round(from + (to - from) * eased);
-      if (p < 1) requestAnimationFrame(step);
-    };
-    el.textContent = from;
-    requestAnimationFrame(step);
-  });
-}
-
-/* --- Statement: split into words lit by scroll ---------------------------- */
-function splitWords() {
-  const el = document.querySelector("[data-words]");
-  if (!el) return [];
-  const hot = ["1992", "hard", "rock", "kompromisy."];
-  const words = el.textContent.trim().split(/\s+/);
-  el.setAttribute("aria-label", words.join(" "));
-  el.textContent = "";
-  return words.map((w, i) => {
-    const span = document.createElement("span");
-    span.className = "w" + (hot.includes(w) ? " hot" : "");
-    span.setAttribute("aria-hidden", "true");
-    span.textContent = w;
-    el.append(span);
-    if (i < words.length - 1) el.append(" ");
-    return span;
-  });
-}
-
-/* --- Marquees ------------------------------------------------------------- */
-function buildMarquees() {
-  return [...document.querySelectorAll("[data-songs]")].map((track) => {
-    const set = SONGS.map((s) => `<span>${s}</span>`).join("");
-    track.innerHTML = set + set + set + set;
-    return { track, x: 0, dir: track.hasAttribute("data-reverse") ? 1 : -1 };
-  });
-}
-
-/* --- Sparks (canvas) ------------------------------------------------------ */
-function initSparks() {
-  const canvas = document.querySelector(".hero__sparks");
-  if (!canvas || reduceMotion) return () => {};
-  const ctx = canvas.getContext("2d");
-  let w = 0, h = 0, dpr = 1;
-  const resize = () => {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    w = canvas.clientWidth; h = canvas.clientHeight;
-    canvas.width = w * dpr; canvas.height = h * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  };
-  resize();
-  window.addEventListener("resize", resize);
-
-  const count = w < 600 ? 28 : 60;
-  const spawn = (p = {}) => Object.assign(p, {
-    x: w * (0.35 + Math.random() * 0.65),
-    y: h + Math.random() * h * 0.5,
-    vx: (Math.random() - 0.5) * 0.4,
-    vy: -(0.4 + Math.random() * 1.2),
-    r: 0.6 + Math.random() * 1.8,
-    life: 0,
-    max: 200 + Math.random() * 260,
-    hue: 10 + Math.random() * 30,
-  });
-  const parts = Array.from({ length: count }, () => {
-    const p = spawn();
-    p.y = Math.random() * h;
-    return p;
-  });
-
-  return function draw() {
-    ctx.clearRect(0, 0, w, h);
-    ctx.globalCompositeOperation = "lighter";
-    for (const p of parts) {
-      p.life++;
-      p.x += p.vx + Math.sin((p.life + p.max) * 0.02) * 0.3;
-      p.y += p.vy;
-      const a = Math.sin(Math.PI * clamp(p.life / p.max, 0, 1));
-      ctx.beginPath();
-      ctx.fillStyle = `hsla(${p.hue}, 100%, 60%, ${a * 0.85})`;
-      ctx.shadowColor = `hsla(${p.hue}, 100%, 55%, 1)`;
-      ctx.shadowBlur = 8;
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-      if (p.life > p.max || p.y < -10) spawn(p);
-    }
-  };
-}
-
-/* --- Pointer effects: spotlight, tilt, magnetic, footer glow -------------- */
-function initPointer() {
-  if (!finePointer || reduceMotion) return;
-
-  const hero = document.querySelector(".hero");
-  hero.addEventListener("pointermove", (e) => {
-    const r = hero.getBoundingClientRect();
-    hero.style.setProperty("--mx", `${e.clientX - r.left}px`);
-    hero.style.setProperty("--my", `${e.clientY - r.top}px`);
-  });
-
-  document.querySelectorAll(".tilt").forEach((el) => {
-    el.addEventListener("pointermove", (e) => {
-      const r = el.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;
-      const py = (e.clientY - r.top) / r.height;
-      el.classList.add("is-tilting");
-      el.style.setProperty("--ry", `${(px - 0.5) * 12}deg`);
-      el.style.setProperty("--rx", `${(0.5 - py) * 10}deg`);
-      el.style.setProperty("--gx", `${px * 100}%`);
-      el.style.setProperty("--gy", `${py * 100}%`);
-    });
-    el.addEventListener("pointerleave", () => {
-      el.classList.remove("is-tilting");
-      el.style.setProperty("--rx", "0deg");
-      el.style.setProperty("--ry", "0deg");
-    });
-  });
-
-  document.querySelectorAll(".magnetic").forEach((el) => {
-    el.addEventListener("pointermove", (e) => {
-      const r = el.getBoundingClientRect();
-      const x = e.clientX - r.left - r.width / 2;
-      const y = e.clientY - r.top - r.height / 2;
-      el.style.transform = `translate(${x * 0.25}px, ${y * 0.35}px)`;
-    });
-    el.addEventListener("pointerleave", () => { el.style.transform = ""; });
-  });
-
-  const footer = document.querySelector(".footer__big");
-  window.addEventListener("pointermove", (e) => {
-    footer.style.setProperty("--fx", `${(e.clientX / window.innerWidth) * 100}%`);
-  }, { passive: true });
-}
-
-/* --- Videos: load YouTube only after a click ----------------------------- */
-function initVideos() {
-  document.querySelectorAll(".video__facade").forEach((btn) => {
-    const thumb = btn.querySelector("img");
-    thumb.addEventListener("error", () => { thumb.style.visibility = "hidden"; });
-    btn.addEventListener("click", () => {
-      const iframe = document.createElement("iframe");
-      iframe.src = `https://www.youtube-nocookie.com/embed/${btn.dataset.yt}?autoplay=1&rel=0`;
-      iframe.title = btn.getAttribute("aria-label").replace("Přehrát video: ", "");
-      iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
-      iframe.allowFullscreen = true;
-      btn.replaceWith(iframe);
-    });
-  });
-}
-
-/* --- Main loop: scroll-driven effects ------------------------------------ */
-function startLoop() {
-  const nav = document.querySelector(".nav");
-  const progress = document.querySelector(".progress");
-  const heroMedia = document.querySelector(".hero__media");
-  const hero = document.querySelector(".hero");
-  const words = splitWords();
-  const statement = document.querySelector("[data-words]");
-  const timeline = document.querySelector(".timeline");
-  const tlItems = [...document.querySelectorAll(".timeline__item")];
-  const fills = [...document.querySelectorAll(".fill-on-scroll")];
-  const marquees = buildMarquees();
-  const drawSparks = initSparks();
-
-  let lastY = window.scrollY;
-  let velocity = 0;
-  let heroVisible = true;
-  new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; }).observe(hero);
-
-  const frame = () => {
-    const y = window.scrollY;
-    const vh = window.innerHeight;
-    const delta = y - lastY;
-    lastY = y;
-    velocity += (delta - velocity) * 0.15;
-
-    // progress bar + nav
-    const max = document.documentElement.scrollHeight - vh;
-    progress.style.setProperty("--p", max > 0 ? y / max : 0);
-    nav.classList.toggle("is-scrolled", y > 24);
-    const menuOpen = document.getElementById("menu").classList.contains("is-open");
-    if (!menuOpen) nav.classList.toggle("is-hidden", delta > 4 && y > vh * 0.8 ? true : delta < -4 ? false : nav.classList.contains("is-hidden"));
-
-    if (!reduceMotion) {
-      // hero parallax + sparks
-      if (heroVisible) {
-        heroMedia.style.setProperty("--py", `${y * 0.35}px`);
-        drawSparks();
-      }
-
-      // marquees react to scroll speed and direction
-      const boost = clamp(Math.abs(velocity) * 0.6, 0, 18);
-      const flip = velocity < -0.5 ? -1 : 1;
-      for (const m of marquees) {
-        const half = m.track.scrollWidth / 2;
-        m.x += m.dir * flip * (0.6 + boost);
-        if (half > 0) {
-          if (m.x <= -half) m.x += half;
-          if (m.x > 0) m.x -= half;
-        }
-        m.track.style.transform = `translate3d(${m.x}px, 0, 0)`;
-      }
-
-      // statement words light up as it scrolls through the viewport
-      if (statement) {
-        const r = statement.getBoundingClientRect();
-        const p = clamp((vh * 0.85 - r.top) / (r.height + vh * 0.35), 0, 1);
-        const lit = Math.floor(p * words.length * 1.05);
-        words.forEach((w, i) => w.classList.toggle("on", i < lit));
-      }
-
-      // timeline line draws with scroll
-      if (timeline) {
-        const r = timeline.getBoundingClientRect();
-        const p = clamp((vh * 0.7 - r.top) / r.height, 0, 1);
-        timeline.style.setProperty("--tl", p.toFixed(3));
-        tlItems.forEach((it) => {
-          const ir = it.getBoundingClientRect();
-          it.classList.toggle("is-lit", ir.top + 14 < vh * 0.7);
-        });
-      }
-
-      // booking headline fills in
-      fills.forEach((f) => {
-        const r = f.getBoundingClientRect();
-        const p = clamp((vh * 0.9 - r.top) / (vh * 0.45), 0, 1);
-        f.style.setProperty("--fill", `${(p * 100).toFixed(1)}%`);
+  if (root.classList.contains("motion")) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add("is-visible"); io.unobserve(e.target); }
       });
-    }
-
-    requestAnimationFrame(frame);
-  };
-  requestAnimationFrame(frame);
+    }, { rootMargin: "0px 0px -8% 0px" });
+    $$(".reveal").forEach((el) => {
+      const sibs = [...el.parentElement.children].filter((c) => c.classList.contains("reveal"));
+      el.style.transitionDelay = `${Math.min(sibs.indexOf(el), 3) * 80}ms`;
+      io.observe(el);
+    });
+  }
+  const mq = new IntersectionObserver((entries) => {
+    entries.forEach((e) => e.target.classList.toggle("is-paused", !e.isIntersecting));
+  });
+  $$(".marquee").forEach((m) => mq.observe(m));
 }
 
-/* --- Boot ----------------------------------------------------------------- */
-document.getElementById("year").textContent = new Date().getFullYear();
-renderGigs();
-initGallery();
+/* --- Gigs ----------------------------------------------------------------- */
+function parseGig(g) {
+  const [y, m, d] = g.date.split("-").map(Number);
+  let end, start;
+  if (!m) end = new Date(y, 11, 31, 23, 59);
+  else if (!d) end = new Date(y, m, 0, 23, 59);
+  else end = new Date(y, m - 1, d, 23, 59);
+  if (d) {
+    const [hh, mm] = (g.time || "20:00").split(":").map(Number);
+    start = new Date(y, m - 1, d, hh, mm);
+  }
+  return { ...g, y, m, d, end, start };
+}
+const allGigs = () => GIGS.map(parseGig).sort((a, b) => a.end - b.end);
+
+function dateParts(g) {
+  if (g.d) return { big: `${g.d}. ${MONTHS[g.m - 1]}`, small: g.time ? `${g.y} · ${g.time}` : String(g.y) };
+  if (g.m) return { big: MONTHS_FULL[g.m - 1], small: String(g.y) };
+  return { big: String(g.y), small: "" };
+}
+
+function gigRow(g) {
+  const li = document.createElement("li");
+  li.className = "gig";
+  const p = dateParts(g);
+  li.innerHTML = `<div class="gig__date"></div><div class="gig__venue"><span></span></div>`;
+  const date = $(".gig__date", li);
+  date.textContent = p.big;
+  if (p.small) { const s = document.createElement("small"); s.textContent = p.small; date.append(s); }
+  const venue = $(".gig__venue", li);
+  venue.prepend(g.venue);
+  $("span", venue).textContent = [g.city, g.note].filter(Boolean).join(" · ");
+  if (g.link) {
+    const a = document.createElement("a");
+    Object.assign(a, { className: "gig__link", href: g.link, target: "_blank", rel: "noopener", textContent: "Info ↗" });
+    li.append(a);
+  }
+  return li;
+}
+
+function renderGigList() {
+  const up = $("#gigs-upcoming");
+  if (!up) return;
+  const now = new Date();
+  const gigs = allGigs();
+  const upcoming = gigs.filter((g) => g.end >= now);
+  const past = gigs.filter((g) => g.end < now).reverse();
+  upcoming.forEach((g) => up.append(gigRow(g)));
+  past.forEach((g) => $("#gigs-past").append(gigRow(g)));
+  up.hidden = !upcoming.length;
+  $("#gigs-empty").hidden = !!upcoming.length;
+  const next = upcoming.find((g) => g.start);
+  if (next) startCountdown(next.start);
+}
+
+function startCountdown(target) {
+  const box = $("#countdown");
+  if (!box) return;
+  box.hidden = false;
+  const el = Object.fromEntries($$("[data-cd]", box).map((n) => [n.dataset.cd, n]));
+  const pad = (n) => String(n).padStart(2, "0");
+  const tick = () => {
+    const s = Math.max(0, Math.floor((target - new Date()) / 1000));
+    el.d.textContent = pad(Math.floor(s / 86400));
+    el.h.textContent = pad(Math.floor((s % 86400) / 3600));
+    el.m.textContent = pad(Math.floor((s % 3600) / 60));
+  };
+  tick();
+  setInterval(tick, 30000);
+}
+
+// Home page: next gig, or the most recent one if nothing is booked yet
+function renderGigBox() {
+  const box = $("#gigbox");
+  if (!box) return;
+  const now = new Date();
+  const gigs = allGigs();
+  const next = gigs.find((g) => g.end >= now);
+  const g = next || gigs.filter((x) => x.end < now).pop();
+  if (!g) return;
+  const p = dateParts(g);
+  $(".gigbox__label", box).textContent = next ? "Další koncert" : "Naposledy jsme hráli";
+  $(".gigbox__date", box).innerHTML = "";
+  $(".gigbox__date", box).append(g.d ? String(g.d) : p.big);
+  const small = document.createElement("small");
+  small.textContent = g.d ? `${MONTHS[g.m - 1]} ${g.y}`.toUpperCase() : p.small;
+  $(".gigbox__date", box).append(small);
+  $(".gigbox__venue", box).textContent = g.venue;
+  $(".gigbox__meta", box).textContent = [g.city, g.note].filter(Boolean).join(" · ");
+  box.hidden = false;
+}
+
+/* --- Videos (YouTube loads only after a click) --------------------------- */
+function renderVideos() {
+  $$("[data-videos]").forEach((wrap) => {
+    const limit = Number(wrap.dataset.videos) || VIDEOS.length;
+    VIDEOS.slice(0, limit).forEach((v) => {
+      const fig = document.createElement("figure");
+      fig.className = "video reveal";
+      fig.innerHTML = `
+        <button class="video__btn" type="button" aria-label="Přehrát video: ${v.title}">
+          <img alt="" loading="lazy" decoding="async" width="480" height="360"
+               src="${yt(v.id, "hqdefault")}" data-chain="${yt(v.id, "mqdefault")}">
+          <span class="video__play" aria-hidden="true"></span>
+          <span class="video__tag" aria-hidden="true">LIVE</span>
+        </button>
+        <figcaption><strong></strong></figcaption>`;
+      $("strong", fig).textContent = v.title;
+      $("figcaption", fig).append(v.meta);
+      smartImage($("img", fig));
+      $("button", fig).addEventListener("click", (e) => {
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`;
+        iframe.title = v.title;
+        iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+        iframe.allowFullscreen = true;
+        e.currentTarget.replaceWith(iframe);
+      });
+      wrap.append(fig);
+    });
+  });
+}
+
+/* --- Gallery + lightbox --------------------------------------------------- */
+function galleryItems() {
+  const frames = [];
+  VIDEOS.forEach((v) => {
+    ["hqdefault", "hq1", "hq2", "hq3"].forEach((k, i) => {
+      frames.push({ src: yt(v.id, k), full: yt(v.id, k === "hqdefault" ? "maxresdefault" : k), caption: `${v.title} · ${v.meta}`, frame: i });
+    });
+  });
+  return [...PHOTOS.map((p) => ({ ...p, full: p.src })), ...frames];
+}
+
+function renderGallery() {
+  const grid = $("[data-gallery]");
+  if (!grid) return;
+  const limit = Number(grid.dataset.gallery) || Infinity;
+  const items = galleryItems().slice(0, limit);
+  items.forEach((it, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "gallery__item" + (i % 7 === 0 ? " gallery__item--big" : "");
+    b.setAttribute("aria-label", `Zvětšit fotku: ${it.caption || "Sarah"}`);
+    b.dataset.removable = "";
+    const img = document.createElement("img");
+    Object.assign(img, { alt: it.caption || "", loading: "lazy", decoding: "async", width: 480, height: 360 });
+    img.src = it.src;
+    smartImage(img);
+    b.append(img);
+    b.addEventListener("click", () => openLightbox(b));
+    grid.append(b);
+  });
+
+  const lb = $("#lightbox");
+  if (!lb) return;
+  const big = $("img", lb);
+  const cap = $(".lightbox__cap", lb);
+  let cur = 0;
+  let lastFocus = null;
+  function show(i) {
+    const visible = $$(".gallery__item", grid);
+    cur = (i + visible.length) % visible.length;
+    const thumb = $("img", visible[cur]);
+    const item = items.find((x) => x.src === thumb.currentSrc || x.src === thumb.src) || {};
+    big.src = thumb.src;
+    // try a sharper version, keep the thumbnail if it doesn't exist
+    if (item.full && item.full !== thumb.src) {
+      const hi = new Image();
+      hi.onload = () => { if (hi.naturalWidth > thumb.naturalWidth) big.src = item.full; };
+      hi.src = item.full;
+    }
+    big.alt = item.caption || "";
+    cap.textContent = item.caption || "";
+  }
+  function openLightbox(btn) {
+    lastFocus = document.activeElement;
+    show(Math.max(0, $$(".gallery__item", grid).indexOf(btn)));
+    lb.classList.add("is-open");
+    root.classList.add("menu-open");
+    $(".lightbox__close", lb).focus();
+  }
+  function close() {
+    lb.classList.remove("is-open");
+    root.classList.remove("menu-open");
+    lastFocus?.focus();
+  }
+  $(".lightbox__close", lb).addEventListener("click", close);
+  $(".lightbox__prev", lb).addEventListener("click", () => show(cur - 1));
+  $(".lightbox__next", lb).addEventListener("click", () => show(cur + 1));
+  lb.addEventListener("click", (e) => { if (e.target === lb) close(); });
+  document.addEventListener("keydown", (e) => {
+    if (!lb.classList.contains("is-open")) return;
+    if (e.key === "Escape") close();
+    if (e.key === "ArrowLeft") show(cur - 1);
+    if (e.key === "ArrowRight") show(cur + 1);
+  });
+  let x0 = null;
+  lb.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener("touchend", (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+}
+
+/* --- Small bits ----------------------------------------------------------- */
+function initMisc() {
+  const year = new Date().getFullYear();
+  $$("[data-year]").forEach((el) => { el.textContent = year; });
+  $$("[data-since]").forEach((el) => { el.textContent = year - Number(el.dataset.since); });
+  $$("img[data-chain]").forEach(smartImage);
+}
+
 initNav();
-initHeroPhoto();
-initVideos();
-initPointer();
-initReveal();
-startLoop();
-initIntro(countUp);
+initMisc();
+renderGigList();
+renderGigBox();
+renderVideos();
+renderGallery();
+initObservers();
