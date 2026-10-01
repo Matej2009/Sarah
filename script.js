@@ -20,9 +20,24 @@ const VIDEOS = [
   { id: "Vr9Ju-DKftQ", title: "Sarah naživo", meta: "Hard rock / České Budějovice" },
 ];
 
-/* VLASTNÍ FOTKY – nahrajte do assets/photos/ a přidejte sem, např.
-   { src: "assets/photos/koncert-1.jpg", caption: "Seven Fest 2023" }
-   Pod nimi se automaticky zobrazí i záběry z videí kapely. */
+/* SKUTEČNÉ FOTKY (např. z Facebooku kapely) – nahrajte do assets/photos/ a vyplňte.
+   Dokud je seznam prázdný, použijí se záběry z videí kapely. */
+
+// Úvodní stránka: velké fotky na pozadí (na šířku, ideálně 1920 px)
+const HERO_PHOTOS = [
+  // "assets/photos/hero-1.jpg",
+];
+
+// Karty členů: portrét na výšku (ideálně 900 × 1200 px)
+const MEMBER_PHOTOS = {
+  troup: "",    // "assets/photos/clenove/troup.jpg"
+  przeczek: "",
+  jakes: "",
+  franc: "",
+};
+
+// Galerie na stránce Foto & video, např.
+// { src: "assets/photos/koncert-1.jpg", caption: "Seven Fest 2023" }
 const PHOTOS = [];
 
 /* -------------------------------------------------------------------------- */
@@ -226,7 +241,17 @@ function initNav() {
 function initHero() {
   const hero = $(".hero");
   if (!hero) return;
-  const slides = $$(".slides img", hero);
+  const box = $(".slides", hero);
+  if (HERO_PHOTOS.length) {
+    box.replaceChildren(...HERO_PHOTOS.map((src, i) => {
+      const img = new Image();
+      Object.assign(img, { alt: "", decoding: "async", width: 1920, height: 1080 });
+      if (i === 0) { img.src = src; img.fetchPriority = "high"; } else img.dataset.src = src;
+      img.addEventListener("load", () => img.classList.add("is-loaded"));
+      return img;
+    }));
+  }
+  const slides = $$("img", box);
   const dots = $(".dots", hero);
   let cur = 0, timer;
   const show = (i) => {
@@ -276,7 +301,7 @@ function initPick() {
   const pick = document.createElement("div");
   pick.className = "pick";
   pick.setAttribute("aria-hidden", "true");
-  pick.innerHTML = '<svg viewBox="0 0 22 26"><path d="M11 25C6 20 1 13 1 7.5 1 3.5 5 1 11 1s10 2.5 10 6.5C21 13 16 20 11 25z" fill="#ff3b1f" stroke="#150a07" stroke-width="1.2"/><text x="11" y="12" text-anchor="middle" font-family="Anton,Impact" font-size="6.5" fill="#150a07">S</text></svg>';
+  pick.innerHTML = '<svg viewBox="0 0 22 26"><path d="M11 25C6 20 1 13 1 7.5 1 3.5 5 1 11 1s10 2.5 10 6.5C21 13 16 20 11 25z" fill="#e3141b" stroke="#000" stroke-width="1.2"/><text x="11" y="12" text-anchor="middle" font-family="Anton,Impact" font-size="6.5" fill="#fff">S</text></svg>';
   document.body.append(pick);
   let x = -100, y = -100, tx = -100, ty = -100, raf = 0;
   const loop = () => {
@@ -378,14 +403,15 @@ function renderTour() {
       ticket.hidden = false;
     }
   }
-  const chip = $("[data-next-chip]");
-  if (chip) {
+  const bar = $("[data-tourbar]");
+  if (bar) {
     const g = upcoming[0] || past[0];
     if (g) {
-      $("b", chip).textContent = g.d ? `${g.d}. ${g.m}.` : g.y;
-      $("small", chip).textContent = upcoming[0] ? "Další koncert" : "Naposledy";
-      $("[data-v]", chip).textContent = g.venue;
-      chip.hidden = false;
+      $(".tourbar__label", bar).textContent = upcoming[0] ? "Další koncert" : "Naposledy jsme hráli";
+      $(".tourbar__date", bar).textContent = g.d ? `${g.d}. ${g.m}. ${g.y}` : g.m ? `${MONTHS_FULL[g.m - 1]} ${g.y}` : g.y;
+      $("[data-v]", bar).textContent = g.venue;
+      $("small", bar).textContent = [g.city, g.note].filter(Boolean).join(" · ");
+      bar.hidden = false;
     }
   }
   const next = upcoming.find((g) => g.start);
@@ -436,7 +462,7 @@ function renderVideos() {
   });
 }
 
-/* --- Polaroid wall + lightbox -------------------------------------------- */
+/* --- Photo gallery + lightbox -------------------------------------------- */
 function wallItems() {
   const frames = [];
   const labels = ["", " · záběr 1", " · záběr 2", " · záběr 3"];
@@ -445,22 +471,21 @@ function wallItems() {
       frames.push({ src: yt(v.id, k), full: yt(v.id, i === 0 ? "maxresdefault" : k), caption: `${v.title}${labels[i]}`, long: `${v.title} · ${v.meta}` });
     });
   });
-  return [...PHOTOS.map((p) => ({ ...p, full: p.src, long: p.caption })), ...frames];
+  return PHOTOS.length ? PHOTOS.map((p) => ({ ...p, full: p.full || p.src, long: p.caption })) : frames;
 }
 
 function renderWall() {
   const wall = $("[data-wall]");
   if (!wall) return;
   const items = wallItems().slice(0, Number(wall.dataset.wall) || Infinity);
-  items.forEach((it, i) => {
+  items.forEach((it) => {
     const b = document.createElement("button");
     b.type = "button";
-    b.className = "polaroid reveal";
+    b.className = "shot reveal";
     b.dataset.removable = "";
-    b.style.setProperty("--r", `${((i * 37) % 9) - 4}deg`);
     b.setAttribute("aria-label", `Zvětšit fotku: ${it.long || it.caption || "Sarah"}`);
     const img = document.createElement("img");
-    Object.assign(img, { alt: "", loading: "lazy", decoding: "async", width: 480, height: 360 });
+    Object.assign(img, { alt: "", loading: "lazy", decoding: "async", width: 640, height: 480 });
     img.src = it.src;
     smartImage(img);
     const cap = document.createElement("span");
@@ -475,7 +500,7 @@ function renderWall() {
   if (!lb) return;
   const big = $("img", lb), cap = $(".lightbox__cap", lb);
   let cur = 0, lastFocus = null;
-  const list = () => $$(".polaroid", wall);
+  const list = () => $$(".shot", wall);
   function show(i) {
     const l = list();
     cur = (i + l.length) % l.length;
@@ -517,7 +542,19 @@ function renderWall() {
   });
 }
 
-/* --- Flip cards ----------------------------------------------------------- */
+/* --- Member photos + flip cards ------------------------------------------ */
+function initMembers() {
+  $$(".flip[data-member]").forEach((card) => {
+    const src = MEMBER_PHOTOS[card.dataset.member];
+    if (!src) return;
+    const img = new Image();
+    Object.assign(img, { alt: "", loading: "lazy", decoding: "async", width: 900, height: 1200, src });
+    img.addEventListener("error", () => { img.remove(); card.classList.remove("has-photo"); });
+    $(".flip__front", card).prepend(img);
+    card.classList.add("has-photo");
+  });
+}
+
 function initFlips() {
   $$(".flip").forEach((card) => {
     const toggle = () => {
@@ -669,6 +706,7 @@ initAmp();
 renderTour();
 renderVideos();
 renderWall();
+initMembers();
 initFlips();
 initVinyl();
 initYears();

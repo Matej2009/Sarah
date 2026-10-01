@@ -13,7 +13,7 @@ kontakt.html    Booking a kontakty
 404.html        Chybová stránka
 styles.css      Vzhled všech stránek
 script.js       Data (koncerty, videa, fotky) a chování stránek
-assets/         favicon, assets/photos/ pro vlastní fotky
+assets/         favicon, assets/photos/ pro skutečné fotky kapely
 ```
 
 ## Jak upravit obsah
@@ -23,17 +23,27 @@ Data jsou nahoře ve `script.js`:
 - **Koncerty** – pole `GIGS`. Budoucí termín se sám ukáže nahoře i na úvodní stránce
   (s odpočtem), po datu se přesune do „Odehráno“.
 - **Videa** – pole `VIDEOS` (id z YouTube adresy za `watch?v=`).
-- **Fotky** – nahrajte do `assets/photos/` a přidejte do pole `PHOTOS`. Ideálně JPG
-  šířky 1600 px, do 300 kB. Galerie zatím ukazuje záběry z videí kapely.
-- **Fotky členů** – v `kapela.html` vložte `<img src="assets/photos/jmeno.jpg" alt="">`
-  do příslušného `.member__pic`.
+- **Skutečné fotky** (např. z Facebooku kapely) – nahrajte do `assets/photos/`
+  (JPG, do 300 kB) a vyplňte ve `script.js`:
+  - `HERO_PHOTOS` – velké fotky na pozadí úvodní stránky (na šířku, 1920 px),
+  - `MEMBER_PHOTOS` – portréty na kartách členů (na výšku, 900 × 1200 px),
+  - `PHOTOS` – galerie na stránce Foto & video (šířka 1600 px).
+  Dokud jsou seznamy prázdné, web ukazuje záběry z videí kapely.
+- **Originální logo** – zatím je překreslené jako SVG (symbol `#sarah-logo`). Až bude
+  soubor s originálem, nahradí se v hlavičce, úvodu, patičce a na obalu desky.
 - **Booking e-mail/telefon** – v `kontakt.html` je připravené místo (`TODO`).
 
 Hlavička a patička jsou v každé stránce stejné – při změně menu upravte všechny.
 
+## Vzhled
+
+Po vzoru webů Metallica a Iron Maiden: černá, ocel a krvavě rudá, ostré hrany,
+kondenzované písmo (Anton, Oswald), chromované nadpisy, natržené okraje sekcí,
+pruh s dalším koncertem a seznam termínů jako na turné.
+
 ## Interaktivní prvky
 
-- **Zesilovač (úvod)** – knoflík hlasitosti 0–11 (táhnout, kolečko myši, šipky). Na 11 se stránka otřese a vyšlehnou plameny.
+- **Zesilovač (úvod, vpravo dole)** – knoflík hlasitosti 0–11 (táhnout, kolečko myši, šipky). Na 11 se stránka otřese a vyšlehnou plameny.
 - **Zahraj riff** – kytarový riff syntetizovaný přímo v prohlížeči (Web Audio, žádné soubory), hlasitost podle knoflíku.
 - **Deska** – kliknutím na píseň se roztočí, dá se chytit a „scratchovat“.
 - **Karty členů** – kliknutím se otočí a ukážou bio.
