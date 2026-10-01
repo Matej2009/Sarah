@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Stránka nenalezena · SARAH</title>
   <meta name="description" content="Stránka nenalezena.">
-  <meta name="theme-color" content="#0e0d0c">
+  <meta name="theme-color" content="#0b0a09">
   <link rel="canonical" href="https://sarahcb.cz/404.html">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <meta property="og:type" content="website">
@@ -18,16 +18,23 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://i.ytimg.com">
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&family=Permanent+Marker&family=Great+Vibes&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script>(function(d){var n=navigator,c=n.connection||{},rm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches,lite=!!(c.saveData||/2g/.test(c.effectiveType||"")||(n.deviceMemory&&n.deviceMemory<=2)||(n.hardwareConcurrency&&n.hardwareConcurrency<=2));d.className+=" js"+(lite?" lite":"")+(!rm&&!lite?" motion":"")})(document.documentElement)</script>
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+    <path id="sarah-letters" d="M110 23H30Q13 23 13 39Q13 55 30 55H80Q97 55 97 71Q97 87 80 87H0 M138 100V45Q138 23 163 23H197Q222 23 222 45V100 M138 45H222 M163 52V100M197 52V100 M388 100V45Q388 23 413 23H447Q472 23 472 45V100 M388 45H472 M413 52V100M447 52V100 M263 100V10 M263 23H325Q347 23 347 39Q347 55 325 55H263 M312 55L347 100 M513 10V100M597 10V100M513 55H597" fill="none" stroke-linejoin="round"/>
+    <symbol id="sarah-logo" viewBox="-12 -2 634 114">
+      <use href="#sarah-letters" stroke="#f4efe8" stroke-width="44"/>
+      <use href="#sarah-letters" stroke="#0b0a09" stroke-width="33"/>
+      <use href="#sarah-letters" stroke="#f4efe8" stroke-width="26"/>
+    </symbol></defs></svg>
   <a class="skip" href="#main">Přeskočit na obsah</a>
 
   <header class="nav">
     <div class="nav__inner">
-      <a class="logo" href="index.html" aria-label="Sarah, úvodní stránka">SARAH<span>ČB</span></a>
+      <a class="logo" href="index.html" aria-label="Sarah, úvodní stránka"><svg class="logo__mark" viewBox="-12 -2 634 114" role="img" aria-label="Sarah"><use href="#sarah-logo"/></svg></a>
       <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Otevřít menu"><span></span><span></span></button>
       <nav class="nav__menu" id="menu" aria-label="Hlavní navigace">
         <a href="index.html">Domů</a>
@@ -43,15 +50,17 @@
   <main id="main">
     <section class="page-head">
       <div class="media-bg" aria-hidden="true"><img src="https://i.ytimg.com/vi/Vr9Ju-DKftQ/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/Vr9Ju-DKftQ/sddefault.jpg,https://i.ytimg.com/vi/Vr9Ju-DKftQ/hqdefault.jpg" alt="" fetchpriority="high" decoding="async" width="1280" height="720"></div>
+      <div class="lights" aria-hidden="true"><span></span><span></span></div>
+      <span class="bigword" aria-hidden="true">404</span>
       <div class="container">
         <p class="eyebrow">Chyba 404</p>
-        <h1 class="h1">Tahle píseň<br><span class="outline">tu nehraje</span></h1>
-        <p class="lead">Stránka, kterou hledáte, neexistuje. Zkuste to z úvodní stránky.</p>
+        <h1 class="h1"><span class="grunge">Tahle píseň<br><span class="outline">tu nehraje</span></span></h1>
+        <p class="lead">Stránka, kterou hledáš, neexistuje. Zkus to z úvodní stránky.</p>
       </div>
     </section>
 
     <section class="section section--tight">
-      <div class="container"><a class="btn btn--primary" href="index.html">Zpět na úvod</a></div>
+      <div class="container btns"><a class="btn btn--primary" href="index.html">Zpět na úvod</a><button class="btn btn--ghost" type="button" data-riff>🎸 Aspoň riff</button></div>
     </section>
 
   </main>
@@ -60,8 +69,9 @@
     <div class="container">
       <div class="footer__grid">
         <div class="footer__about">
-          <a class="logo" href="index.html">SARAH<span>ČB</span></a>
+          <a class="logo logo--footer" href="index.html"><svg class="logo__mark" viewBox="-12 -2 634 114" role="img" aria-label="Sarah"><use href="#sarah-logo"/></svg><span class="script">Hard rock</span></a>
           <p>Hardrocková kapela z Českých Budějovic. Na jihočeské scéně od roku 1992.</p>
+          <p class="footer__egg">Tip: na klávesnici napiš „sarah“.</p>
         </div>
         <div>
           <h4>Stránky</h4>
@@ -86,7 +96,7 @@
       </div>
       <div class="footer__bottom">
         <span>© <span data-year>2026</span> Sarah · České Budějovice</span>
-        <span>Hard rock od roku 1992</span>
+        <span>Hard rock od roku 1992 · hrajeme nahlas</span>
       </div>
     </div>
   </footer>

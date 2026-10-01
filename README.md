@@ -31,9 +31,20 @@ Data jsou nahoře ve `script.js`:
 
 Hlavička a patička jsou v každé stránce stejné – při změně menu upravte všechny.
 
+## Interaktivní prvky
+
+- **Zesilovač (úvod)** – knoflík hlasitosti 0–11 (táhnout, kolečko myši, šipky). Na 11 se stránka otřese a vyšlehnou plameny.
+- **Zahraj riff** – kytarový riff syntetizovaný přímo v prohlížeči (Web Audio, žádné soubory), hlasitost podle knoflíku.
+- **Deska** – kliknutím na píseň se roztočí, dá se chytit a „scratchovat“.
+- **Karty členů** – kliknutím se otočí a ukážou bio.
+- **Historie** – posuvná časová osa (táhnout / šipky).
+- **Zapalovače** – v sekci Booking, počet se pamatuje v prohlížeči.
+- **Easter egg** – na klávesnici napište „sarah“.
+- Logo SARAH je překreslené jako SVG (sdílený symbol `#sarah-logo` na začátku každé stránky).
+
 ## Výkon
 
-Žádné knihovny ani canvas, animace jen přes CSS (opacity/transform). Na slabých
+Žádné knihovny ani canvas, animace jen přes CSS (opacity/transform), zvuk až po kliknutí. Na slabých
 zařízeních, při úsporném režimu dat nebo při „omezit pohyb“ se animace a dekorace
 vypnou. YouTube se načítá až po kliknutí na video, obrázky líně.
 
