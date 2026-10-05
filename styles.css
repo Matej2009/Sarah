@@ -88,6 +88,20 @@ p { margin: 0 0 1em; }
 .link::before { content: ""; position: absolute; left: 0; right: 1.3em; bottom: -3px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .45s var(--ease); }
 .link:hover::before { transform: scaleX(1); transform-origin: left; }
 
+/* rolling hover text: the label rolls up, a copy rolls in from below */
+.roll { position: relative; display: inline-block; overflow: hidden; vertical-align: top; line-height: 1.25; }
+.roll > span { display: block; transition: transform .5s var(--ease); }
+.roll > span + span { position: absolute; left: 0; top: 0; transform: translateY(105%); }
+:is(a, button):hover > .roll > span:first-child { transform: translateY(-105%); }
+:is(a, button):hover > .roll > span + span { transform: none; }
+
+/* scrollbar */
+html { scrollbar-color: #3f3f46 var(--bg); scrollbar-width: thin; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
 /* --- Intro loader (home, once per visit) --------------------------------- */
 .loader { display: none; }
 .intro .loader {
@@ -127,7 +141,11 @@ p { margin: 0 0 1em; }
 .nav__menu a:not(.btn):hover, .nav__menu a[aria-current="page"] { color: var(--text); }
 .nav__menu a[aria-current="page"]::after { transform: scale(1); }
 .nav__toggle { display: none; }
+.nav__social { display: none; }
 @media (max-width: 860px) {
+  .nav__social { display: flex; gap: 10px; margin-top: 28px; }
+  .nav__social a { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line); }
+  .nav__social svg { width: 18px; height: 18px; fill: currentColor; }
   .nav__toggle { display: grid; place-content: center; gap: 6px; width: 44px; height: 44px; margin-right: -10px; padding: 0; border: 0; background: none; cursor: pointer; }
   .nav__toggle span { display: block; width: 22px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .25s var(--ease); }
   .nav__toggle[aria-expanded="true"] span:first-child { transform: translateY(4px) rotate(45deg); }
@@ -337,7 +355,10 @@ p { margin: 0 0 1em; }
 @media (max-width: 560px) { .members { grid-template-columns: 1fr; } }
 .member { margin: 0; scroll-margin-top: calc(var(--nav-h) + 24px); }
 .member__photo { position: relative; aspect-ratio: 4 / 5; overflow: hidden; display: grid; place-items: end start; padding: 22px; border-radius: var(--radius); background: radial-gradient(120% 80% at 80% 0%, rgba(229, 37, 42, .22), transparent 60%), linear-gradient(160deg, #1f1f23, #121214); transition: translate .6s var(--ease); }
+.member__photo { transform: perspective(900px) rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg)); transition: translate .6s var(--ease), transform .5s var(--ease); }
+.member__photo::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(60% 50% at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, .14), transparent 70%); opacity: 0; transition: opacity .4s; }
 .member:hover .member__photo { translate: 0 -6px; }
+.member:hover .member__photo::after { opacity: 1; }
 .member__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; filter: grayscale(.35); transition: scale .8s var(--ease), filter .5s, transform 1.4s var(--ease); }
 .member:hover .member__photo img { scale: 1.05; filter: none; }
 .member__initials { font-size: clamp(3rem, 7vw, 5rem); font-weight: 800; font-stretch: 125%; line-height: .9; color: rgba(255, 255, 255, .1); transition: color .4s; }
@@ -406,6 +427,10 @@ p { margin: 0 0 1em; }
 .shot:hover img { scale: 1.06; }
 .lightbox { position: fixed; inset: 0; z-index: 120; display: none; place-items: center; padding: 64px 16px; background: rgba(5, 5, 6, .96); }
 .lightbox.is-open { display: grid; }
+.motion .lightbox.is-open { animation: fade-in .35s ease both; }
+.motion .lightbox.is-open img { animation: zoom-in .5s var(--ease) both; }
+@keyframes zoom-in { from { opacity: 0; transform: scale(.94); } }
+.lightbox__count { position: absolute; left: 20px; top: 26px; font-size: .85rem; font-weight: 600; letter-spacing: .12em; color: var(--muted); font-variant-numeric: tabular-nums; }
 .lightbox figure { margin: 0; }
 .lightbox img { max-width: min(1200px, 100%); max-height: 80vh; width: auto; border-radius: 8px; }
 .lightbox__cap { margin-top: 12px; text-align: center; color: var(--muted); font-size: .9rem; }
@@ -465,6 +490,8 @@ p { margin: 0 0 1em; }
 .footer__mega { position: relative; display: block; margin: clamp(56px, 8vw, 96px) 0 clamp(40px, 5vw, 64px); }
 .footer__mega svg { display: block; width: 100%; height: auto; overflow: visible; }
 .footer__mega .script { position: absolute; right: .5%; bottom: -.7em; font-size: clamp(1.8rem, 6vw, 5.6rem); color: var(--muted); }
+.footer__top-link { color: var(--muted); text-decoration: none; transition: color .2s; }
+.footer__top-link:hover { color: var(--text); }
 .footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--dim); font-size: .88rem; }
 @media (min-width: 861px) and (min-height: 760px) {
   main { position: relative; z-index: 1; background: var(--bg); box-shadow: 0 30px 60px rgba(0, 0, 0, .6); }
@@ -502,6 +529,7 @@ p { margin: 0 0 1em; }
 .motion .reveal-img { clip-path: inset(10% 6% 10% 6% round var(--radius)); transition: clip-path 1.3s var(--ease); }
 .motion .reveal-img img { transform: scale(1.2); }
 .motion .reveal-img.is-visible { clip-path: inset(0 0 0 0 round var(--radius)); }
+.motion .member__photo.reveal-img { transition: clip-path 1.3s var(--ease), translate .6s var(--ease), transform .5s var(--ease); }
 .motion .reveal-img.is-visible img { transform: none; }
 .motion .bigcta__link span { transform: translateY(40px); opacity: 0; transition: transform 1.1s var(--ease), opacity .9s, color .4s, -webkit-text-stroke-color .4s; }
 .motion .bigcta__link.is-visible span { transform: none; opacity: 1; }

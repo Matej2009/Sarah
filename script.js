@@ -204,9 +204,10 @@ function renderGigs() {
 
   const next = upcoming[0];
   const pill = $("[data-next-pill]");
-  if (pill && next) {
-    $("strong", pill).textContent = next.venue;
-    $("span", pill).textContent = gigDate(next);
+  if (pill) {
+    $("b", pill).textContent = next ? "Další koncert" : "Koncerty";
+    $("strong", pill).textContent = next ? next.venue : "Nové termíny brzy";
+    $("span", pill).textContent = next ? gigDate(next) : "→";
     pill.hidden = false;
   }
 
@@ -292,7 +293,7 @@ function renderGallery() {
 
   const lb = $("#lightbox");
   if (!lb) return;
-  const big = $("img", lb), cap = $(".lightbox__cap", lb);
+  const big = $("img", lb), cap = $(".lightbox__cap", lb), count = $(".lightbox__count", lb);
   let cur = 0, lastFocus = null;
   const list = () => $$(".shot", grid);
   function show(i) {
@@ -302,6 +303,10 @@ function renderGallery() {
     big.src = thumb.src;
     big.alt = it.caption;
     cap.textContent = it.caption;
+    if (count) count.textContent = `${cur + 1} / ${l.length}`;
+    big.style.animation = "none";
+    void big.offsetWidth;
+    big.style.animation = "";
     if (it.full && it.full !== thumb.src) {
       const hi = new Image();
       hi.onload = () => { if (hi.naturalWidth > thumb.naturalWidth && l[cur] === btn) big.src = it.full; };
@@ -313,6 +318,7 @@ function renderGallery() {
     show(list().indexOf(btn));
     lb.classList.add("is-open");
     root.classList.add("menu-open");
+    $(".cursor")?.classList.remove("is-on");
     $(".lightbox__close", lb).focus();
   }
   function close() { lb.classList.remove("is-open"); root.classList.remove("menu-open"); lastFocus?.focus(); }
@@ -632,6 +638,38 @@ function initTransitions() {
   window.addEventListener("pageshow", (e) => { if (e.persisted) root.classList.remove("is-leaving"); });
 }
 
+/* --- Rolling hover text on links and buttons ----------------------------- */
+function initRoll() {
+  if (!finePointer) return;
+  $$(".nav__menu > a:not(.btn), .btn, .footer__top ul a, .link, .footer__top-link").forEach((el) => {
+    const node = [...el.childNodes].reverse().find((n) => n.nodeType === 3 && n.textContent.trim());
+    if (!node) return;
+    const text = node.textContent.trim();
+    const roll = Object.assign(document.createElement("span"), { className: "roll" });
+    const copy = Object.assign(document.createElement("span"), { textContent: text });
+    copy.setAttribute("aria-hidden", "true");
+    roll.append(Object.assign(document.createElement("span"), { textContent: text }), copy);
+    node.replaceWith(roll);
+  });
+}
+
+/* --- Member cards tilt towards the mouse --------------------------------- */
+function initTilt() {
+  if (!finePointer || !motion()) return;
+  $$(".member").forEach((card) => {
+    const ph = $(".member__photo", card);
+    card.addEventListener("pointermove", (e) => {
+      const r = ph.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      ph.style.setProperty("--ty", `${((x - 0.5) * 12).toFixed(2)}deg`);
+      ph.style.setProperty("--tx", `${((0.5 - y) * 12).toFixed(2)}deg`);
+      ph.style.setProperty("--gx", `${(x * 100).toFixed(1)}%`);
+      ph.style.setProperty("--gy", `${(y * 100).toFixed(1)}%`);
+    });
+    card.addEventListener("pointerleave", () => { ph.style.setProperty("--tx", "0deg"); ph.style.setProperty("--ty", "0deg"); });
+  });
+}
+
 /* --- Intro loader: remove once it has lifted ----------------------------- */
 function initLoader() {
   const loader = $(".loader");
@@ -666,3 +704,5 @@ initStage();
 initFloat();
 initCursor();
 initMagnetic();
+initRoll();
+initTilt();
