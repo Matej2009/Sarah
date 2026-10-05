@@ -125,20 +125,30 @@ function initHero() {
   show(0);
   if (slides.length > 1 && !reduceMotion) setInterval(() => { if (!document.hidden) show(cur + 1); }, 7000);
 
-  // Parallax: the photo drifts slower than the page, the text fades as it leaves
-  const hero = box.closest(".hero"), content = $(".container", hero);
-  if (!motion()) return;
+  // Depth: photo and logo shift in opposite directions with the mouse
+  const hero = box.closest(".hero");
+  if (!motion() || !finePointer) return;
+  hero.addEventListener("pointermove", (e) => {
+    hero.style.setProperty("--mx", (e.clientX / window.innerWidth - 0.5).toFixed(3));
+    hero.style.setProperty("--my", (e.clientY / window.innerHeight - 0.5).toFixed(3));
+  });
+  hero.addEventListener("pointerleave", () => { hero.style.setProperty("--mx", 0); hero.style.setProperty("--my", 0); });
+}
+
+/* --- Header photos drift slower than the page, the text fades as it leaves */
+function initParallax() {
+  const head = $(".hero, .page-head");
+  if (!head || !motion()) return;
+  const media = $(".media", head), content = $(".container", head);
   let raf = 0;
-  window.addEventListener("scroll", () => {
-    if (raf) return;
-    raf = requestAnimationFrame(() => {
-      raf = 0;
-      const y = Math.min(window.scrollY, hero.offsetHeight);
-      box.style.transform = `translate3d(0, ${y * 0.3}px, 0)`;
-      content.style.opacity = String(Math.max(0, 1 - y / (hero.offsetHeight * 0.65)));
-      content.style.transform = `translate3d(0, ${y * -0.12}px, 0)`;
-    });
-  }, { passive: true });
+  const update = () => {
+    raf = 0;
+    const h = head.offsetHeight, y = Math.min(window.scrollY, h);
+    media.style.transform = `translate3d(0, ${y * 0.3}px, 0)`;
+    content.style.opacity = String(Math.max(0, 1 - y / (h * 0.65)));
+    content.style.transform = `translate3d(0, ${y * -0.12}px, 0)`;
+  };
+  window.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
 }
 
 /* --- Gigs ----------------------------------------------------------------- */
@@ -341,7 +351,7 @@ function initMembers() {
 /* --- Headings: wrap the text so it can slide up from a hidden line -------- */
 function initMasks() {
   $$("main .h1, main .h2").forEach((h) => {
-    if (h.closest(".hero") || h.matches(".next__venue")) return;
+    if (h.closest(".hero") || h.matches(".next__venue, [data-split]")) return;
     h.innerHTML = `<span class="mask"><span>${h.innerHTML}</span></span>`;
     if (!h.closest(".page-head")) h.classList.add("reveal-mask");
   });
@@ -638,6 +648,7 @@ function initMisc() {
 initNav();
 initMisc();
 initHero();
+initParallax();
 renderGigs();
 renderVideos();
 renderGallery();
