@@ -71,6 +71,7 @@
             <span class="label">Další koncert</span>
             <h2 class="h2 next__venue"></h2>
             <p class="next__meta"></p>
+            <a class="btn btn--ghost btn--sm next__cal" download="sarah-koncert.ics" hidden>Přidat do kalendáře</a>
           </div>
           <div class="countdown" hidden aria-label="Do koncertu zbývá">
             <div><b data-cd="d">00</b><span>dní</span></div>
@@ -78,7 +79,16 @@
             <div><b data-cd="m">00</b><span>minut</span></div>
           </div>
         </div>
-        <p class="gigs-note" data-gigs-empty hidden><strong>Nové termíny právě domlouváme.</strong> Sleduj nás na <a href="https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504" target="_blank" rel="noopener">Facebooku</a>, ať ti nic neuteče.</p>
+        <div class="soon reveal" data-gigs-empty hidden>
+          <div>
+            <p class="soon__title">Nové termíny právě domlouváme.</p>
+            <p class="muted">Sleduj nás na Facebooku, ať ti nic neuteče – nebo nás rovnou pozvi hrát.</p>
+          </div>
+          <div class="btns">
+            <a class="btn btn--primary" href="https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504" target="_blank" rel="noopener">Sledovat na Facebooku</a>
+            <a class="btn btn--ghost" href="kontakt.html">Pozvat kapelu</a>
+          </div>
+        </div>
         <div data-gigs-upcoming hidden>
           <h2 class="gigs-title">Nadcházející</h2>
           <ul class="gigs" data-gigs="upcoming"></ul>

@@ -41,19 +41,26 @@ Tmavý, moderní „editorial“ web: jedno písmo (Archivo), jeden červený ak
 typografie a pohyb řízený posouváním.
 
 - **Intro** (úvod, jednou za návštěvu) – logo se nakreslí tah po tahu s počítadlem 0–100.
-- **Úvod** – logo přes celou šířku, fotka se pomalu přibližuje a posouvá pomaleji než stránka.
+- **Úvod** – logo přes celou šířku s červeným odleskem po obrysu, houpající se reflektory,
+  filmové zrno; fotka a logo se s myší posouvají proti sobě, při posouvání se fotka zpomalí.
 - **Pás písní** – obří názvy písní jedou do strany, rychleji a ve směru posouvání.
 - **Úvodní text** se rozsvěcuje slovo po slovu, čísla se dopočítají.
-- **Koncerty** – po najetí myší se u kurzoru objeví fotka.
+- **Koncerty** – po najetí myší se u kurzoru objeví fotka. Když není ohlášený koncert, ukáže se
+  panel „Nové termíny“; jinak karta s odpočtem a tlačítkem **Přidat do kalendáře** (soubor .ics).
 - **Album** – obal stojí na místě a při posouvání z něj vyjíždí deska.
+- **Recenze** – velká citace Českobudějovického deníku, slova vyjíždějí postupně.
 - **Sestava** – velká jména; po najetí se u kurzoru ukáže portrét (z `MEMBER_PHOTOS`).
-- **Z pódia** – na počítači se posouváním jede pás fotek a let do strany.
-- **Videa** – nad videem i fotkami kurzor ukazuje „Přehrát“ / „Zvětšit“.
-- Tlačítka se lehce „přitahují“ ke kurzoru, patička s velkým logem se odkryje zpod stránky,
-  mezi stránkami je plynulý přechod, hlavička se při posouvání dolů schová.
+  Na stránce Kapela se karty členů naklánějí za myší.
+- **Z pódia** – na počítači se posouváním jede pás fotek a let do strany (s ukazatelem),
+  na mobilu se posouvá prstem.
+- **Videa a fotky** – kurzor ukazuje „Přehrát“ / „Zvětšit“, prohlížeč fotek s počítadlem.
+- **Přechod mezi stránkami** – černá opona s logem; červená linka nahoře ukazuje postup čtení.
+- Text odkazů a tlačítek při najetí „odroluje“, tlačítka se přitahují ke kurzoru,
+  patička s velkým logem se odkryje zpod stránky, hlavička se při posouvání dolů schová.
 - Menší náhledy z YouTube mají v sobě černé pruhy – web je automaticky ořízne.
 
 Logo SARAH je překreslené jako SVG (sdílený symbol `#sarah-logo` na začátku každé stránky).
+Úvodní stránka obsahuje strukturovaná data pro vyhledávače (kapela, členové, album).
 
 ## Výkon
 

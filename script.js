@@ -186,6 +186,20 @@ function gigItem(g, past, mixed, i) {
   return li;
 }
 
+// Calendar file for the next show (opens in Google/Apple/Outlook calendar)
+function icsLink(g) {
+  const pad = (n) => String(n).padStart(2, "0");
+  const d = g.start;
+  const local = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
+  const esc = (t) => String(t).replace(/([,;\\])/g, "\\$1");
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//sarahcb.cz//koncerty//CS", "BEGIN:VEVENT",
+    `UID:${local}-${g.venue.replace(/\W+/g, "")}@sarahcb.cz`, `DTSTAMP:${stamp}`, `DTSTART:${local}`, "DURATION:PT3H",
+    `SUMMARY:${esc(`Sarah – ${g.venue}`)}`, `LOCATION:${esc([g.venue, g.city].filter(Boolean).join(", "))}`,
+    `DESCRIPTION:${esc(g.note || "Koncert kapely Sarah")}`, "URL:https://sarahcb.cz/koncerty.html", "END:VEVENT", "END:VCALENDAR"];
+  return "data:text/calendar;charset=utf-8," + encodeURIComponent(lines.join("\r\n"));
+}
+
 function renderGigs() {
   const { upcoming, past } = splitGigs();
 
@@ -216,6 +230,8 @@ function renderGigs() {
     $(".next__venue", card).textContent = next.venue;
     $(".next__meta", card).textContent = [gigDate(next), gigPlace(next)].filter(Boolean).join(" · ");
     card.hidden = false;
+    const cal = $(".next__cal", card);
+    if (cal && next.start) { cal.href = icsLink(next); cal.hidden = false; }
     const box = $(".countdown", card);
     if (next.start && box) {
       box.hidden = false;
