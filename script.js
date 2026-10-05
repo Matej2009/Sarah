@@ -46,15 +46,21 @@ const MONTHS = ["led", "úno", "bře", "dub", "kvě", "čvn", "čvc", "srp", "z�
 const MONTHS_FULL = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"];
 const root = document.documentElement;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const motion = () => root.classList.contains("motion");
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const yt = (id, kind) => `https://i.ytimg.com/vi/${id}/${kind}.jpg`;
 
 /* --- Images: YouTube frames with quality fallback ------------------------- */
 // A missing YouTube size comes back as a 120×90 grey placeholder, so check the size.
+// The smaller sizes are 4:3 with black bars around a 16:9 frame; .is-4x3 crops them away.
 function smartImage(img) {
   const chain = (img.dataset.chain || "").split(",").filter(Boolean);
-  const done = () => img.classList.add("is-loaded");
+  const done = () => {
+    const ratio = img.naturalWidth / img.naturalHeight;
+    img.classList.toggle("is-4x3", img.src.includes("i.ytimg.com") && Math.abs(ratio - 4 / 3) < 0.02);
+    img.classList.add("is-loaded");
+  };
   const next = () => {
     const src = chain.shift();
     if (src) img.src = src;
@@ -70,7 +76,16 @@ function initNav() {
   const nav = $(".nav");
   const toggle = $(".nav__toggle");
   const menu = $("#menu");
-  const onScroll = () => nav.classList.toggle("is-scrolled", window.scrollY > 20);
+  let lastY = window.scrollY;
+  const onScroll = () => {
+    const y = window.scrollY;
+    nav.classList.toggle("is-scrolled", y > 20);
+    if (!root.classList.contains("menu-open")) {
+      if (y > lastY + 6 && y > 400) nav.classList.add("is-hidden");
+      else if (y < lastY - 6 || y < 400) nav.classList.remove("is-hidden");
+    }
+    lastY = y;
+  };
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
   const setOpen = (open) => {
@@ -107,6 +122,20 @@ function initHero() {
   };
   show(0);
   if (slides.length > 1 && !reduceMotion) setInterval(() => { if (!document.hidden) show(cur + 1); }, 7000);
+
+  // Parallax: the photo drifts slower than the page, the text fades as it leaves
+  const hero = box.closest(".hero"), content = $(".container", hero);
+  if (!motion()) return;
+  let raf = 0;
+  window.addEventListener("scroll", () => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      const y = Math.min(window.scrollY, hero.offsetHeight);
+      box.style.transform = `translate3d(0, ${y * 0.3}px, 0)`;
+      content.style.opacity = String(Math.max(0, 1 - y / (hero.offsetHeight * 0.7)));
+    });
+  }, { passive: true });
 }
 
 /* --- Gigs ----------------------------------------------------------------- */
@@ -196,7 +225,7 @@ function renderVideos() {
       const fig = document.createElement("figure");
       fig.className = "video reveal";
       fig.innerHTML = `
-        <button class="video__btn" type="button">
+        <button class="video__btn reveal-img" type="button">
           <img alt="" loading="lazy" decoding="async" width="480" height="360" src="${yt(v.id, "hqdefault")}" data-chain="${yt(v.id, "mqdefault")}">
           <span class="video__play" aria-hidden="true"></span>
         </button>
@@ -229,10 +258,11 @@ function galleryItems() {
 function renderGallery() {
   const grid = $("[data-gallery]");
   if (!grid) return;
+  grid.classList.toggle("gallery--photos", PHOTOS.length > 0);
   galleryItems().forEach((it) => {
     const b = document.createElement("button");
     b.type = "button";
-    b.className = "shot reveal";
+    b.className = "shot reveal-img";
     b.dataset.removable = "";
     b.setAttribute("aria-label", `Zvětšit fotku${it.caption ? `: ${it.caption}` : ""}`);
     const img = Object.assign(document.createElement("img"), { alt: "", loading: "lazy", decoding: "async", width: 640, height: 480 });
@@ -302,18 +332,68 @@ function initMembers() {
   });
 }
 
+/* --- Headings: wrap the text so it can slide up from a hidden line -------- */
+function initMasks() {
+  $$("main .h1, main .h2").forEach((h) => {
+    if (h.closest(".hero") || h.matches(".next__venue")) return;
+    h.innerHTML = `<span class="mask"><span>${h.innerHTML}</span></span>`;
+    if (!h.closest(".page-head")) h.classList.add("reveal-mask");
+  });
+}
+
+/* --- Intro statement: words light up as it scrolls through the screen ----- */
+function initWords() {
+  $$("[data-words]").forEach((el) => {
+    const words = el.textContent.trim().split(/\s+/);
+    el.textContent = "";
+    const spans = words.map((w) => Object.assign(document.createElement("span"), { textContent: w }));
+    spans.forEach((sp, i) => el.append(sp, i < spans.length - 1 ? " " : ""));
+    if (!motion()) return;
+    let lit = -1, raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = el.getBoundingClientRect(), vh = window.innerHeight;
+      const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (vh * 0.45 + r.height * 0.6)));
+      const n = Math.round(p * spans.length);
+      if (n === lit) return;
+      lit = n;
+      spans.forEach((sp, i) => sp.classList.toggle("on", i < n));
+    };
+    update();
+    window.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+    window.addEventListener("resize", update);
+  });
+}
+
+/* --- Numbers count up the first time they appear ------------------------- */
+function countUp(el) {
+  const to = Number(el.dataset.count), suffix = el.dataset.suffix || "", t0 = performance.now();
+  const step = (t) => {
+    const p = Math.min(1, (t - t0) / 1600);
+    el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))) + suffix;
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
 /* --- Reveal on scroll ---------------------------------------------------- */
 function initReveal() {
-  if (!root.classList.contains("motion")) return;
+  if (!motion()) return;
   if (!("IntersectionObserver" in window)) { root.classList.remove("motion"); return; }
   const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-visible"); io.unobserve(e.target); } });
-  }, { rootMargin: "0px 0px -6% 0px" });
-  $$(".reveal").forEach((el) => {
-    const sibs = [...el.parentElement.children].filter((c) => c.classList.contains("reveal"));
-    el.style.transitionDelay = `${Math.min(sibs.indexOf(el), 4) * 70}ms`;
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add("is-visible");
+      if (e.target.dataset.count) countUp(e.target);
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: "0px 0px -8% 0px" });
+  $$(".reveal, .reveal-mask, .reveal-img").forEach((el) => {
+    const sibs = [...el.parentElement.children].filter((c) => c.className === el.className);
+    el.style.transitionDelay = `${Math.min(Math.max(sibs.indexOf(el), 0), 5) * 90}ms`;
     io.observe(el);
   });
+  $$("[data-count]").forEach((el) => { el.textContent = "0" + (el.dataset.suffix || ""); io.observe(el); });
 }
 
 function initMisc() {
@@ -328,4 +408,6 @@ renderGigs();
 renderVideos();
 renderGallery();
 initMembers();
+initMasks();
+initWords();
 initReveal();

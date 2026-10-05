@@ -38,13 +38,17 @@ Hlavička a patička jsou v každé stránce stejné – při změně menu uprav
 ## Vzhled
 
 Čistý a moderní: tmavé pozadí, velké fotky, jedno písmo (Archivo), jeden červený
-akcent. Žádné efekty navíc – jen jemné objevení obsahu při posouvání.
+akcent. Jednoduché animace: logo se při načtení „odkryje“, fotka v úvodu se pomalu
+přibližuje a posouvá pomaleji než stránka, nadpisy a obrázky se objevují při
+posouvání, úvodní text se rozsvěcuje slovo po slovu, čísla se dopočítají, mezi
+stránkami je plynulý přechod a hlavička se při posouvání dolů schová.
+Menší náhledy z YouTube mají v sobě černé pruhy – web je automaticky ořízne.
 Logo SARAH je překreslené jako SVG (sdílený symbol `#sarah-logo` na začátku každé stránky).
 
 ## Výkon
 
-Žádné knihovny. YouTube se načítá až po kliknutí na video, obrázky líně.
-Při „omezit pohyb“ v systému se animace vypnou.
+Žádné knihovny, animace jen přes CSS (transform/opacity/clip-path). YouTube se načítá
+až po kliknutí na video, obrázky líně. Při „omezit pohyb“ v systému se animace vypnou.
 
 ## Ověřit s kapelou
 
