@@ -151,7 +151,7 @@ html { scrollbar-color: #3f3f46 var(--bg); scrollbar-width: thin; }
   .nav__toggle[aria-expanded="true"] span:first-child { transform: translateY(4px) rotate(45deg); }
   .nav__toggle[aria-expanded="true"] span:last-child { transform: translateY(-4px) rotate(-45deg); }
   .nav__menu {
-    position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0; flex-direction: column; align-items: stretch; gap: 0;
+    position: absolute; top: 100%; left: 0; right: 0; height: calc(100vh - var(--nav-h)); height: calc(100dvh - var(--nav-h)); flex-direction: column; align-items: stretch; gap: 0;
     padding: 16px var(--gutter) 32px; background: var(--bg); overflow-y: auto;
     opacity: 0; visibility: hidden; transition: opacity .25s, visibility 0s .25s;
   }
@@ -393,6 +393,8 @@ html { scrollbar-color: #3f3f46 var(--bg); scrollbar-width: thin; }
 .stage__item--text b { margin-bottom: auto; font-size: clamp(3.4rem, 6vw, 5.4rem); font-weight: 800; font-stretch: 125%; line-height: 1; }
 .stage__item--text h3 { margin-bottom: 6px; font-size: 1.25rem; font-weight: 700; }
 .stage__item--text p { margin: 0; color: var(--muted); }
+.stage__hint { display: none; margin: 18px 0 0; color: var(--muted); font-size: .9rem; }
+@media (hover: none) { .stage:not(.is-pinned) .stage__hint { display: block; } }
 .stage__bar { display: none; height: 2px; margin-top: 28px; background: var(--line); overflow: hidden; }
 .stage__bar span { display: block; height: 100%; background: var(--accent); transform: scaleX(var(--sp, 0)); transform-origin: left; }
 .stage.is-pinned .stage__bar { display: block; }

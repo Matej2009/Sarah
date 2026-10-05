@@ -328,6 +328,11 @@ function renderGallery() {
   lb.addEventListener("click", (e) => { if (e.target === lb) close(); });
   document.addEventListener("keydown", (e) => {
     if (!lb.classList.contains("is-open")) return;
+    if (e.key === "Tab") { // keep focus inside the viewer
+      const btns = $$("button", lb), i = btns.indexOf(document.activeElement);
+      e.preventDefault();
+      btns[(i + (e.shiftKey ? -1 : 1) + btns.length) % btns.length].focus();
+    }
     if (e.key === "Escape") close();
     if (e.key === "ArrowLeft") show(cur - 1);
     if (e.key === "ArrowRight") show(cur + 1);
