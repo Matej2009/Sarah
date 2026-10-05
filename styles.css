@@ -26,6 +26,7 @@
   --intro: 0s; /* zpoždění úvodních animací, když hraje intro s logem */
 }
 .intro { --intro: 2s; }
+.arriving { --intro: .45s; }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 16px); -webkit-text-size-adjust: 100%; }
@@ -98,8 +99,19 @@ p { margin: 0 0 1em; }
 @keyframes count { to { --n: 100; } }
 @keyframes loader-out { to { transform: translateY(-100%); visibility: hidden; } }
 
+/* --- Page transition curtain + reading progress ------------------------ */
+.curtain { position: fixed; inset: 0; z-index: 250; display: grid; place-items: center; background: var(--bg); transform: translateY(100%); pointer-events: none; visibility: hidden; }
+.curtain svg { width: min(36vw, 240px); height: auto; overflow: visible; opacity: 0; transition: opacity .3s; }
+.is-leaving .curtain { visibility: visible; transform: none; transition: transform .5s cubic-bezier(.75, 0, .25, 1); }
+.is-leaving .curtain svg { opacity: 1; transition-delay: .2s; }
+.arriving .curtain { visibility: visible; animation: curtain-out .75s cubic-bezier(.75, 0, .25, 1) .05s both; }
+.arriving .curtain svg { opacity: 1; animation: fade-out .3s ease both; }
+@keyframes curtain-out { from { transform: none; } to { transform: translateY(-100%); visibility: hidden; } }
+@keyframes fade-out { to { opacity: 0; } }
+.progress { position: fixed; left: 0; right: 0; top: 0; z-index: 60; height: 2px; background: var(--accent); transform: scaleX(var(--progress, 0)); transform-origin: left; pointer-events: none; }
+
 /* --- Header -------------------------------------------------------------- */
-.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: var(--nav-h); border-bottom: 1px solid transparent; transition: background-color .3s, border-color .3s, transform .5s var(--ease); view-transition-name: site-nav; }
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: var(--nav-h); border-bottom: 1px solid transparent; transition: background-color .3s, border-color .3s, transform .5s var(--ease); }
 .nav.is-hidden:not(:focus-within) { transform: translateY(-100%); }
 .nav.is-scrolled { background: rgba(11, 11, 12, .82); -webkit-backdrop-filter: saturate(140%) blur(14px); backdrop-filter: saturate(140%) blur(14px); border-color: var(--line); }
 .nav__inner { max-width: var(--max); height: 100%; margin: 0 auto; padding: 0 var(--gutter); display: flex; align-items: center; justify-content: space-between; gap: 24px; }
@@ -335,6 +347,9 @@ p { margin: 0 0 1em; }
 .stage__item--text b { margin-bottom: auto; font-size: clamp(3.4rem, 6vw, 5.4rem); font-weight: 800; font-stretch: 125%; line-height: 1; }
 .stage__item--text h3 { margin-bottom: 6px; font-size: 1.25rem; font-weight: 700; }
 .stage__item--text p { margin: 0; color: var(--muted); }
+.stage__bar { display: none; height: 2px; margin-top: 28px; background: var(--line); overflow: hidden; }
+.stage__bar span { display: block; height: 100%; background: var(--accent); transform: scaleX(var(--sp, 0)); transform-origin: left; }
+.stage.is-pinned .stage__bar { display: block; }
 .stage.is-pinned { padding: 0; }
 .stage.is-pinned .stage__sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
 .stage.is-pinned .stage__track { overflow: visible; scroll-snap-type: none; will-change: transform; }
@@ -387,6 +402,20 @@ p { margin: 0 0 1em; }
 .checks li { position: relative; padding: 14px 0 14px 30px; border-bottom: 1px solid var(--line); color: #d4d4d8; }
 .checks li::before { content: ""; position: absolute; left: 2px; top: 22px; width: 12px; height: 7px; border-left: 2px solid var(--accent-text); border-bottom: 2px solid var(--accent-text); transform: rotate(-45deg); }
 
+/* --- Press quote ---------------------------------------------------------- */
+.press { position: relative; overflow: hidden; }
+.press::before { content: "„"; position: absolute; right: -2vw; top: -6vw; font-size: clamp(16rem, 42vw, 40rem); font-weight: 800; line-height: 1; color: rgba(229, 37, 42, .07); pointer-events: none; }
+.press__quote { position: relative; margin: 0; }
+.press__quote p { margin: 0 0 36px; max-width: 18em; font-size: clamp(2.2rem, 5.6vw, 5.4rem); font-weight: 700; font-stretch: 112%; line-height: 1.06; letter-spacing: -.025em; }
+.press__quote cite { display: block; font-style: normal; color: var(--muted); }
+.press__quote cite a { color: var(--text); font-weight: 600; text-underline-offset: 4px; }
+
+/* words that rise one after another ([data-split]) */
+.w { display: inline-block; overflow: hidden; vertical-align: top; padding: .12em 0 .06em; margin: -.12em 0 -.06em; }
+.w > span { display: inline-block; }
+.motion .rise .w > span { transform: translateY(110%); transition: transform 1s var(--ease); transition-delay: calc(var(--i) * 45ms); }
+.motion .rise.is-visible .w > span { transform: none; }
+
 /* --- Big booking call ---------------------------------------------------- */
 .bigcta { border-top: 1px solid var(--line); }
 .bigcta__link { display: block; margin: 8px 0 32px; text-decoration: none; font-size: clamp(3.2rem, 11vw, 10.5rem); font-weight: 800; font-stretch: 125%; line-height: .95; text-transform: uppercase; letter-spacing: -.03em; }
@@ -437,9 +466,9 @@ p { margin: 0 0 1em; }
 .motion .hero__bottom > * { animation: fade-up 1s var(--ease) calc(var(--intro) + .9s) both; }
 .motion .hero__bottom > :nth-child(2) { animation-delay: calc(var(--intro) + 1.1s); }
 .motion .hero__scroll::after { animation: cue 2.2s var(--ease) calc(var(--intro) + 1.6s) infinite; }
-.motion .page-head .label { animation: fade-up .9s var(--ease) .1s both; }
-.motion .page-head .mask > span { animation: rise-in 1.1s var(--ease) .2s both; }
-.motion .page-head .lead { animation: fade-up 1s var(--ease) .45s both; }
+.motion .page-head .label { animation: fade-up .9s var(--ease) calc(var(--intro) + .1s) both; }
+.motion .page-head .mask > span { animation: rise-in 1.1s var(--ease) calc(var(--intro) + .2s) both; }
+.motion .page-head .lead { animation: fade-up 1s var(--ease) calc(var(--intro) + .45s) both; }
 
 .motion .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s var(--ease); }
 .motion .reveal.is-visible { opacity: 1; transform: none; }
@@ -453,12 +482,6 @@ p { margin: 0 0 1em; }
 .motion .bigcta__link.is-visible span { transform: none; opacity: 1; }
 .motion .bigcta__link.is-visible span:last-child { transition-delay: .12s, .12s, 0s, 0s; }
 .motion .bigcta__link.is-visible:hover span:first-child { transform: translateX(4vw); }
-
-/* smooth fade between pages (browsers that support cross-document view transitions) */
-@media (prefers-reduced-motion: no-preference) {
-  @view-transition { navigation: auto; }
-  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .4s; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

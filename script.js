@@ -394,7 +394,7 @@ function initReveal() {
       io.unobserve(e.target);
     });
   }, { rootMargin: "0px 0px -8% 0px" });
-  $$(".reveal, .reveal-mask, .reveal-img, .bigcta__link").forEach((el) => {
+  $$(".reveal, .reveal-mask, .reveal-img, .bigcta__link, .rise").forEach((el) => {
     const sibs = [...el.parentElement.children].filter((c) => c.className === el.className);
     el.style.transitionDelay = `${Math.min(Math.max(sibs.indexOf(el), 0), 5) * 90}ms`;
     io.observe(el);
@@ -468,6 +468,7 @@ function initStage() {
     if (!stage.classList.contains("is-pinned")) return;
     const p = clamp01(-stage.getBoundingClientRect().top / dist);
     track.style.transform = `translate3d(${-p * dist}px, 0, 0)`;
+    stage.style.setProperty("--sp", p.toFixed(3));
     const mid = window.innerWidth / 2;
     imgs.forEach((fig) => {
       const r = fig.getBoundingClientRect();
@@ -572,6 +573,55 @@ function initMagnetic() {
   });
 }
 
+/* --- Words that rise one after another ----------------------------------- */
+function initSplit() {
+  $$("[data-split]").forEach((el) => {
+    const words = el.textContent.trim().split(/\s+/);
+    el.textContent = "";
+    words.forEach((w, i) => {
+      const outer = Object.assign(document.createElement("span"), { className: "w" });
+      outer.append(Object.assign(document.createElement("span"), { textContent: w }));
+      outer.style.setProperty("--i", i);
+      el.append(outer, i < words.length - 1 ? " " : "");
+    });
+    el.classList.add("rise");
+  });
+}
+
+/* --- Reading progress (thin red line at the top) ------------------------- */
+function initProgress() {
+  const bar = $(".progress");
+  if (!bar) return;
+  let raf = 0;
+  const update = () => {
+    raf = 0;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.setProperty("--progress", max > 0 ? (window.scrollY / max).toFixed(4) : 0);
+  };
+  update();
+  window.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+  window.addEventListener("resize", update);
+}
+
+/* --- Page transition: a curtain covers the page, the next page lifts it --- */
+function initTransitions() {
+  if (!motion()) return;
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a[href]");
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (a.target || a.hasAttribute("download")) return;
+    const url = new URL(a.href, location.href);
+    if (url.origin !== location.origin || !/^https?:$/.test(url.protocol)) return;
+    if (url.pathname === location.pathname && url.hash) return; // in-page jump
+    e.preventDefault();
+    try { sessionStorage.setItem("sarah-nav", "1"); } catch (err) { /* storage blocked */ }
+    root.classList.add("is-leaving");
+    setTimeout(() => { location.href = url.href; }, 480);
+  });
+  // coming back via the browser's back button restores the page from cache – lift the curtain
+  window.addEventListener("pageshow", (e) => { if (e.persisted) root.classList.remove("is-leaving"); });
+}
+
 /* --- Intro loader: remove once it has lifted ----------------------------- */
 function initLoader() {
   const loader = $(".loader");
@@ -594,7 +644,10 @@ renderGallery();
 initMembers();
 initMasks();
 initWords();
+initSplit();
 initReveal();
+initProgress();
+initTransitions();
 initLoader();
 initTicker();
 initAlbum();
