@@ -334,7 +334,7 @@ function renderGallery() {
     show(list().indexOf(btn));
     lb.classList.add("is-open");
     root.classList.add("menu-open");
-    $(".cursor")?.classList.remove("is-on");
+    $(".pick")?.classList.remove("has-label");
     $(".lightbox__close", lb).focus();
   }
   function close() { lb.classList.remove("is-open"); root.classList.remove("menu-open"); lastFocus?.focus(); }
@@ -384,12 +384,23 @@ function initMasks() {
   });
 }
 
+/* --- A word underlined or circled by hand ([data-mark]) ------------------ */
+const SCRIBBLE = {
+  line: '<svg viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8C20 3 40 11 60 6S90 4 98 7"/></svg>',
+  ring: '<svg viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M62 4C26 0 2 14 4 28 6 44 40 50 70 44 96 38 100 18 82 8 70 2 50 3 36 7"/></svg>',
+};
+const isMark = (word, mark) => Boolean(mark) && word.replace(/[^\p{L}]/gu, "").toLowerCase() === mark;
+
 /* --- Intro statement: words light up as it scrolls through the screen ----- */
 function initWords() {
   $$("[data-words]").forEach((el) => {
     const words = el.textContent.trim().split(/\s+/);
     el.textContent = "";
-    const spans = words.map((w) => Object.assign(document.createElement("span"), { textContent: w }));
+    const spans = words.map((w) => {
+      const sp = Object.assign(document.createElement("span"), { textContent: w });
+      if (isMark(w, el.dataset.mark)) { sp.classList.add("marked", "marked--line"); sp.insertAdjacentHTML("beforeend", SCRIBBLE.line); }
+      return sp;
+    });
     spans.forEach((sp, i) => el.append(sp, i < spans.length - 1 ? " " : ""));
     if (!motion()) return;
     let lit = -1, raf = 0;
@@ -431,7 +442,7 @@ function initReveal() {
       io.unobserve(e.target);
     });
   }, { rootMargin: "0px 0px -8% 0px" });
-  $$(".reveal, .reveal-mask, .reveal-img, .bigcta__link, .rise").forEach((el) => {
+  $$(".reveal, .reveal-mask, .reveal-img, .bigcta__link, .rise, .note").forEach((el) => {
     const sibs = [...el.parentElement.children].filter((c) => c.className === el.className);
     el.style.transitionDelay = `${Math.min(Math.max(sibs.indexOf(el), 0), 5) * 90}ms`;
     io.observe(el);
@@ -572,30 +583,55 @@ function initFloat() {
   });
 }
 
-/* --- Cursor bubble ("Přehrát", "Zvětšit") over videos and photos --------- */
-function initCursor() {
-  if (!finePointer || !motion()) return;
-  const dot = document.createElement("div");
-  dot.className = "cursor";
-  dot.setAttribute("aria-hidden", "true");
-  dot.append(document.createElement("span"));
-  document.body.append(dot);
-  root.classList.add("has-cursor");
-  let x = -200, y = -200, tx = -200, ty = -200, raf = 0;
+/* --- Guitar pick instead of the mouse pointer --------------------------- */
+const PICK_SVG = `<svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="pick-g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#ff6d60"/><stop offset=".55" stop-color="#e5252a"/><stop offset="1" stop-color="#8c0d12"/></linearGradient></defs>
+<g transform="translate(24 24) rotate(145) translate(-20 -23)"><path d="M20 45C13 38 2 24 2 13 2 5 10 1 20 1s18 4 18 12c0 11-11 25-18 32z" fill="url(#pick-g)" stroke="rgba(0,0,0,.55)" stroke-width="1.2"/>
+<path d="M9 9c3-3.5 7-5 12-5" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round"/></g>
+<text x="26.5" y="31" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="800" font-size="11" fill="rgba(255,255,255,.92)">S</text></svg>`;
+
+function initPick() {
+  if (!finePointer) return;
+  const pick = document.createElement("div");
+  pick.className = "pick";
+  pick.setAttribute("aria-hidden", "true");
+  pick.innerHTML = PICK_SVG + '<span class="pick__label"></span>';
+  document.body.append(pick);
+  root.classList.add("has-pick");
+  const label = $(".pick__label", pick);
+  const smooth = motion();
+  let x = -100, y = -100, tx = -100, ty = -100, tilt = 0, raf = 0;
   const loop = () => {
-    x += (tx - x) * 0.22;
-    y += (ty - y) * 0.22;
-    dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-    raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.3 ? requestAnimationFrame(loop) : 0;
+    const dx = tx - x;
+    x += dx * (smooth ? 0.5 : 1);
+    y += (ty - y) * (smooth ? 0.5 : 1);
+    const want = smooth ? Math.max(-28, Math.min(28, dx * 1.2)) : 0; // leans into the movement
+    tilt += (want - tilt) * 0.18;
+    pick.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    pick.style.setProperty("--tilt", `${tilt.toFixed(2)}deg`);
+    raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.1 || Math.abs(tilt - want) > 0.1 ? requestAnimationFrame(loop) : 0;
   };
   document.addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse") return;
     tx = e.clientX; ty = e.clientY;
-    const t = e.target.closest?.("[data-cursor]");
-    if (t) dot.firstChild.textContent = t.dataset.cursor;
-    dot.classList.toggle("is-on", Boolean(t));
+    if (!pick.classList.contains("is-on")) { x = tx; y = ty; pick.classList.add("is-on"); }
+    pick.classList.toggle("is-hot", Boolean(e.target.closest?.("a, button, [role=button], [data-cursor], summary, label")));
+    const tag = e.target.closest?.("[data-cursor]");
+    if (tag) label.textContent = tag.dataset.cursor;
+    pick.classList.toggle("has-label", Boolean(tag));
     if (!raf) raf = requestAnimationFrame(loop);
   }, { passive: true });
-  document.addEventListener("pointerleave", () => dot.classList.remove("is-on"));
+  // a little strum on every click
+  document.addEventListener("pointerdown", (e) => {
+    if (e.pointerType !== "mouse" || !smooth) return;
+    pick.classList.remove("is-strum");
+    void pick.offsetWidth;
+    pick.classList.add("is-strum");
+  });
+  // the page can't draw over a YouTube player or outside the window – hide the pick there
+  document.addEventListener("pointerover", (e) => { if (e.target.tagName === "IFRAME") pick.classList.remove("is-on"); });
+  document.documentElement.addEventListener("mouseleave", () => pick.classList.remove("is-on"));
+  window.addEventListener("blur", () => pick.classList.remove("is-on"));
 }
 
 /* --- Buttons lean towards the cursor ------------------------------------- */
@@ -619,6 +655,7 @@ function initSplit() {
       const outer = Object.assign(document.createElement("span"), { className: "w" });
       outer.append(Object.assign(document.createElement("span"), { textContent: w }));
       outer.style.setProperty("--i", i);
+      if (isMark(w, el.dataset.mark)) { outer.classList.add("marked", "marked--ring"); outer.insertAdjacentHTML("beforeend", SCRIBBLE.ring); }
       el.append(outer, i < words.length - 1 ? " " : "");
     });
     el.classList.add("rise");
@@ -723,7 +760,7 @@ initTicker();
 initAlbum();
 initStage();
 initFloat();
-initCursor();
+initPick();
 initMagnetic();
 initRoll();
 initTilt();

@@ -53,7 +53,11 @@ typografie a pohyb řízený posouváním.
   Na stránce Kapela se karty členů naklánějí za myší.
 - **Z pódia** – na počítači se posouváním jede pás fotek a let do strany (s ukazatelem),
   na mobilu se posouvá prstem.
-- **Videa a fotky** – kurzor ukazuje „Přehrát“ / „Zvětšit“, prohlížeč fotek s počítadlem.
+- **Trsátko místo kurzoru** – červené trsátko se naklání podle pohybu, nad odkazy se zvětší, při kliknutí
+  „brnkne“ a nad videi a fotkami ukáže „Přehrát“ / „Zvětšit“. Prohlížeč fotek s počítadlem.
+- **Ruční poznámky** – červeným fixem psané poznámky (písmo Caveat Brush) se při posouvání „dopíšou“
+  a nakreslí si šipku; slovo „nahlas“ se podtrhne, „zaboduje“ zakroužkuje. Na stránce Hudba je
+  ručně psaný setlist přilepený páskou, fotky v pásu Z pódia jsou nalepené trochu nakřivo.
 - **Přechod mezi stránkami** – černá opona s logem; červená linka nahoře ukazuje postup čtení.
 - Text odkazů a tlačítek při najetí „odroluje“, tlačítka se přitahují ke kurzoru,
   patička s velkým logem se odkryje zpod stránky, hlavička se při posouvání dolů schová.

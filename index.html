@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://i.ytimg.com">
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Great+Vibes&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Great+Vibes&family=Caveat+Brush&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script>(function(d){var m=!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);d.className="js"+(m?" motion":"");try{if(m&&sessionStorage.getItem("sarah-nav")){d.className+=" arriving";sessionStorage.removeItem("sarah-nav")}}catch(e){}try{if(m&&!/arriving/.test(d.className)&&!sessionStorage.getItem("sarah-intro")){d.className+=" intro";sessionStorage.setItem("sarah-intro","1")}}catch(e){}})(document.documentElement)</script>
   <link rel="preload" as="image" href="https://i.ytimg.com/vi/8QpXZPaKw-g/maxresdefault.jpg" fetchpriority="high">
@@ -65,11 +65,11 @@
       <div class="media media--slides" aria-hidden="true"><img src="https://i.ytimg.com/vi/8QpXZPaKw-g/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/8QpXZPaKw-g/sddefault.jpg,https://i.ytimg.com/vi/8QpXZPaKw-g/hqdefault.jpg" alt="" decoding="async" width="1280" height="720" fetchpriority="high"><img data-src="https://i.ytimg.com/vi/YIDTwOcJh58/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/YIDTwOcJh58/sddefault.jpg,https://i.ytimg.com/vi/YIDTwOcJh58/hqdefault.jpg" alt="" decoding="async" width="1280" height="720"><img data-src="https://i.ytimg.com/vi/Vr9Ju-DKftQ/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/Vr9Ju-DKftQ/sddefault.jpg,https://i.ytimg.com/vi/Vr9Ju-DKftQ/hqdefault.jpg" alt="" decoding="async" width="1280" height="720"></div>
       <div class="hero__beams" aria-hidden="true"><span></span><span></span><span></span></div>
       <div class="container hero__inner">
-        <div class="hero__top"><span class="label">Hard rock · České Budějovice</span><span class="hero__est">Est. 1992</span></div>
+        <div class="hero__top"><span class="label">Hard rock · České Budějovice</span><span class="hero__est hand">od roku 1992</span></div>
         <h1 class="hero__title"><svg viewBox="-12 -2 634 114" role="img" aria-label="Sarah"><use href="#sarah-logo"/></svg><span class="hero__glint" aria-hidden="true"></span><span class="script" aria-hidden="true">Hard rock</span></h1>
         <div class="hero__bottom">
           <div>
-            <p class="lead hero__lead">Přes třicet let jihočeského hard rocku. Vlastní písně, poctivé kytary a koncerty, na které se nezapomíná.</p>
+            <p class="lead hero__lead">Budějovický hard rock od roku 1992. Hrajeme svoje písničky, hrajeme je nahlas a pořád nás to baví.</p>
             <div class="btns">
               <a class="btn btn--primary" href="koncerty.html">Koncerty</a>
               <a class="btn btn--ghost" href="hudba.html">Poslechnout</a>
@@ -85,14 +85,14 @@
 
     <section class="section" id="intro">
       <div class="container">
-        <span class="label"><b>01</b>Kapela</span>
-        <p class="statement" data-words>Sarah je hard rock z Českých Budějovic. Od roku 1992 hrajeme vlastní písně – přímočaré, melodické a nahlas. V roce 2023 jsme se vrátili v původní sestavě a jsme zpátky na pódiích.</p>
+        <span class="label">Kapela</span>
+        <p class="statement" data-words data-mark="nahlas">Sarah je hard rock z Budějovic. Od roku 1992 hrajeme svoje písničky – přímočaře, s melodií a hlavně nahlas. V roce 2023 jsme se po letech sešli v původní sestavě a zjistili, že nás to pořád baví.</p>
         <a class="link reveal" href="kapela.html">Příběh kapely</a>
         <div class="stats reveal">
           <div><b>1992</b><span>založení kapely</span></div>
-          <div><b data-count="30" data-suffix="+">30+</b><span>let od založení</span></div>
+          <div><b data-count="30" data-suffix="+">30+</b><span>let od založení</span><span class="note note--down-left note--stats" aria-hidden="true" style="--rot:-5deg; left: 16%; top: -30px"><svg viewBox="0 0 80 60"><path pathLength="1" d="M76 4 C 64 8, 34 16, 14 46"/><path pathLength="1" d="M8 32 L13 47 L28 43"/></svg><span>a pořád nás to baví!</span></span></div>
           <div><b data-count="11">11</b><span>vlastních písní na albu Sarah</span></div>
-          <div><b data-count="4">4</b><span>muzikanti na pódiu</span></div>
+          <div><b data-count="4">4</b><span>chlapi na pódiu</span></div>
         </div>
       </div>
     </section>
@@ -101,7 +101,7 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <span class="label"><b>02</b>Koncerty</span>
+            <span class="label">Koncerty</span>
             <h2 class="h2">Kde hrajeme</h2>
           </div>
           <a class="link" href="koncerty.html">Všechny termíny</a>
@@ -109,7 +109,7 @@
         <div class="soon reveal" data-gigs-empty hidden>
           <div>
             <p class="soon__title">Nové termíny právě domlouváme.</p>
-            <p class="muted">Sleduj nás na Facebooku, ať ti nic neuteče – nebo nás rovnou pozvi hrát.</p>
+            <p class="muted">Sleduj nás na Facebooku, ať ti nic neuteče – nebo nás rovnou pozvi k vám.</p>
           </div>
           <div class="btns">
             <a class="btn btn--primary" href="https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504" target="_blank" rel="noopener">Sledovat na Facebooku</a>
@@ -123,13 +123,14 @@
     <section class="section" data-album>
       <div class="container album">
         <div class="album__visual" aria-hidden="true">
+          <span class="note note--down-left note--album" aria-hidden="true" style="--rot:-6deg; right: -12%; top: -70px"><svg viewBox="0 0 80 60"><path pathLength="1" d="M76 4 C 64 8, 34 16, 14 46"/><path pathLength="1" d="M8 32 L13 47 L28 43"/></svg><span>naše první deska!</span></span>
           <div class="album__disc"><span>Sarah · 2012</span></div>
           <div class="album__cover"><small>ALBUM · 2012</small><svg viewBox="-12 -2 634 114" aria-hidden="true"><use href="#sarah-logo"/></svg><span class="script">Hard rock</span></div>
         </div>
         <div class="album__text">
-          <span class="label"><b>03</b>Album · 2012</span>
+          <span class="label">Album · 2012</span>
           <h2 class="h2">Sarah</h2>
-          <p class="prose">Jedenáct vlastních písní v sestavě Zdeněk Troup, Martin Przeczek, Josef Jakeš a Rosťa Holčapek. Českobudějovický deník desku přirovnal k Iron Maiden, Accept i Pražskému výběru.</p>
+          <p class="prose">Jedenáct vlastních písní, které jsme natočili v sestavě Zdeněk Troup, Martin Przeczek, Josef Jakeš a Rosťa Holčapek. Deník ji přirovnal k Iron Maiden, Accept i Pražskému výběru – a my se nebráníme.</p>
           <ol class="tracklist"><li>Srdce-lhář</li><li>Nechápu</li><li>Jinej svět</li><li>Na křídlech černých vran</li><li>V prázdným těle</li><li>Tisíce lží</li><li>Kudy a kam</li><li>Sobě sám</li><li>Smíření</li><li>Kdo z nás to ví</li><li>Pohřebiště citů</li></ol>
           <div class="btns">
             <a class="btn btn--primary" href="https://bandzone.cz/sarah" target="_blank" rel="noopener">Poslechnout na Bandzone</a>
@@ -142,8 +143,8 @@
       <div class="container">
         <span class="label reveal">Recenze · 2012</span>
         <blockquote class="press__quote">
-          <p data-split>„Nová deska rockových Sarah u publika zaboduje.“</p>
-          <cite class="reveal"><a href="https://ceskobudejovicky.denik.cz/volny-cas/recenze-nova-deska-rockovych-sarah-u-publika-zaboduje-20120611.html" target="_blank" rel="noopener">Českobudějovický deník</a> o albu Sarah, červen 2012</cite>
+          <p data-split data-mark="zaboduje">„Nová deska rockových Sarah u publika zaboduje.“</p>
+          <cite class="reveal"><a href="https://ceskobudejovicky.denik.cz/volny-cas/recenze-nova-deska-rockovych-sarah-u-publika-zaboduje-20120611.html" target="_blank" rel="noopener">Českobudějovický deník</a> o albu Sarah, červen 2012 <span class="note note--plain note--inline" aria-hidden="true" style="--rot:-5deg"><span>a měli pravdu ;)</span></span></cite>
         </blockquote>
       </div>
     </section>
@@ -151,8 +152,9 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <span class="label"><b>04</b>Sestava</span>
+            <span class="label">Sestava</span>
             <h2 class="h2">Kdo hraje</h2>
+            <span class="note note--left note--roster" aria-hidden="true" style="--rot:-4deg; left: calc(100% + 16px); bottom: 6px"><svg viewBox="0 0 80 44"><path pathLength="1" d="M78 26 C 58 16, 32 16, 8 28"/><path pathLength="1" d="M19 17 L7 28 L20 36"/></svg><span>4 chlapi, 1 zvuk</span></span>
           </div>
           <a class="link" href="kapela.html#sestava">O členech</a>
         </div>
@@ -169,12 +171,12 @@
       <div class="stage__sticky">
         <div class="container section-head">
           <div>
-            <span class="label"><b>05</b>Z pódia</span>
+            <span class="label">Z pódia</span>
             <h2 class="h2">Třicet let nahlas</h2>
           </div>
           <a class="link" href="media.html">Foto a video</a>
         </div>
-        <div class="stage__track"><figure class="stage__item stage__item--img"><div class="stage__ph"><img src="https://i.ytimg.com/vi/YIDTwOcJh58/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/YIDTwOcJh58/sddefault.jpg,https://i.ytimg.com/vi/YIDTwOcJh58/hqdefault.jpg" alt="" decoding="async" width="1280" height="720" loading="lazy" data-stage-img></div><figcaption><strong>Křídla</strong> · Jílovice, 16. 9. 2023</figcaption></figure><div class="stage__item stage__item--text"><b>1992</b><h3>Začátek</h3><p>Zdeněk Troup zakládá v Budějovicích kapelu Sarah.</p></div><figure class="stage__item stage__item--img"><div class="stage__ph"><img src="https://i.ytimg.com/vi/8QpXZPaKw-g/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/8QpXZPaKw-g/sddefault.jpg,https://i.ytimg.com/vi/8QpXZPaKw-g/hqdefault.jpg" alt="" decoding="async" width="1280" height="720" loading="lazy" data-stage-img></div><figcaption><strong>Vlaky</strong> · Původní sestava po třiceti letech</figcaption></figure><div class="stage__item stage__item--text"><b>2012</b><h3>Album Sarah</h3><p>Jedenáct vlastních písní na první desce.</p></div><figure class="stage__item stage__item--img"><div class="stage__ph"><img src="https://i.ytimg.com/vi/Vr9Ju-DKftQ/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/Vr9Ju-DKftQ/sddefault.jpg,https://i.ytimg.com/vi/Vr9Ju-DKftQ/hqdefault.jpg" alt="" decoding="async" width="1280" height="720" loading="lazy" data-stage-img></div><figcaption><strong>Sarah naživo</strong> · Hard rock / České Budějovice</figcaption></figure><div class="stage__item stage__item--text"><b>2023</b><h3>Třicetiny</h3><p>Návrat v původní sestavě – Seven Fest a Jílovice.</p></div></div>
+        <div class="stage__track"><figure class="stage__item stage__item--img"><span class="tape" aria-hidden="true"></span><div class="stage__ph"><img src="https://i.ytimg.com/vi/YIDTwOcJh58/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/YIDTwOcJh58/sddefault.jpg,https://i.ytimg.com/vi/YIDTwOcJh58/hqdefault.jpg" alt="" decoding="async" width="1280" height="720" loading="lazy" data-stage-img></div><figcaption><strong>Křídla</strong> · Jílovice, 16. 9. 2023</figcaption></figure><div class="stage__item stage__item--text"><b>1992</b><h3>Začátek</h3><p>Zdeněk Troup zakládá v Budějovicích kapelu Sarah.</p></div><figure class="stage__item stage__item--img"><span class="tape" aria-hidden="true"></span><div class="stage__ph"><img src="https://i.ytimg.com/vi/8QpXZPaKw-g/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/8QpXZPaKw-g/sddefault.jpg,https://i.ytimg.com/vi/8QpXZPaKw-g/hqdefault.jpg" alt="" decoding="async" width="1280" height="720" loading="lazy" data-stage-img></div><figcaption><strong>Vlaky</strong> · Původní sestava po třiceti letech</figcaption></figure><div class="stage__item stage__item--text"><b>2012</b><h3>Album Sarah</h3><p>Jedenáct vlastních písní na první desce.</p></div><figure class="stage__item stage__item--img"><span class="tape" aria-hidden="true"></span><div class="stage__ph"><img src="https://i.ytimg.com/vi/Vr9Ju-DKftQ/maxresdefault.jpg" data-chain="https://i.ytimg.com/vi/Vr9Ju-DKftQ/sddefault.jpg,https://i.ytimg.com/vi/Vr9Ju-DKftQ/hqdefault.jpg" alt="" decoding="async" width="1280" height="720" loading="lazy" data-stage-img></div><figcaption><strong>Sarah naživo</strong> · Hard rock / České Budějovice</figcaption></figure><div class="stage__item stage__item--text"><b>2023</b><h3>Třicetiny</h3><p>Návrat v původní sestavě – Seven Fest a Jílovice.</p></div></div>
         <div class="container"><p class="stage__hint">Přejeď prstem do strany →</p><div class="stage__bar"><span></span></div></div>
       </div>
     </section>
@@ -183,7 +185,7 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <span class="label"><b>06</b>Naživo</span>
+            <span class="label">Naživo</span>
             <h2 class="h2">Videa</h2>
           </div>
           <a class="link" href="media.html">Foto a video</a>
@@ -196,7 +198,8 @@
       <div class="container">
         <span class="label reveal">Booking</span>
         <a class="bigcta__link" href="kontakt.html"><span>Pozvi nás</span><span>hrát <i aria-hidden="true">→</i></span></a>
-        <p class="muted reveal">Kluby, festivaly, letní parkety i soukromé akce. Ozvi se a domluvíme termín.</p>
+        <span class="note note--plain note--cta" aria-hidden="true" style="--rot:-7deg; right: 5%; top: 58%"><span>(klidně i na svatbu, fakt)</span></span>
+        <p class="muted reveal">Kluby, festivaly, letní parkety, firemní večírky i narozeniny. Napiš a domluvíme se.</p>
       </div>
     </section>
 
@@ -206,7 +209,7 @@
     <div class="container">
       <div class="footer__top">
         <div class="footer__brand">
-          <p>Hardrocková kapela z Českých Budějovic. Na jihočeské scéně od roku 1992.</p>
+          <p>Budějovický hard rock. Hrajeme nahlas od roku 1992 – sousedi o tom vědí.</p>
           <a class="btn btn--primary" href="kontakt.html">Domluvit koncert</a>
         </div>
         <div>
