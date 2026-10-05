@@ -37,18 +37,29 @@ Hlavička a patička jsou v každé stránce stejné – při změně menu uprav
 
 ## Vzhled
 
-Čistý a moderní: tmavé pozadí, velké fotky, jedno písmo (Archivo), jeden červený
-akcent. Jednoduché animace: logo se při načtení „odkryje“, fotka v úvodu se pomalu
-přibližuje a posouvá pomaleji než stránka, nadpisy a obrázky se objevují při
-posouvání, úvodní text se rozsvěcuje slovo po slovu, čísla se dopočítají, mezi
-stránkami je plynulý přechod a hlavička se při posouvání dolů schová.
-Menší náhledy z YouTube mají v sobě černé pruhy – web je automaticky ořízne.
+Tmavý, moderní „editorial“ web: jedno písmo (Archivo), jeden červený akcent, velká
+typografie a pohyb řízený posouváním.
+
+- **Intro** (úvod, jednou za návštěvu) – logo se nakreslí tah po tahu s počítadlem 0–100.
+- **Úvod** – logo přes celou šířku, fotka se pomalu přibližuje a posouvá pomaleji než stránka.
+- **Pás písní** – obří názvy písní jedou do strany, rychleji a ve směru posouvání.
+- **Úvodní text** se rozsvěcuje slovo po slovu, čísla se dopočítají.
+- **Koncerty** – po najetí myší se u kurzoru objeví fotka.
+- **Album** – obal stojí na místě a při posouvání z něj vyjíždí deska.
+- **Sestava** – velká jména; po najetí se u kurzoru ukáže portrét (z `MEMBER_PHOTOS`).
+- **Z pódia** – na počítači se posouváním jede pás fotek a let do strany.
+- **Videa** – nad videem i fotkami kurzor ukazuje „Přehrát“ / „Zvětšit“.
+- Tlačítka se lehce „přitahují“ ke kurzoru, patička s velkým logem se odkryje zpod stránky,
+  mezi stránkami je plynulý přechod, hlavička se při posouvání dolů schová.
+- Menší náhledy z YouTube mají v sobě černé pruhy – web je automaticky ořízne.
+
 Logo SARAH je překreslené jako SVG (sdílený symbol `#sarah-logo` na začátku každé stránky).
 
 ## Výkon
 
-Žádné knihovny, animace jen přes CSS (transform/opacity/clip-path). YouTube se načítá
-až po kliknutí na video, obrázky líně. Při „omezit pohyb“ v systému se animace vypnou.
+Žádné knihovny. Animuje se jen transform/opacity/clip-path, smyčky běží jen pro viditelné
+prvky. YouTube se načítá až po kliknutí na video, obrázky líně. Efekty u kurzoru jen s myší;
+při „omezit pohyb“ v systému se všechny animace vypnou.
 
 ## Ověřit s kapelou
 

@@ -47,6 +47,8 @@ const MONTHS_FULL = ["leden", "únor", "březen", "duben", "květen", "červen",
 const root = document.documentElement;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const motion = () => root.classList.contains("motion");
+const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const yt = (id, kind) => `https://i.ytimg.com/vi/${id}/${kind}.jpg`;
@@ -133,7 +135,8 @@ function initHero() {
       raf = 0;
       const y = Math.min(window.scrollY, hero.offsetHeight);
       box.style.transform = `translate3d(0, ${y * 0.3}px, 0)`;
-      content.style.opacity = String(Math.max(0, 1 - y / (hero.offsetHeight * 0.7)));
+      content.style.opacity = String(Math.max(0, 1 - y / (hero.offsetHeight * 0.65)));
+      content.style.transform = `translate3d(0, ${y * -0.12}px, 0)`;
     });
   }, { passive: true });
 }
@@ -154,9 +157,11 @@ function splitGigs() {
 const gigDate = (g) => (g.d ? `${g.d}. ${g.m}. ${g.y}` : g.m ? `${MONTHS_FULL[g.m - 1]} ${g.y}` : String(g.y));
 const gigPlace = (g) => [g.city, g.note].filter(Boolean).join(" · ");
 
-function gigItem(g, past, mixed) {
+function gigItem(g, past, mixed, i) {
   const li = document.createElement("li");
   li.className = "gig reveal" + (past ? " gig--past" : "");
+  li.dataset.float = "";
+  li.dataset.floatImg = PHOTOS.length ? PHOTOS[i % PHOTOS.length].src : yt(VIDEOS[i % VIDEOS.length].id, "maxresdefault");
   li.innerHTML = '<div class="gig__date"><b></b><span></span></div><div class="gig__info"><strong></strong><span></span></div>';
   $(".gig__date b", li).textContent = g.d || (g.m ? MONTHS[g.m - 1] : g.y);
   $(".gig__date span", li).textContent = g.d ? `${MONTHS[g.m - 1]} ${g.y}` : String(g.y);
@@ -181,7 +186,7 @@ function renderGigs() {
     if (mode === "upcoming") items = upcoming.map((g) => [g, false]);
     else if (mode === "past") items = past.map((g) => [g, true]);
     else items = upcoming.length ? upcoming.slice(0, 4).map((g) => [g, false]) : past.slice(0, 3).map((g) => [g, true]);
-    items.forEach(([g, p]) => list.append(gigItem(g, p, mode === "home")));
+    items.forEach(([g, p], i) => list.append(gigItem(g, p, mode === "home", i)));
     list.hidden = !items.length;
   });
   $$("[data-gigs-empty]").forEach((el) => { el.hidden = upcoming.length > 0; });
@@ -225,7 +230,7 @@ function renderVideos() {
       const fig = document.createElement("figure");
       fig.className = "video reveal";
       fig.innerHTML = `
-        <button class="video__btn reveal-img" type="button">
+        <button class="video__btn reveal-img" type="button" data-cursor="Přehrát">
           <img alt="" loading="lazy" decoding="async" width="480" height="360" src="${yt(v.id, "hqdefault")}" data-chain="${yt(v.id, "mqdefault")}">
           <span class="video__play" aria-hidden="true"></span>
         </button>
@@ -263,6 +268,7 @@ function renderGallery() {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "shot reveal-img";
+    b.dataset.cursor = "Zvětšit";
     b.dataset.removable = "";
     b.setAttribute("aria-label", `Zvětšit fotku${it.caption ? `: ${it.caption}` : ""}`);
     const img = Object.assign(document.createElement("img"), { alt: "", loading: "lazy", decoding: "async", width: 640, height: 480 });
@@ -388,12 +394,190 @@ function initReveal() {
       io.unobserve(e.target);
     });
   }, { rootMargin: "0px 0px -8% 0px" });
-  $$(".reveal, .reveal-mask, .reveal-img").forEach((el) => {
+  $$(".reveal, .reveal-mask, .reveal-img, .bigcta__link").forEach((el) => {
     const sibs = [...el.parentElement.children].filter((c) => c.className === el.className);
     el.style.transitionDelay = `${Math.min(Math.max(sibs.indexOf(el), 0), 5) * 90}ms`;
     io.observe(el);
   });
   $$("[data-count]").forEach((el) => { el.textContent = "0" + (el.dataset.suffix || ""); io.observe(el); });
+}
+
+/* --- Giant song titles: drift sideways, faster and in the scroll direction */
+function initTicker() {
+  $$("[data-ticker]").forEach((t) => {
+    const track = $(".ticker__track", t);
+    track.innerHTML += track.innerHTML;
+    if (!motion()) return;
+    let x = 0, v = 0, dir = -1, lastY = window.scrollY, half = 0, raf = 0, visible = false;
+    const measure = () => { half = track.scrollWidth / 2; };
+    const loop = () => {
+      x += dir * (0.6 + Math.min(Math.abs(v), 30));
+      v *= 0.92;
+      if (x <= -half) x += half;
+      if (x > 0) x -= half;
+      track.style.transform = `translate3d(${x}px, 0, 0)`;
+      raf = visible ? requestAnimationFrame(loop) : 0;
+    };
+    window.addEventListener("scroll", () => {
+      const dy = window.scrollY - lastY;
+      lastY = window.scrollY;
+      if (dy) { dir = dy > 0 ? -1 : 1; v += Math.abs(dy) * 0.12; }
+    }, { passive: true });
+    window.addEventListener("resize", measure);
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible && !raf) { measure(); raf = requestAnimationFrame(loop); }
+    }).observe(t);
+  });
+}
+
+/* --- Album: the record slides out of the sleeve while the section scrolls - */
+function initAlbum() {
+  const section = $("[data-album]");
+  if (!section || !motion()) return;
+  const visual = $(".album__visual", section);
+  let raf = 0;
+  const update = () => {
+    raf = 0;
+    const r = section.getBoundingClientRect(), vh = window.innerHeight;
+    visual.style.setProperty("--p", clamp01((vh - r.top) / (vh + r.height * 0.8)).toFixed(3));
+  };
+  update();
+  window.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+}
+
+/* --- Stage: vertical scroll moves the strip sideways (desktop) ----------- */
+function initStage() {
+  const stage = $("[data-stage]");
+  if (!stage) return;
+  // real photos replace the video stills, when there are some
+  $$("img[data-stage-img]", stage).forEach((img, i) => {
+    const photo = PHOTOS[i];
+    if (!photo) return;
+    img.removeAttribute("data-chain");
+    img.src = photo.src;
+    const cap = img.closest("figure")?.querySelector("figcaption");
+    if (cap && photo.caption) cap.textContent = photo.caption;
+  });
+  const track = $(".stage__track", stage);
+  const imgs = $$(".stage__item--img", stage);
+  const wide = window.matchMedia("(min-width: 861px)");
+  let dist = 0, raf = 0;
+  const update = () => {
+    raf = 0;
+    if (!stage.classList.contains("is-pinned")) return;
+    const p = clamp01(-stage.getBoundingClientRect().top / dist);
+    track.style.transform = `translate3d(${-p * dist}px, 0, 0)`;
+    const mid = window.innerWidth / 2;
+    imgs.forEach((fig) => {
+      const r = fig.getBoundingClientRect();
+      fig.style.setProperty("--shift", `${((r.left + r.width / 2 - mid) / window.innerWidth) * -60}px`);
+    });
+  };
+  const layout = () => {
+    stage.classList.remove("is-pinned");
+    stage.style.height = "";
+    track.style.transform = "";
+    if (!motion() || !wide.matches) return;
+    dist = track.scrollWidth - track.clientWidth;
+    if (dist <= 0) return;
+    stage.classList.add("is-pinned");
+    stage.style.height = `${window.innerHeight + dist}px`;
+    update();
+  };
+  layout();
+  window.addEventListener("resize", layout);
+  window.addEventListener("load", layout);
+  window.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+}
+
+/* --- Floating photo / portrait that follows the cursor ------------------- */
+function initFloat() {
+  const targets = $$("[data-float]");
+  if (!targets.length || !finePointer || !motion()) return;
+  const box = document.createElement("div");
+  box.className = "float";
+  box.setAttribute("aria-hidden", "true");
+  document.body.append(box);
+  let x = 0, y = 0, tx = 0, ty = 0, raf = 0, active = null;
+  const loop = () => {
+    x += (tx - x) * 0.16;
+    y += (ty - y) * 0.16;
+    box.style.transform = `translate3d(${x + 28}px, ${y}px, 0) translateY(-55%) rotate(${Math.max(-8, Math.min(8, (tx - x) * 0.06))}deg)`;
+    raf = active || Math.abs(tx - x) + Math.abs(ty - y) > 0.5 ? requestAnimationFrame(loop) : 0;
+  };
+  const content = (el) => {
+    const wrap = document.createElement("div");
+    wrap.className = "float__img";
+    const photo = el.dataset.member ? MEMBER_PHOTOS[el.dataset.member] : el.dataset.floatImg;
+    if (photo) {
+      const img = Object.assign(new Image(), { alt: "", decoding: "async", src: photo });
+      if (photo.includes("i.ytimg.com")) img.dataset.chain = photo.replace("maxresdefault", "sddefault");
+      smartImage(img);
+      wrap.append(img);
+    } else {
+      wrap.append(Object.assign(document.createElement("span"), { className: "float__card", textContent: el.dataset.initials || "" }));
+    }
+    return wrap;
+  };
+  targets.forEach((el) => {
+    el.addEventListener("pointerenter", (e) => {
+      active = el;
+      box.classList.toggle("float--member", Boolean(el.dataset.member));
+      box.replaceChildren(content(el));
+      tx = e.clientX; ty = e.clientY;
+      if (!raf) { x = tx; y = ty; raf = requestAnimationFrame(loop); }
+      requestAnimationFrame(() => box.classList.add("is-on"));
+    });
+    el.addEventListener("pointermove", (e) => { tx = e.clientX; ty = e.clientY; });
+    el.addEventListener("pointerleave", () => { if (active === el) { active = null; box.classList.remove("is-on"); } });
+  });
+}
+
+/* --- Cursor bubble ("Přehrát", "Zvětšit") over videos and photos --------- */
+function initCursor() {
+  if (!finePointer || !motion()) return;
+  const dot = document.createElement("div");
+  dot.className = "cursor";
+  dot.setAttribute("aria-hidden", "true");
+  dot.append(document.createElement("span"));
+  document.body.append(dot);
+  root.classList.add("has-cursor");
+  let x = -200, y = -200, tx = -200, ty = -200, raf = 0;
+  const loop = () => {
+    x += (tx - x) * 0.22;
+    y += (ty - y) * 0.22;
+    dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.3 ? requestAnimationFrame(loop) : 0;
+  };
+  document.addEventListener("pointermove", (e) => {
+    tx = e.clientX; ty = e.clientY;
+    const t = e.target.closest?.("[data-cursor]");
+    if (t) dot.firstChild.textContent = t.dataset.cursor;
+    dot.classList.toggle("is-on", Boolean(t));
+    if (!raf) raf = requestAnimationFrame(loop);
+  }, { passive: true });
+  document.addEventListener("pointerleave", () => dot.classList.remove("is-on"));
+}
+
+/* --- Buttons lean towards the cursor ------------------------------------- */
+function initMagnetic() {
+  if (!finePointer || !motion()) return;
+  $$(".btn, .hero__scroll").forEach((b) => {
+    b.addEventListener("pointermove", (e) => {
+      const r = b.getBoundingClientRect();
+      b.style.translate = `${(e.clientX - r.left - r.width / 2) * 0.22}px ${(e.clientY - r.top - r.height / 2) * 0.3}px`;
+    });
+    b.addEventListener("pointerleave", () => { b.style.translate = ""; });
+  });
+}
+
+/* --- Intro loader: remove once it has lifted ----------------------------- */
+function initLoader() {
+  const loader = $(".loader");
+  if (!loader) return;
+  if (!root.classList.contains("intro")) { loader.remove(); return; }
+  loader.addEventListener("animationend", (e) => { if (e.animationName === "loader-out") loader.remove(); });
 }
 
 function initMisc() {
@@ -411,3 +595,10 @@ initMembers();
 initMasks();
 initWords();
 initReveal();
+initLoader();
+initTicker();
+initAlbum();
+initStage();
+initFloat();
+initCursor();
+initMagnetic();
