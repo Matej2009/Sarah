@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tuning Sport Praha - Autoservis VW, Audi, SEAT, Škoda | Dolní Počernice</title>
+<meta name="description" content="Tuning Sport Praha - kompletní servis vozů Volkswagen, Audi, SEAT a Škoda v Dolních Počernicích. Příprava na STK, měření emisí, diagnostika, leštění laku, pneuservis a přepis vozidel.">
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,900;1,600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#1a2027;
+    --paper:#eef1f5;
+    --paper-dim:#dde3ea;
+    --steel:#233240;
+    --steel-soft:#5b6c7a;
+    --yellow:#eea200;
+    --yellow-deep:#c97e00;
+    --red:#c1392b;
+    --line: rgba(26,32,39,0.14);
+    --radius: 2px;
+  }
+
+  *{box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Archivo', sans-serif;
+    font-weight:400;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  img{
+    max-width:100%;
+    display:block;
+  }
+
+  a{
+    color:inherit;
+  }
+
+  h1,h2,h3{
+    font-family:'Archivo', sans-serif;
+    font-weight:900;
+    letter-spacing:-0.01em;
+    margin:0 0 0.4em;
+    color:var(--steel);
+  }
+
+  p{
+    margin:0 0 1em;
+  }
+
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  section{
+    padding:96px 0;
+  }
+
+  @media (max-width:720px){
+    section{
+      padding:64px 0;
+    }
+
+    .wrap{
+      padding:0 16px;
+    }
+  }
+
+  /* ---------- Nav ---------- */
+
+  .nav{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:50;
+    background:rgba(238,241,245,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+
+  .nav .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding-top:12px;
+    padding-bottom:12px;
+  }
+
+  .nav-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:900;
+    font-size:1.05rem;
+    color:var(--steel);
+    text-decoration:none;
+  }
+
+  .brand-mark{
+    display:flex;
+    flex-direction:column;
+    line-height:0.95;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+  }
+
+  .brand-mark b{
+    font-weight:900;
+    font-size:1.15rem;
+    color:var(--steel);
+  }
+
+  .brand-mark b em{
+    font-style:italic;
+    color:var(--red);
+  }
+
+  .brand-mark small{
+    font-weight:700;
+    font-size:0.68rem;
+    letter-spacing:0.32em;
+    color:var(--yellow-deep);
+  }
+
+  .brand-badge{
+    width:40px;
+    height:40px;
+    flex:none;
+  }
+
+  .nav-links{
+    display:flex;
+    gap:28px;
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+
+  .nav-links a{
+    text-decoration:none;
+    font-weight:600;
+    font-size:0.95rem;
+    color:var(--steel);
+    border-bottom:2px solid transparent;
+    padding-bottom:2px;
+    transition:border-color .15s ease;
+  }
+
+  .nav-links a:hover{
+    border-color:var(--yellow);
+  }
+
+  .nav-call-group{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .nav-call{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--steel);
+    color:var(--paper);
+    padding:9px 14px;
+    border-radius:var(--radius);
+    text-decoration:none;
+    font-weight:700;
+    font-size:0.88rem;
+    white-space:nowrap;
+  }
+
+  .nav-call:hover{
+    background:var(--red);
+  }
+
+  @media (max-width:820px){
+    .nav-links{
+      display:none;
+    }
+  }
+
+  @media (max-width:600px){
+    .nav-call{
+      padding:8px 10px;
+      font-size:0.8rem;
+    }
+
+    .brand-mark b{
+      font-size:1rem;
+    }
+  }
+
+  /* ---------- Hero ---------- */
+
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:flex-end;
+    background:
+      linear-gradient(180deg, rgba(18,24,32,0.4), rgba(14,19,26,0.85)),
+      url('images/hero.jpg') center 40%/cover no-repeat,
+      radial-gradient(ellipse at 70% 20%, #3a4d5e 0%, #1a2027 60%);
+    color:#f4f3ee;
+  }
+
+  .hero .wrap{
+    padding-top:140px;
+    padding-bottom:88px;
+    width:100%;
+  }
+
+  .hero-tag{
+    display:inline-block;
+    font-weight:700;
+    font-size:0.85rem;
+    color:var(--yellow);
+    background:rgba(28,28,26,0.55);
+    border:1px solid rgba(238,162,0,0.5);
+    padding:6px 14px;
+    border-radius:var(--radius);
+    margin-bottom:22px;
+  }
+
+  .hero h1{
+    color:#faf9f4;
+    font-size:clamp(2.4rem, 6vw, 4.6rem);
+    line-height:0.98;
+    max-width:15ch;
+    margin-bottom:0.3em;
+  }
+
+  .hero-sub{
+    max-width:46ch;
+    font-size:1.15rem;
+    color:#dcded5;
+    margin-bottom:2em;
+  }
+
+  .hero-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+
+  .hero-facts{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 28px;
+    margin-top:40px;
+    padding-top:22px;
+    border-top:1px solid rgba(244,243,238,0.18);
+    font-size:0.95rem;
+    color:#c4cdcf;
+  }
+
+  .hero-facts strong{
+    color:#fff;
+  }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 26px;
+    font-weight:700;
+    font-size:1rem;
+    text-decoration:none;
+    border-radius:var(--radius);
+    border:2px solid transparent;
+    transition:
+      transform .12s ease,
+      background .15s ease,
+      border-color .15s ease;
+  }
+
+  .btn:hover{
+    transform:translateY(-1px);
+  }
+
+  .btn-primary{
+    background:var(--yellow);
+    color:var(--ink);
+  }
+
+  .btn-primary:hover{
+    background:#ffb519;
+  }
+
+  .btn-ghost{
+    border-color:rgba(244,243,238,0.55);
+    color:#f4f3ee;
+  }
+
+  .btn-ghost:hover{
+    border-color:#f4f3ee;
+    background:rgba(244,243,238,0.08);
+  }
+
+  .btn-dark{
+    background:var(--steel);
+    color:var(--paper);
+  }
+
+  .btn-dark:hover{
+    background:var(--red);
+    color:#fff;
+  }
+
+  /* ---------- Hazard divider ---------- */
+
+  .hazard{
+    height:14px;
+    background:
+      repeating-linear-gradient(
+        135deg,
+        var(--yellow) 0 22px,
+        var(--ink) 22px 44px
+      );
+  }
+
+  /* ---------- Section heads ---------- */
+
+  .kicker{
+    font-weight:700;
+    font-size:0.95rem;
+    color:var(--red);
+    margin-bottom:10px;
+  }
+
+  .section-head{
+    max-width:56ch;
+    margin-bottom:48px;
+  }
+
+  .section-head h2{
+    font-size:clamp(1.8rem, 3.4vw, 2.6rem);
+  }
+
+  .section-head p{
+    color:var(--steel-soft);
+    font-size:1.08rem;
+  }
+
+  /* ---------- Photo slots (fallback, dokud nejsou nahrané fotky) ---------- */
+
+  .photo{
+    position:relative;
+    background:
+      repeating-linear-gradient(135deg, rgba(91,108,122,0.10) 0 14px, transparent 14px 28px),
+      var(--paper-dim);
+  }
+
+  .photo.noimg::after{
+    content:attr(data-label);
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    text-align:center;
+    font-weight:700;
+    font-size:0.9rem;
+    color:var(--steel-soft);
+  }
+
+  .photo.noimg img{
+    visibility:hidden;
+  }
+
+  /* ---------- About ---------- */
+
+  .about{
+    background:var(--paper);
+  }
+
+  .about-grid{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:56px;
+    align-items:center;
+  }
+
+  @media (max-width:860px){
+    .about-grid{
+      grid-template-columns:1fr;
+    }
+  }
+
+  .about-photo{
+    position:relative;
+    border-radius:var(--radius);
+    overflow:hidden;
+    border:1px solid var(--line);
+  }
+
+  .about-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    aspect-ratio:4/5;
+  }
+
+  .about-badge{
+    position:absolute;
+    left:18px;
+    bottom:18px;
+    z-index:1;
+    background:var(--ink);
+    color:var(--yellow);
+    font-weight:900;
+    font-size:0.95rem;
+    padding:10px 16px;
+    border-radius:var(--radius);
+    border:1px solid rgba(238,162,0,0.5);
+  }
+
+  .about-text h2{
+    font-size:clamp(1.8rem,3.2vw,2.5rem);
+  }
+
+  .about-text p{
+    font-size:1.08rem;
+    color:#3a4448;
+  }
+
+  .about-signoff{
+    margin-top:28px;
+    padding-top:22px;
+    border-top:1px solid var(--line);
+    display:flex;
+    gap:18px 36px;
+    flex-wrap:wrap;
+  }
+
+  .signoff-item{
+    font-weight:700;
+    color:var(--steel);
+  }
+
+  .signoff-item span{
+    display:block;
+    font-weight:400;
+    font-size:0.9rem;
+    color:var(--steel-soft);
+  }
+
+  .brand-strip{
+    margin-top:26px;
+    padding-top:22px;
+    border-top:1px solid var(--line);
+  }
+
+  .brand-list{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:2px;
+    background:var(--line);
+    border:1px solid var(--line);
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+
+  .brand-list li{
+    background:#fff;
+    padding:16px 8px;
+    text-align:center;
+    font-weight:900;
+    font-size:1rem;
+    color:var(--steel);
+    letter-spacing:0.02em;
+  }
+
+  @media (max-width:420px){
+    .brand-list{
+      grid-template-columns:repeat(2,1fr);
+    }
+  }
+
+  /* ---------- Services ---------- */
+
+  .services{
+    background:var(--steel);
+    color:var(--paper);
+  }
+
+  .services .kicker{
+    color:var(--yellow);
+  }
+
+  .services .section-head h2{
+    color:#fff;
+  }
+
+  .services .section-head p{
+    color:#c4cdcf;
+  }
+
+  .service-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:2px;
+    background:rgba(244,243,238,0.14);
+    border:1px solid rgba(244,243,238,0.14);
+  }
+
+  @media (max-width:720px){
+    .service-grid{
+      grid-template-columns:1fr;
+    }
+  }
+
+  .service-card{
+    background:var(--steel);
+    padding:34px;
+    display:flex;
+    gap:18px;
+  }
+
+  @media (max-width:720px){
+    .service-card{
+      padding:26px 20px;
+    }
+  }
+
+  .service-icon{
+    flex:none;
+    width:46px;
+    height:46px;
+    color:var(--yellow);
+  }
+
+  .service-card h3{
+    color:#fff;
+    font-size:1.2rem;
+    margin-bottom:0.35em;
+  }
+
+  .service-card p{
+    color:#b9c2c4;
+    margin:0;
+    font-size:0.98rem;
+  }
+
+  .service-price{
+    display:inline-block;
+    margin-top:12px;
+    font-weight:700;
+    font-size:0.88rem;
+    color:var(--yellow);
+    border:1px solid rgba(238,162,0,0.45);
+    padding:4px 10px;
+    border-radius:var(--radius);
+  }
+
+  .gear-strip{
+    margin-top:56px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+  }
+
+  @media (max-width:720px){
+    .gear-strip{
+      grid-template-columns:1fr 1fr;
+    }
+  }
+
+  .gear-strip figure{
+    margin:0;
+    overflow:hidden;
+    border-radius:var(--radius);
+  }
+
+  .gear-strip .photo{
+    background:
+      repeating-linear-gradient(135deg, rgba(244,243,238,0.05) 0 14px, transparent 14px 28px),
+      #1d2a36;
+  }
+
+  .gear-strip .photo.noimg::after{
+    color:#8b9598;
+  }
+
+  .gear-strip img{
+    width:100%;
+    aspect-ratio:3/4;
+    height:auto;
+    object-fit:cover;
+    filter:saturate(0.92);
+  }
+
+  /* ---------- Ceník ---------- */
+
+  .pricing{
+    background:var(--paper-dim);
+  }
+
+  .price-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:28px;
+  }
+
+  @media (max-width:860px){
+    .price-grid{
+      grid-template-columns:1fr;
+    }
+  }
+
+  .price-card{
+    background:#fff;
+    border:1px solid var(--line);
+    padding:32px;
+    border-radius:var(--radius);
+    display:flex;
+    flex-direction:column;
+  }
+
+  .price-label{
+    font-weight:700;
+    font-size:0.9rem;
+    color:var(--yellow-deep);
+    margin-bottom:10px;
+  }
+
+  .price-card h3{
+    font-size:1.25rem;
+  }
+
+  .price-value{
+    font-weight:900;
+    font-size:2.2rem;
+    line-height:1;
+    color:var(--steel);
+    margin:6px 0 16px;
+  }
+
+  .price-value small{
+    font-size:1rem;
+    font-weight:700;
+    color:var(--steel-soft);
+    margin-right:4px;
+  }
+
+  .price-card p{
+    color:#3a4448;
+    margin-bottom:0;
+  }
+
+  .price-note{
+    margin-top:28px;
+    font-size:0.92rem;
+    color:var(--steel-soft);
+  }
+
+  /* ---------- Contact ---------- */
+
+  .contact{
+    background:var(--ink);
+    color:var(--paper);
+  }
+
+  .contact .kicker{
+    color:var(--yellow);
+  }
+
+  .contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+    align-items:start;
+  }
+
+  @media (max-width:860px){
+    .contact-grid{
+      grid-template-columns:1fr;
+    }
+  }
+
+  .contact-block h2{
+    color:#fff;
+  }
+
+  .contact-list{
+    list-style:none;
+    margin:0 0 30px;
+    padding:0;
+  }
+
+  .contact-list li{
+    display:flex;
+    gap:14px;
+    padding:14px 0;
+    border-bottom:1px solid rgba(244,243,238,0.12);
+    font-size:1.02rem;
+    overflow-wrap:anywhere;
+  }
+
+  .contact-list li strong{
+    display:block;
+    color:#fff;
+  }
+
+  .contact-list li a{
+    color:var(--yellow);
+    text-decoration:none;
+    font-weight:700;
+  }
+
+  .contact-list li a:hover{
+    text-decoration:underline;
+  }
+
+  .hours-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:0.98rem;
+  }
+
+  .hours-table td{
+    padding:9px 0;
+    border-bottom:1px solid rgba(244,243,238,0.1);
+  }
+
+  .hours-table td:last-child{
+    text-align:right;
+    font-weight:700;
+    color:#fff;
+  }
+
+  .map-frame{
+    border-radius:var(--radius);
+    overflow:hidden;
+    border:1px solid rgba(244,243,238,0.16);
+    margin-bottom:16px;
+  }
+
+  .map-frame iframe{
+    width:100%;
+    height:340px;
+    border:0;
+    display:block;
+    filter:grayscale(0.15) contrast(1.05);
+  }
+
+  /* ---------- Footer ---------- */
+
+  .footer{
+    background:var(--ink);
+    border-top:1px solid rgba(244,243,238,0.12);
+    padding:26px 0;
+  }
+
+  .footer .wrap{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:space-between;
+    align-items:center;
+    color:#8b9598;
+    font-size:0.88rem;
+  }
+
+  .footer a{
+    color:#c4cdcf;
+    text-decoration:none;
+  }
+
+  .footer a:hover{
+    color:var(--yellow);
+  }
+
+  /* ---------- Reveal on scroll ---------- */
+
+  .reveal{
+    opacity:0;
+    transform:translateY(18px);
+    transition:
+      opacity .6s ease,
+      transform .6s ease;
+  }
+
+  .reveal.in{
+    opacity:1;
+    transform:none;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .reveal{
+      opacity:1;
+      transform:none;
+      transition:none;
+    }
+
+    html{
+      scroll-behavior:auto;
+    }
+  }
+
+  :focus-visible{
+    outline:3px solid var(--yellow);
+    outline-offset:2px;
+  }
+</style>
+</head>
+
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+
+    <a class="nav-brand" href="#top" aria-label="Tuning Sport Praha - nahoru">
+      <svg class="brand-badge" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="2" fill="#233240"/>
+        <path d="M8 27a12 12 0 0 1 24 0" fill="none" stroke="#eea200" stroke-width="3" stroke-linecap="round"/>
+        <path d="M20 27 27 17" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="20" cy="27" r="2.6" fill="#c1392b"/>
+      </svg>
+      <span class="brand-mark">
+        <b>Tuning <em>Sport</em></b>
+        <small>Praha</small>
+      </span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#o-nas">O nás</a></li>
+      <li><a href="#sluzby">Služby</a></li>
+      <li><a href="#cenik">Ceník</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+
+    <div class="nav-call-group">
+      <a class="nav-call" href="tel:+420777307370">📞 777 307 370</a>
+    </div>
+
+  </div>
+</nav>
+
+<header id="top" class="hero">
+  <div class="wrap">
+
+    <span class="hero-tag">Praha 9 - Dolní Počernice</span>
+
+    <h1>Tuning Sport Praha - Kompletní servis koncernových vozů.</h1>
+
+    <p class="hero-sub">
+      Volkswagen, Audi, SEAT a Škoda pod jednou střechou. Příprava na STK,
+      měření emisí, diagnostika i leštění laku - s jasnou a rychlou domluvou.
+    </p>
+
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="tel:+420777307370">📞 777 307 370</a>
+      <a class="btn btn-ghost" href="#sluzby">Naše služby</a>
+      <a class="btn btn-ghost" href="#kontakt">Najít nás</a>
+    </div>
+
+    <div class="hero-facts">
+      <span><strong>Emise</strong> denně 7:00–16:00</span>
+      <span><strong>Diagnostika</strong> od 400 Kč</span>
+      <span><strong>Leštění laku</strong> od 2 500 Kč</span>
+    </div>
+
+  </div>
+</header>
+
+<div class="hazard" role="presentation"></div>
+
+<section class="about" id="o-nas">
+  <div class="wrap about-grid">
+
+    <div class="about-photo photo reveal" data-label="Fotka dílny - images/dilna.jpg">
+      <img src="images/dilna.jpg" alt="Dílna Tuning Sport Praha v Dolních Počernicích">
+      <span class="about-badge">Specialista na VW, Audi, SEAT, Škoda</span>
+    </div>
+
+    <div class="about-text reveal">
+
+      <p class="kicker">O nás</p>
+
+      <h2>Jeden servis - všechno kolem auta.</h2>
+
+      <p>
+        Tuning Sport Praha je autoservis v Dolních Počernicích zaměřený na vozy
+        koncernu Volkswagen. Známe je do posledního šroubku, a proto u nás
+        vyřídíte údržbu, opravy i úpravy na jednom místě.
+      </p>
+
+      <p>
+        Auto připravíme na STK, změříme emise přímo u nás na stanici,
+        provedeme diagnostiku, přezujeme pneumatiky a vyřešíme i přepis vozidla.
+        Ať už jde o běžný servis nebo vyladění vozu, domluvíme se rychle a férově.
+      </p>
+
+      <div class="about-signoff">
+        <div class="signoff-item">
+          Petr Bačák
+          <span>vedoucí servisu</span>
+        </div>
+
+        <div class="signoff-item">
+          Nad Rybníkem 4
+          <span>Praha 9 - Dolní Počernice</span>
+        </div>
+      </div>
+
+      <div class="brand-strip">
+        <ul class="brand-list" aria-label="Servisované značky">
+          <li>Volkswagen</li>
+          <li>Audi</li>
+          <li>SEAT</li>
+          <li>Škoda</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="services" id="sluzby">
+  <div class="wrap">
+
+    <div class="section-head reveal">
+      <p class="kicker">Co u nás vyřídíte</p>
+      <h2>Servis, na který se dá spolehnout</h2>
+      <p>Od emisí a STK přes diagnostiku až po péči o lak a pneumatiky.</p>
+    </div>
+
+    <div class="service-grid reveal">
+
+      <div class="service-card">
+        <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 30h6l3-8h10l3 8h6" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+          <path d="M8 30v6h32v-6" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M14 8c3 2 3 5 0 7M22 8c3 2 3 5 0 7M30 8c3 2 3 5 0 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+
+        <div>
+          <h3>Měření emisí</h3>
+          <p>Vlastní stanice měření emisí v Dolních Počernicích. Benzín i diesel, osobní vozy.</p>
+          <span class="service-price">od 800 Kč · denně 7–16 h</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="9" y="7" width="30" height="34" rx="2" stroke="currentColor" stroke-width="2.4"/>
+          <path d="M16 18l3 3 6-6M16 30l3 3 6-6M29 19h4M29 31h4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+        <div>
+          <h3>Příprava a provedení STK</h3>
+          <p>Prohlédneme vůz, opravíme, co je potřeba, a zajistíme technickou kontrolu.</p>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 30a16 16 0 0 1 32 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M24 30 32 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+          <circle cx="24" cy="30" r="2.4" fill="currentColor"/>
+        </svg>
+
+        <div>
+          <h3>Pokročilá diagnostika</h3>
+          <p>Diagnostika vhodná pro všechny typy vozidel. Cena podle typu vozu a rozsahu.</p>
+          <span class="service-price">od 400 Kč</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="28" r="12" stroke="currentColor" stroke-width="2.4"/>
+          <circle cx="20" cy="28" r="4" stroke="currentColor" stroke-width="2.4"/>
+          <path d="M34 6l1.6 4.4L40 12l-4.4 1.6L34 18l-1.6-4.4L28 12l4.4-1.6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+
+        <div>
+          <h3>Strojní leštění laku</h3>
+          <p>Renovace laku s pastami 3M, Würth a Meguiar's. Lesk jako z výroby.</p>
+          <span class="service-price">od 2 500 Kč</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="17" stroke="currentColor" stroke-width="2.4"/>
+          <circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="2.4"/>
+          <path d="M24 7v6M24 35v6M7 24h6M35 24h6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+
+        <div>
+          <h3>Kompletní pneuservis</h3>
+          <p>Sezónní přezutí, vyvážení kol i opravy defektů.</p>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 6h14l8 8v28H14Z" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M28 6v8h8M19 24h12M19 31h12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+        <div>
+          <h3>Přepis vozidel</h3>
+          <p>Vyřídíme přepis vozu za vás - bez front a zbytečného papírování.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="gear-strip reveal">
+      <figure class="photo" data-label="images/emise.jpg">
+        <img src="images/emise.jpg" alt="Měření emisí v servisu">
+      </figure>
+
+      <figure class="photo" data-label="images/lesteni.jpg">
+        <img src="images/lesteni.jpg" alt="Strojní leštění laku">
+      </figure>
+
+      <figure class="photo" data-label="images/diagnostika.jpg">
+        <img src="images/diagnostika.jpg" alt="Diagnostika vozu">
+      </figure>
+    </div>
+
+  </div>
+</section>
+
+<section class="pricing" id="cenik">
+  <div class="wrap">
+
+    <div class="section-head reveal">
+      <p class="kicker">Ceník</p>
+      <h2>Jasné ceny bez překvapení</h2>
+      <p>Přesnou cenu vám řekneme předem po telefonu - podle vozu a rozsahu práce.</p>
+    </div>
+
+    <div class="price-grid reveal">
+
+      <div class="price-card">
+        <div class="price-label">Stanice měření emisí</div>
+        <h3>Emise</h3>
+        <div class="price-value"><small>od</small>800 Kč</div>
+        <p>Osobní vozy, benzín i diesel. Každý den 7:00–16:00.</p>
+      </div>
+
+      <div class="price-card">
+        <div class="price-label">Všechny typy vozidel</div>
+        <h3>Diagnostika</h3>
+        <div class="price-value"><small>od</small>400 Kč</div>
+        <p>Cena podle typu vozu a rozsahu diagnostiky.</p>
+      </div>
+
+      <div class="price-card">
+        <div class="price-label">3M · Würth · Meguiar's</div>
+        <h3>Strojní leštění laku</h3>
+        <div class="price-value"><small>od</small>2 500 Kč</div>
+        <p>Odstranění škrábanců a oživení laku profesionálními pastami.</p>
+      </div>
+
+    </div>
+
+    <p class="price-note reveal">
+      STK, pneuservis, přepis vozidel a další práce naceníme individuálně - stačí zavolat na
+      <a href="tel:+420777307370"><strong>777 307 370</strong></a>.
+    </p>
+
+  </div>
+</section>
+
+<section class="contact" id="kontakt">
+  <div class="wrap contact-grid">
+
+    <div class="contact-block reveal">
+
+      <p class="kicker">Kde nás najdete</p>
+
+      <h2>Zastavte se nebo zavolejte</h2>
+
+      <ul class="contact-list">
+
+        <li>
+          <div>
+            <strong>Adresa</strong>
+            Nad Rybníkem 4, 190 12 Praha 9 - Dolní Počernice
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <strong>Telefon</strong>
+            <a href="tel:+420777307370">777 307 370</a>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <strong>E-mail</strong>
+            <a href="mailto:info@tuningsportpraha.cz">info@tuningsportpraha.cz</a>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <strong>Kontaktní osoba</strong>
+            Petr Bačák
+          </div>
+        </li>
+
+      </ul>
+
+      <table class="hours-table">
+        <tr><td>Měření emisí</td><td>denně 7:00–16:00</td></tr>
+        <tr><td>Servis, STK, pneuservis</td><td>po telefonické domluvě</td></tr>
+      </table>
+
+    </div>
+
+    <div class="contact-block reveal">
+
+      <div class="map-frame">
+        <iframe
+          src="https://www.google.com/maps?q=Nad+Rybn%C3%ADkem+4,+190+12+Praha+9+-+Doln%C3%AD+Po%C4%8Dernice&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Mapa – Tuning Sport Praha, Nad Rybníkem 4">
+        </iframe>
+      </div>
+
+      <a
+        class="btn btn-dark"
+        href="https://www.google.com/maps/search/?api=1&amp;query=Nad+Rybn%C3%ADkem+4%2C+Praha+9+Doln%C3%AD+Po%C4%8Dernice"
+        target="_blank"
+        rel="noopener"
+      >
+        Otevřít v Google Mapách
+      </a>
+
+      <figure style="margin:24px 0 0;">
+        <div class="map-frame photo" data-label="Fotka vjezdu - images/vjezd.jpg" style="margin-bottom:8px; background:#1d2a36;">
+          <img src="images/vjezd.jpg" alt="Vjezd do servisu Tuning Sport Praha" style="width:100%; aspect-ratio:16/9; object-fit:cover;">
+        </div>
+
+        <figcaption style="font-size:0.88rem; color:#8b9598;">
+          Takhle vypadá vjezd do servisu - podle něj nás snadno poznáte.
+        </figcaption>
+      </figure>
+
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+
+  <div class="wrap">
+
+    <span>
+      © <span id="year"></span> Tuning Sport Praha - Nad Rybníkem 4, Praha 9
+    </span>
+
+    <span>
+      <a href="tel:+420777307370">777 307 370</a>
+      &nbsp;/&nbsp;
+      <a href="mailto:info@tuningsportpraha.cz">info@tuningsportpraha.cz</a>
+    </span>
+
+  </div>
+
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Dokud nejsou nahrané fotky, ukáže se místo nich popisek s názvem souboru.
+  document.querySelectorAll('.photo img').forEach(img => {
+    const mark = () => img.closest('.photo').classList.add('noimg');
+    if (img.complete && img.naturalWidth === 0) mark();
+    img.addEventListener('error', mark);
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+
+  if ('IntersectionObserver' in window) {
+
+    const io = new IntersectionObserver((entries) => {
+
+      entries.forEach(e => {
+
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+
+      });
+
+    }, {threshold:0.15});
+
+    revealEls.forEach(el => io.observe(el));
+
+  } else {
+
+    revealEls.forEach(el => el.classList.add('in'));
+
+  }
+</script>
+
+</body>
+</html>
