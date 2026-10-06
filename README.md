@@ -41,6 +41,15 @@ Tmavý, moderní „editorial“ web: jedno písmo (Archivo), jeden červený ak
 typografie a pohyb řízený posouváním.
 
 - **Intro** (úvod, jednou za návštěvu) – logo se nakreslí tah po tahu s počítadlem 0–100.
+- **Živé video v úvodu** – na počítači za logem tiše běží záznam z koncertu (YouTube, bez zvuku).
+  Tlačítko **Pustit se zvukem** zapne zvuk; když video odjede z obrazovky, zastaví se.
+  Video pro úvod se mění v `index.html` (`data-video` a `data-start` u `.hero__video`).
+- **Červený pás** s názvy písní a **červená recenze** – výrazné barevné předěly mezi sekcemi.
+- **Plakáty koncertů** – každý termín z `GIGS` má vlastní plakát (logo, datum, razítko
+  „Odehráno“ / „Přijď!“). Na úvodu je vedle termínů, na stránce Koncerty celá nástěnka.
+- **Kreslené nástroje** – dokud nejsou fotky členů, karty ukazují mikrofon, kytaru, basu a bicí.
+- **Facebook** – sekce s příspěvky kapely; obsah z Facebooku se načte až po kliknutí (cookies).
+- **Videa** – velký přehrávač a seznam dalších videí vedle.
 - **Úvod** – logo přes celou šířku s červeným odleskem po obrysu, houpající se reflektory,
   filmové zrno; fotka a logo se s myší posouvají proti sobě, při posouvání se fotka zpomalí.
 - **Pás písní** – obří názvy písní jedou do strany, rychleji a ve směru posouvání.
@@ -69,7 +78,8 @@ Logo SARAH je překreslené jako SVG (sdílený symbol `#sarah-logo` na začátk
 ## Výkon
 
 Žádné knihovny. Animuje se jen transform/opacity/clip-path, smyčky běží jen pro viditelné
-prvky. YouTube se načítá až po kliknutí na video, obrázky líně. Efekty u kurzoru jen s myší;
+prvky. YouTube se načítá až po kliknutí na video (kromě tichého videa v úvodu, které se na mobilu
+a při šetření dat nenačítá), Facebook až po kliknutí, obrázky líně. Efekty u kurzoru jen s myší;
 při „omezit pohyb“ v systému se všechny animace vypnou.
 
 ## Ověřit s kapelou

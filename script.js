@@ -135,6 +135,58 @@ function initHero() {
   hero.addEventListener("pointerleave", () => { hero.style.setProperty("--mx", 0); hero.style.setProperty("--my", 0); });
 }
 
+/* --- Hero: the band's live video plays muted behind the logo (desktop) ---- */
+function initHeroVideo() {
+  const slot = $("[data-video]");
+  if (!slot) return;
+  const conn = navigator.connection || {};
+  if (!motion() || !window.matchMedia("(min-width: 861px)").matches || conn.saveData) return;
+  const id = slot.dataset.video;
+  const params = new URLSearchParams({ autoplay: 1, mute: 1, controls: 0, loop: 1, playlist: id, playsinline: 1, rel: 0, modestbranding: 1, iv_load_policy: 3, disablekb: 1, start: slot.dataset.start || 0, enablejsapi: 1, origin: location.origin });
+  const f = document.createElement("iframe");
+  f.src = `https://www.youtube-nocookie.com/embed/${id}?${params}`;
+  f.title = "Sarah naživo";
+  f.allow = "autoplay; encrypted-media";
+  f.tabIndex = -1;
+  slot.append(f);
+  const media = slot.closest(".media"), btn = $("[data-sound]");
+  const cmd = (func, args = []) => f.contentWindow?.postMessage(JSON.stringify({ event: "command", func, args }), "*");
+  // fade the video in only once the player reports it is really playing (never show an error screen)
+  f.addEventListener("load", () => f.contentWindow?.postMessage(JSON.stringify({ event: "listening", id: 1, channel: "widget" }), "*"));
+  window.addEventListener("message", (e) => {
+    if (e.source !== f.contentWindow || media.classList.contains("has-video")) return;
+    let data;
+    try { data = typeof e.data === "string" ? JSON.parse(e.data) : e.data; } catch (err) { return; }
+    if (data?.info?.playerState === 1) { media.classList.add("has-video"); if (btn) btn.hidden = false; }
+  });
+  btn?.addEventListener("click", () => {
+    const on = btn.getAttribute("aria-pressed") !== "true";
+    btn.setAttribute("aria-pressed", String(on));
+    $(".sound__label", btn).textContent = on ? "Ztlumit" : "Pustit se zvukem";
+    if (on) { cmd("unMute"); cmd("setVolume", [70]); cmd("playVideo"); } else cmd("mute");
+  });
+  // no need to play while the hero is off screen
+  new IntersectionObserver(([e]) => cmd(e.isIntersecting ? "playVideo" : "pauseVideo")).observe(slot.closest(".hero"));
+}
+
+/* --- Full-width photo breaks drift with the scroll ----------------------- */
+function initBreaks() {
+  const items = $$(".break");
+  if (!items.length || !motion()) return;
+  let raf = 0;
+  const update = () => {
+    raf = 0;
+    const vh = window.innerHeight;
+    items.forEach((b) => {
+      const r = b.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > vh) return;
+      $(".media", b).style.transform = `translate3d(0, ${((r.top + r.height / 2 - vh / 2) * -0.2).toFixed(1)}px, 0) scale(1.15)`;
+    });
+  };
+  update();
+  window.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+}
+
 /* --- Header photos drift slower than the page, the text fades as it leaves */
 function initParallax() {
   const head = $(".hero, .page-head");
@@ -200,6 +252,26 @@ function icsLink(g) {
   return "data:text/calendar;charset=utf-8," + encodeURIComponent(lines.join("\r\n"));
 }
 
+// A gig poster: logo on top, big date, venue; past shows get an "Odehráno" stamp
+function posterEl(g, i, isPast) {
+  const el = document.createElement("article");
+  el.className = `poster poster--${["paper", "red", "dark"][i % 3]} reveal`;
+  el.style.setProperty("--r", `${[-2.4, 1.8, -1.2][i % 3]}deg`);
+  el.setAttribute("aria-label", `Plakát: ${g.venue}, ${gigDate(g)}`);
+  el.innerHTML = `<span class="tape" aria-hidden="true"></span>
+    <div class="poster__top" aria-hidden="true"><svg viewBox="-12 -2 634 114"><use href="#sarah-logo"/></svg><span class="script">Hard rock</span></div>
+    <span class="poster__kicker">Hard rock · živě</span><span class="poster__date"></span><span class="poster__month"></span>
+    <span class="poster__venue"></span><span class="poster__city"></span><span class="poster__note"></span><span class="poster__stamp"></span>`;
+  $(".poster__date", el).textContent = g.d ? `${g.d}. ${g.m}.` : g.m ? MONTHS_FULL[g.m - 1] : g.y;
+  if (!g.d) $(".poster__date", el).classList.add("is-word");
+  $(".poster__month", el).textContent = g.d ? `${MONTHS_FULL[g.m - 1]} ${g.y}` : String(g.y);
+  $(".poster__venue", el).textContent = g.venue;
+  $(".poster__city", el).textContent = g.city || "";
+  $(".poster__note", el).textContent = g.note || "";
+  $(".poster__stamp", el).textContent = isPast ? "Odehráno" : g.link ? "Vstupenky" : "Přijď!";
+  return el;
+}
+
 function renderGigs() {
   const { upcoming, past } = splitGigs();
 
@@ -215,6 +287,12 @@ function renderGigs() {
   });
   $$("[data-gigs-empty]").forEach((el) => { el.hidden = upcoming.length > 0; });
   $$("[data-gigs-upcoming]").forEach((el) => { el.hidden = !upcoming.length; });
+
+  const slot = $("[data-poster]");
+  const latest = upcoming[0] || past[0];
+  if (slot && latest) slot.append(posterEl(latest, 0, !upcoming[0]));
+  const wall = $("[data-posters]");
+  if (wall) [...upcoming.map((g) => [g, false]), ...past.map((g) => [g, true])].forEach(([g, isPast], i) => wall.append(posterEl(g, i, isPast)));
 
   const next = upcoming[0];
   const pill = $("[data-next-pill]");
@@ -276,6 +354,66 @@ function renderVideos() {
       });
       wrap.append(fig);
     });
+  });
+}
+
+/* --- Video playlist: big player + list ----------------------------------- */
+function renderPlaylist() {
+  const box = $("[data-playlist]");
+  if (!box) return;
+  box.innerHTML = '<div><div class="playlist__stage"></div><div class="playlist__cap"><strong></strong><span></span></div></div><ol class="playlist__list"></ol>';
+  const stage = $(".playlist__stage", box), list = $(".playlist__list", box);
+  const embed = (v) => {
+    const f = document.createElement("iframe");
+    f.src = `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`;
+    f.title = v.title;
+    f.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+    f.allowFullscreen = true;
+    return f;
+  };
+  const show = (i, play) => {
+    const v = VIDEOS[i];
+    $(".playlist__cap strong", box).textContent = v.title;
+    $(".playlist__cap span", box).textContent = v.meta;
+    $$("button", list).forEach((b, j) => b.setAttribute("aria-current", String(j === i)));
+    if (play) { stage.replaceChildren(embed(v)); return; }
+    stage.innerHTML = `<button class="video__btn reveal-img" type="button" data-cursor="Přehrát"><img alt="" decoding="async" width="1280" height="720"><span class="video__play" aria-hidden="true"></span></button>`;
+    const btn = $("button", stage), img = $("img", stage);
+    btn.setAttribute("aria-label", `Přehrát video: ${v.title}`);
+    img.dataset.chain = `${yt(v.id, "sddefault")},${yt(v.id, "hqdefault")}`;
+    img.src = yt(v.id, "maxresdefault");
+    smartImage(img);
+    btn.addEventListener("click", () => stage.replaceChildren(embed(v)));
+  };
+  VIDEOS.forEach((v, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = '<button type="button"><span class="playlist__thumb"><img alt="" loading="lazy" decoding="async" width="320" height="180"></span><span><strong></strong><small></small></span></button>';
+    const img = $("img", li);
+    img.src = yt(v.id, "mqdefault");
+    smartImage(img);
+    $("strong", li).textContent = v.title;
+    $("small", li).textContent = v.meta;
+    $("button", li).addEventListener("click", () => show(i, true));
+    list.append(li);
+  });
+  show(0, false);
+}
+
+/* --- Facebook posts: load only after the visitor asks (cookies) ---------- */
+function initFacebook() {
+  $$("[data-fb]").forEach((box) => {
+    const btn = $("[data-fb-load]", box);
+    if (!btn) return;
+    btn.addEventListener("click", () => {
+      const w = Math.min(500, Math.max(280, Math.round(box.clientWidth)));
+      const params = new URLSearchParams({ href: box.dataset.fb, tabs: "timeline", width: w, height: 640, small_header: "true", adapt_container_width: "true", hide_cover: "false", show_facepile: "false", locale: "cs_CZ" });
+      const f = Object.assign(document.createElement("iframe"), { src: `https://www.facebook.com/plugins/page.php?${params}`, title: "Příspěvky kapely Sarah na Facebooku", width: w, height: 640 });
+      f.allow = "encrypted-media";
+      box.classList.add("is-loaded");
+      box.append(f);
+      try { localStorage.setItem("sarah-fb", "1"); } catch (e) { /* storage blocked */ }
+    });
+    try { if (localStorage.getItem("sarah-fb") === "1") btn.click(); } catch (e) { /* storage blocked */ }
   });
 }
 
@@ -565,7 +703,10 @@ function initFloat() {
       smartImage(img);
       wrap.append(img);
     } else {
-      wrap.append(Object.assign(document.createElement("span"), { className: "float__card", textContent: el.dataset.initials || "" }));
+      const card = Object.assign(document.createElement("span"), { className: "float__card" });
+      if (el.dataset.art) card.innerHTML = `<svg class="float__art" aria-hidden="true"><use href="#art-${el.dataset.art}"/></svg>`;
+      card.append(Object.assign(document.createElement("b"), { textContent: el.dataset.initials || "" }));
+      wrap.append(card);
     }
     return wrap;
   };
@@ -744,10 +885,14 @@ function initMisc() {
 initNav();
 initMisc();
 initHero();
+initHeroVideo();
 initParallax();
+initBreaks();
 renderGigs();
 renderVideos();
+renderPlaylist();
 renderGallery();
+initFacebook();
 initMembers();
 initMasks();
 initWords();
