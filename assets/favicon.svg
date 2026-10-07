@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="10" fill="#0b0b0c"/>
-  <defs><path id="s" d="M110 23H30Q13 23 13 39Q13 55 30 55H80Q97 55 97 71Q97 87 80 87H0" fill="none" stroke-linejoin="round"/></defs>
-  <g transform="translate(9.5 8.5) scale(.4)">
-    <use href="#s" stroke="#e5252a" stroke-width="46" transform="translate(9 9)"/>
-    <use href="#s" stroke="#f4f4f5" stroke-width="46"/>
-    <use href="#s" stroke="#0b0b0c" stroke-width="34"/>
-    <use href="#s" stroke="#f4f4f5" stroke-width="25"/>
+  <rect width="64" height="64" rx="10" fill="#0a0908"/>
+  <defs><path id="s" d="M120 18H44Q18 18 18 44Q18 63 44 63H76Q102 63 102 89Q102 108 76 108H0" fill="none" stroke-linejoin="round"/></defs>
+  <g transform="translate(7 6.5) scale(.4)">
+    <use href="#s" stroke="#d42a1e" stroke-width="38" transform="translate(9 9)"/>
+    <use href="#s" stroke="#f3f1ed" stroke-width="38"/>
+    <use href="#s" stroke="#0a0908" stroke-width="28"/>
+    <use href="#s" stroke="#f3f1ed" stroke-width="21"/>
   </g>
 </svg>

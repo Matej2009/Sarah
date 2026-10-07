@@ -102,7 +102,7 @@ p { margin: 0 0 1em; }
 .hero__content { position: relative; }
 .hero__logo { position: relative; width: min(1000px, 100%); margin: 0 auto; filter: drop-shadow(0 12px 40px rgba(0, 0, 0, .65)); }
 .hero__logo svg { display: block; width: 100%; height: auto; overflow: visible; }
-.hero__logo .script { position: absolute; right: -.5%; bottom: -.46em; font-size: clamp(2.2rem, 7.6vw, 6.3rem); color: var(--white); transform: rotate(-5deg); text-shadow: 0 4px 24px rgba(0, 0, 0, .7); }
+.hero__logo .script { position: absolute; right: -1.5%; bottom: -.66em; font-size: clamp(2.2rem, 7.6vw, 6.3rem); color: var(--white); transform: rotate(-5deg); text-shadow: 0 4px 24px rgba(0, 0, 0, .7); }
 .hero__lead { max-width: 30ch; margin: clamp(52px, 7.5vw, 92px) auto 0; font-size: clamp(1.2rem, 1.9vw, 1.55rem); line-height: 1.45; color: var(--soft); text-shadow: 0 2px 16px rgba(0, 0, 0, .6); }
 .hero__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 34px; }
 .hero__actions .btn { height: 66px; padding: 0 32px; font-size: 1.05rem; }
@@ -236,7 +236,7 @@ p { margin: 0 0 1em; }
 .album__cover small { position: absolute; top: 22px; left: 26px; color: var(--smoke); font-size: .85rem; font-weight: 600; letter-spacing: .08em; }
 .album__logo { position: relative; width: 100%; }
 .album__logo svg { display: block; width: 100%; height: auto; overflow: visible; }
-.album__logo .script { position: absolute; right: -2%; bottom: -.55em; font-size: clamp(1.7rem, 3.3vw, 2.7rem); color: var(--white); transform: rotate(-5deg); }
+.album__logo .script { position: absolute; right: -4%; bottom: -.78em; font-size: clamp(1.7rem, 3.3vw, 2.7rem); color: var(--white); transform: rotate(-5deg); }
 .album__text .h2 { margin-bottom: 20px; }
 .album__intro { max-width: 56ch; color: var(--smoke); }
 .tracklist { list-style: none; counter-reset: t; margin: 30px 0 12px; padding: 0; border-top: 1px solid var(--line); }
@@ -325,7 +325,7 @@ p { margin: 0 0 1em; }
 .footer { padding: clamp(80px, 10vw, 130px) 0 36px; border-top: 1px solid var(--line); }
 .footer__logo { position: relative; display: block; width: 100%; }
 .footer__logo svg { display: block; width: 100%; height: auto; overflow: visible; opacity: .95; }
-.footer__logo .script { position: absolute; right: 0; bottom: -.46em; font-size: clamp(2rem, 7.4vw, 6.4rem); color: var(--white); transform: rotate(-5deg); }
+.footer__logo .script { position: absolute; right: -1%; bottom: -.62em; font-size: clamp(2rem, 7.4vw, 6.4rem); color: var(--white); transform: rotate(-5deg); }
 .footer__cols { display: grid; grid-template-columns: 2fr 1fr 1.3fr; gap: 40px; margin-top: clamp(72px, 9vw, 110px); }
 .footer__about { max-width: 28ch; margin: 0; color: var(--smoke); font-size: 1.15rem; }
 .footer ul { list-style: none; display: grid; gap: 12px; margin: 0; padding: 0; }
