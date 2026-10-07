@@ -8,16 +8,16 @@
    time:  nepovinné, např. "20:00" (použije se pro odpočet)
    link:  nepovinné, odkaz na vstupenky / událost */
 const GIGS = [
-  { date: "2026-09-26", venue: "Letní parket Jílovice", city: "Jílovice u Č. Budějovic", note: "s kapelou Blamage" },
-  { date: "2023-09-16", venue: "Jílovice", city: "Jílovice u Č. Budějovic", note: "Původní sestava, 30 let kapely" },
-  { date: "2023-04", venue: "Seven Fest", city: "KD Ševětín", note: "Oslava 30. narozenin kapely" },
+  { date: "2026-09-26", venue: "Letní parket Jílovice", city: "Jílovice u Českých Budějovic", note: "s kapelou Blamage" },
+  { date: "2023-09-16", venue: "Jílovice", city: "Jílovice u Českých Budějovic", note: "původní sestava, 30 let kapely" },
+  { date: "2023-04", venue: "Seven Fest", city: "KD Ševětín", note: "oslava 30. narozenin kapely" },
 ];
 
 /* VIDEA z YouTube (id je část adresy za "watch?v=") */
 const VIDEOS = [
-  { id: "YIDTwOcJh58", title: "Křídla", meta: "Jílovice, 16. 9. 2023 · původní sestava" },
-  { id: "8QpXZPaKw-g", title: "Vlaky", meta: "Původní sestava po třiceti letech · 2023" },
-  { id: "Vr9Ju-DKftQ", title: "Sarah naživo", meta: "Hard rock / České Budějovice" },
+  { id: "YIDTwOcJh58", title: "Křídla", meta: "Živě v Jílovicích, 16. 9. 2023" },
+  { id: "8QpXZPaKw-g", title: "Vlaky", meta: "Původní sestava po třiceti letech, 2023" },
+  { id: "Vr9Ju-DKftQ", title: "Sarah naživo", meta: "Záznam z koncertu" },
 ];
 
 /* SKUTEČNÉ FOTKY (např. z Facebooku kapely) – nahrajte do assets/photos/ a vyplňte.
@@ -42,14 +42,21 @@ const PHOTOS = [];
 
 /* -------------------------------------------------------------------------- */
 
-const MONTHS = ["led", "úno", "bře", "dub", "kvě", "čvn", "čvc", "srp", "zář", "říj", "lis", "pro"];
 const MONTHS_FULL = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"];
+const MONTHS_OF = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
 const root = document.documentElement;
 const motion = () => root.classList.contains("motion");
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const yt = (id, kind) => `https://i.ytimg.com/vi/${id}/${kind}.jpg`;
+const onScroll = (fn) => {
+  let raf = 0;
+  window.addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; fn(); }); }, { passive: true });
+  window.addEventListener("resize", fn);
+  fn();
+};
 
 /* --- Images: YouTube frames with quality fallback ------------------------- */
 // A missing YouTube size comes back as a 120×90 grey placeholder, so check the size.
@@ -75,9 +82,7 @@ function initNav() {
   const nav = $(".nav");
   const toggle = $(".nav__toggle");
   const menu = $("#menu");
-  const onScroll = () => nav.classList.toggle("is-scrolled", window.scrollY > 20);
-  onScroll();
-  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll(() => nav.classList.toggle("is-scrolled", window.scrollY > 20));
   const setOpen = (open) => {
     toggle.setAttribute("aria-expanded", String(open));
     toggle.setAttribute("aria-label", open ? "Zavřít menu" : "Otevřít menu");
@@ -86,6 +91,17 @@ function initNav() {
   };
   toggle.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
+}
+
+/* --- The lights-on intro can be skipped by any input ---------------------- */
+function initIntro() {
+  if (!root.classList.contains("intro")) return;
+  const skip = () => {
+    root.classList.add("intro-skip");
+    ["wheel", "touchstart", "keydown", "pointerdown"].forEach((t) => window.removeEventListener(t, skip));
+  };
+  ["wheel", "touchstart", "keydown", "pointerdown"].forEach((t) => window.addEventListener(t, skip, { passive: true }));
+  setTimeout(() => ["wheel", "touchstart", "keydown", "pointerdown"].forEach((t) => window.removeEventListener(t, skip)), 3000);
 }
 
 /* --- Hero: real photos or video frames, slow crossfade -------------------- */
@@ -111,42 +127,65 @@ function initHero() {
     });
   };
   show(0);
-  if (slides.length > 1 && motion()) setInterval(() => { if (!document.hidden) show(cur + 1); }, 7000);
+  if (slides.length > 1 && motion()) setInterval(() => { if (!document.hidden && !box.classList.contains("has-video")) show(cur + 1); }, 7000);
+
+  // while scrolling away, the stage drifts slower than the page and the logo fades
+  if (!motion()) return;
+  const hero = box.closest(".hero"), content = $(".hero__content", hero);
+  onScroll(() => {
+    const h = hero.offsetHeight, y = Math.min(window.scrollY, h);
+    box.style.transform = `translate3d(0, ${(y * 0.28).toFixed(1)}px, 0)`;
+    content.style.opacity = String(Math.max(0, 1 - y / (h * 0.7)).toFixed(3));
+  });
 }
 
-/* --- Hero: the band's live video plays muted behind the logo (desktop) ---- */
+/* --- Hero: the band plays live behind the logo ---------------------------- */
+// The sound button turns the sound on. If the video can't play here (blocked, data saver),
+// the button plays the same song on the big screen in the "Naživo" section instead.
 function initHeroVideo() {
   const slot = $("[data-video]");
-  if (!slot) return;
+  const btn = $("[data-sound]");
+  if (!slot || !btn) return;
+  const media = slot.closest(".hero__media");
+  const label = $(".sound__text b", btn);
+  let f = null, soundOn = false;
+  const cmd = (func, args = []) => f?.contentWindow?.postMessage(JSON.stringify({ event: "command", func, args }), "*");
+  const setSound = (on) => {
+    soundOn = on;
+    btn.setAttribute("aria-pressed", String(on));
+    label.textContent = on ? "Ztlumit zvuk" : "Pustit se zvukem";
+    if (on) { cmd("unMute"); cmd("setVolume", [80]); cmd("playVideo"); } else cmd("mute");
+  };
+  btn.addEventListener("click", () => {
+    if (media.classList.contains("has-video")) { setSound(!soundOn); return; }
+    const big = $("[data-playlist] .video__btn");
+    if (!big) return;
+    big.closest(".playlist").scrollIntoView({ behavior: motion() ? "smooth" : "auto", block: "center" });
+    big.click();
+  });
+  // another video started playing on the page: the background band goes quiet
+  document.addEventListener("sarah:video", () => { if (soundOn) setSound(false); });
+
   const conn = navigator.connection || {};
-  if (!motion() || !window.matchMedia("(min-width: 861px)").matches || conn.saveData) return;
+  if (!motion() || conn.saveData) return;
   const id = slot.dataset.video;
   const params = new URLSearchParams({ autoplay: 1, mute: 1, controls: 0, loop: 1, playlist: id, playsinline: 1, rel: 0, modestbranding: 1, iv_load_policy: 3, disablekb: 1, start: slot.dataset.start || 0, enablejsapi: 1, origin: location.origin });
-  const f = document.createElement("iframe");
+  f = document.createElement("iframe");
   f.src = `https://www.youtube-nocookie.com/embed/${id}?${params}`;
   f.title = "Sarah naživo";
   f.allow = "autoplay; encrypted-media";
   f.tabIndex = -1;
   slot.append(f);
-  const media = slot.closest(".hero__media"), btn = $("[data-sound]");
-  const cmd = (func, args = []) => f.contentWindow?.postMessage(JSON.stringify({ event: "command", func, args }), "*");
   // fade the video in only once the player reports it is really playing (never show an error screen)
   f.addEventListener("load", () => f.contentWindow?.postMessage(JSON.stringify({ event: "listening", id: 1, channel: "widget" }), "*"));
   window.addEventListener("message", (e) => {
     if (e.source !== f.contentWindow || media.classList.contains("has-video")) return;
     let data;
     try { data = typeof e.data === "string" ? JSON.parse(e.data) : e.data; } catch (err) { return; }
-    if (data?.info?.playerState === 1) { media.classList.add("has-video"); if (btn) btn.hidden = false; }
+    if (data?.info?.playerState === 1) media.classList.add("has-video");
   });
-  btn?.addEventListener("click", () => {
-    const on = btn.getAttribute("aria-pressed") !== "true";
-    btn.setAttribute("aria-pressed", String(on));
-    btn.setAttribute("aria-label", on ? "Vypnout zvuk" : "Zapnout zvuk");
-    $("use", btn).setAttribute("href", on ? "#i-sound" : "#i-mute");
-    if (on) { cmd("unMute"); cmd("setVolume", [70]); cmd("playVideo"); } else cmd("mute");
-  });
-  // no need to play while the hero is off screen
-  new IntersectionObserver(([e]) => cmd(e.isIntersecting ? "playVideo" : "pauseVideo")).observe(slot.closest(".hero"));
+  // off screen and muted there is no reason to play; with the sound on the band keeps playing
+  new IntersectionObserver(([e]) => { if (!soundOn) cmd(e.isIntersecting ? "playVideo" : "pauseVideo"); }).observe(slot.closest(".hero"));
 }
 
 /* --- Gigs ----------------------------------------------------------------- */
@@ -162,19 +201,19 @@ function splitGigs() {
   const all = GIGS.map(parseGig).sort((a, b) => a.end - b.end);
   return { upcoming: all.filter((g) => g.end >= now), past: all.filter((g) => g.end < now).reverse() };
 }
-const gigDate = (g) => (g.d ? `${g.d}. ${g.m}. ${g.y}` : g.m ? `${MONTHS_FULL[g.m - 1]} ${g.y}` : String(g.y));
-const gigPlace = (g) => [g.city, g.note].filter(Boolean).join(" · ");
+const gigDate = (g) => (g.d ? `${g.d}. ${MONTHS_OF[g.m - 1]} ${g.y}` : g.m ? `${MONTHS_FULL[g.m - 1]} ${g.y}` : String(g.y));
+const gigPlace = (g) => [g.city, g.note].filter(Boolean).join(", ");
 
 function gigItem(g, past, mixed) {
   const li = document.createElement("li");
-  li.className = "gig reveal" + (past ? " gig--past" : "");
+  li.className = "gig" + (past ? " gig--past" : "");
   li.innerHTML = '<div class="gig__date"><b></b><span></span></div><div class="gig__info"><strong></strong><span></span></div>';
-  $(".gig__date b", li).textContent = g.d || (g.m ? MONTHS[g.m - 1] : g.y);
-  $(".gig__date span", li).textContent = g.d ? `${MONTHS[g.m - 1]} ${g.y}` : String(g.y);
+  $(".gig__date b", li).textContent = g.d ? `${g.d}. ${g.m}.` : g.y;
+  $(".gig__date span", li).textContent = g.d ? String(g.y) : (g.m ? MONTHS_FULL[g.m - 1] : "");
   $(".gig__info strong", li).textContent = g.venue;
   $(".gig__info span", li).textContent = gigPlace(g);
   if (g.link && !past) {
-    li.append(Object.assign(document.createElement("a"), { className: "btn btn--ghost btn--sm", href: g.link, target: "_blank", rel: "noopener", textContent: "Vstupenky" }));
+    li.append(Object.assign(document.createElement("a"), { className: "btn btn--line btn--sm", href: g.link, target: "_blank", rel: "noopener", textContent: "Vstupenky" }));
   } else if (!past || mixed) {
     li.append(Object.assign(document.createElement("span"), { className: "gig__status", textContent: past ? "Odehráno" : "Vstup na místě" }));
   }
@@ -215,7 +254,7 @@ function renderGigs() {
   const card = $("[data-next]");
   if (!card || !next) return;
   $(".next__venue", card).textContent = next.venue;
-  $(".next__meta", card).textContent = [gigDate(next), gigPlace(next)].filter(Boolean).join(" · ");
+  $(".next__meta", card).textContent = [gigDate(next), gigPlace(next)].filter(Boolean).join(", ");
   card.hidden = false;
   const cal = $(".next__cal", card);
   if (cal && next.start) { cal.href = icsLink(next); cal.hidden = false; }
@@ -234,36 +273,57 @@ function renderGigs() {
   setInterval(tick, 30000);
 }
 
-/* --- Videos (YouTube loads only after a click) --------------------------- */
-function renderVideos() {
-  $$("[data-videos]").forEach((wrap) => {
-    VIDEOS.forEach((v, i) => {
-      const big = i === 0 && wrap.classList.contains("videos--feature");
-      const fig = document.createElement("figure");
-      fig.className = "video reveal";
-      fig.innerHTML = `
-        <button class="video__btn" type="button">
-          <img alt="" loading="lazy" decoding="async" width="1280" height="720">
-          <span class="video__play" aria-hidden="true"></span>
-        </button>
-        <figcaption><strong></strong></figcaption>`;
-      const img = $("img", fig);
-      img.src = yt(v.id, big ? "maxresdefault" : "hqdefault");
-      img.dataset.chain = big ? `${yt(v.id, "sddefault")},${yt(v.id, "hqdefault")}` : yt(v.id, "mqdefault");
+/* --- Videos: one big screen + a list (YouTube loads only after a click) --- */
+function renderPlaylist() {
+  $$("[data-playlist]").forEach((box) => {
+    box.innerHTML = '<div><div class="playlist__stage"></div><div class="playlist__cap"><strong></strong><span></span></div></div><ol class="playlist__list"></ol>';
+    const stage = $(".playlist__stage", box), list = $(".playlist__list", box);
+    const play = (v) => {
+      document.dispatchEvent(new CustomEvent("sarah:video"));
+      const f = document.createElement("iframe");
+      f.src = `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`;
+      f.title = v.title;
+      f.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+      f.allowFullscreen = true;
+      stage.replaceChildren(f);
+    };
+    const show = (i, autoplay) => {
+      const v = VIDEOS[i];
+      $(".playlist__cap strong", box).textContent = v.title;
+      $(".playlist__cap span", box).textContent = v.meta;
+      $$("button", list).forEach((b, j) => b.setAttribute("aria-current", String(j === i)));
+      if (autoplay) { play(v); return; }
+      stage.innerHTML = '<button class="video__btn" type="button"><img alt="" decoding="async" loading="lazy" width="1280" height="720"><span class="video__play" aria-hidden="true"></span></button>';
+      const btn = $("button", stage), img = $("img", stage);
+      btn.setAttribute("aria-label", `Přehrát video: ${v.title}`);
+      img.dataset.chain = `${yt(v.id, "sddefault")},${yt(v.id, "hqdefault")}`;
+      img.src = yt(v.id, "maxresdefault");
       smartImage(img);
-      $("button", fig).setAttribute("aria-label", `Přehrát video: ${v.title}`);
-      $("strong", fig).textContent = v.title;
-      $("figcaption", fig).append(v.meta);
-      $("button", fig).addEventListener("click", (e) => {
-        const iframe = document.createElement("iframe");
-        iframe.src = `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`;
-        iframe.title = v.title;
-        iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
-        iframe.allowFullscreen = true;
-        e.currentTarget.replaceWith(iframe);
-      });
-      wrap.append(fig);
+      btn.addEventListener("click", () => play(v));
+    };
+    VIDEOS.forEach((v, i) => {
+      const li = document.createElement("li");
+      li.innerHTML = '<button type="button"><span class="playlist__thumb"><img alt="" loading="lazy" decoding="async" width="320" height="180"></span><span><strong></strong><small></small></span></button>';
+      const img = $("img", li);
+      img.src = yt(v.id, "mqdefault");
+      smartImage(img);
+      $("strong", li).textContent = v.title;
+      $("small", li).textContent = v.meta;
+      $("button", li).addEventListener("click", () => show(i, true));
+      list.append(li);
     });
+    show(0, false);
+  });
+}
+
+/* --- Album: the record slides out of the sleeve while you scroll ---------- */
+function initAlbum() {
+  const section = $("[data-album]");
+  if (!section || !motion()) return;
+  const art = $(".album__art", section);
+  onScroll(() => {
+    const r = section.getBoundingClientRect(), vh = window.innerHeight;
+    art.style.setProperty("--p", clamp01((vh - r.top) / (vh + r.height * 0.7)).toFixed(3));
   });
 }
 
@@ -271,7 +331,7 @@ function renderVideos() {
 function galleryItems() {
   if (PHOTOS.length) return PHOTOS.map((p) => ({ src: p.src, full: p.full || p.src, caption: p.caption || "" }));
   return VIDEOS.flatMap((v) => ["hqdefault", "hq1", "hq2", "hq3"].map((k, i) => ({
-    src: yt(v.id, k), full: yt(v.id, i === 0 ? "maxresdefault" : k), caption: `${v.title} · ${v.meta}`,
+    src: yt(v.id, k), full: yt(v.id, i === 0 ? "maxresdefault" : k), caption: `${v.title}, ${v.meta.charAt(0).toLowerCase()}${v.meta.slice(1)}`,
   })));
 }
 
@@ -359,27 +419,9 @@ function initMembers() {
   });
 }
 
-/* --- Gentle fade-in on scroll -------------------------------------------- */
-function initReveal() {
-  if (!motion()) return;
-  if (!("IntersectionObserver" in window)) { root.classList.remove("motion"); return; }
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (!e.isIntersecting) return;
-      e.target.classList.add("is-visible");
-      io.unobserve(e.target);
-    });
-  }, { rootMargin: "0px 0px -8% 0px" });
-  $$(".reveal").forEach((el) => {
-    const sibs = [...el.parentElement.children].filter((c) => c.classList.contains("reveal"));
-    el.style.transitionDelay = `${Math.min(Math.max(sibs.indexOf(el), 0), 4) * 80}ms`;
-    io.observe(el);
-  });
-}
-
 /* --- Guitar pick instead of the mouse pointer --------------------------- */
 const PICK_SVG = `<svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="pick-g" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0" stop-color="#ff6d60"/><stop offset=".55" stop-color="#e5252a"/><stop offset="1" stop-color="#8c0d12"/></linearGradient></defs>
+<stop offset="0" stop-color="#ff6d60"/><stop offset=".55" stop-color="#d42a1e"/><stop offset="1" stop-color="#8c0d12"/></linearGradient></defs>
 <g transform="translate(24 24) rotate(145) translate(-20 -23)"><path d="M20 45C13 38 2 24 2 13 2 5 10 1 20 1s18 4 18 12c0 11-11 25-18 32z" fill="url(#pick-g)" stroke="rgba(0,0,0,.55)" stroke-width="1.2"/>
 <path d="M9 9c3-3.5 7-5 12-5" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round"/></g></svg>`;
 
@@ -422,12 +464,13 @@ function initMisc() {
 }
 
 initNav();
+initIntro();
 initMisc();
 initHero();
-initHeroVideo();
 renderGigs();
-renderVideos();
+renderPlaylist();
+initHeroVideo();
+initAlbum();
 renderGallery();
 initMembers();
-initReveal();
 initPick();
