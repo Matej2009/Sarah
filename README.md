@@ -4,16 +4,21 @@ Statický web hardrockové kapely Sarah z Českých Budějovic. Čisté HTML, CS
 bez build kroku a bez knihoven. Hostuje se na GitHub Pages z větve `main`.
 
 ```
-index.html      Domů
-kapela.html     Příběh a sestava (bio členů)
-hudba.html      Album Sarah (2012), repertoár
-media.html      Videa a galerie s prohlížečem fotek
-koncerty.html   Nadcházející a odehrané koncerty, odpočet
-kontakt.html    Booking a kontakty
-404.html        Chybová stránka
-styles.css      Vzhled všech stránek
-script.js       Data (koncerty, videa, fotky) a chování stránek
-assets/         favicon, assets/photos/ pro skutečné fotky kapely
+index.html        Domů
+kapela.html       O nás: fotka kapely (každý člen je odkaz), příběh, historie
+petr-hajek.html   Stránky členů (kytara, bicí, zpěv, baskytara)
+slavek-franc.html
+zdenek-troup.html
+josef-jakes.html
+hudba.html        Album Sarah (2012), repertoár
+media.html        Videa a galerie s prohlížečem fotek
+koncerty.html     Nadcházející a odehrané koncerty, odpočet
+kontakt.html      Booking: telefon 778 885 465 a další kontakty
+404.html          Chybová stránka
+styles.css        Vzhled všech stránek
+script.js         Data (koncerty, videa, fotky, sestava, telefon) a chování stránek, chat
+assets/           logo, ikona webu, fotky kapely (assets/photos/)
+chat-worker/      Volitelný server, díky kterému chat odpovídá pomocí Claude (návod uvnitř)
 ```
 
 ## Jak upravit obsah
@@ -21,19 +26,33 @@ assets/         favicon, assets/photos/ pro skutečné fotky kapely
 Data jsou nahoře ve `script.js`:
 
 - **Koncerty** – pole `GIGS`. Budoucí termín se sám ukáže na úvodní stránce
-  a na stránce Koncerty (s odpočtem), po datu se přesune do „Odehráno“.
+  a na stránce Koncerty (s odpočtem), po datu se přesune do „Odehráno“. Chat ho zná taky.
 - **Videa** – pole `VIDEOS` (id z YouTube adresy za `watch?v=`).
-- **Skutečné fotky** (např. z Facebooku kapely) – nahrajte do `assets/photos/`
-  (JPG, do 300 kB) a vyplňte ve `script.js`:
-  - `HERO_PHOTOS` – velké fotky na pozadí úvodní stránky (na šířku, 1920 px),
-  - `MEMBER_PHOTOS` – portréty na kartách členů na stránce Kapela (na výšku, 900 × 1200 px),
-  - `PHOTOS` – galerie na stránce Foto a video (šířka 1600 px).
-  Dokud jsou seznamy prázdné, web ukazuje záběry z videí kapely.
-- **Originální logo** – zatím je překreslené jako SVG (symbol `#sarah-logo`). Až bude
-  soubor s originálem, nahradí se v hlavičce, úvodu, patičce a na obalu alba.
-- **Booking e-mail/telefon** – v `kontakt.html` je připravené místo (`TODO`).
+- **Fotky** – nahrajte do `assets/photos/` (JPG, do 300 kB) a doplňte do `PHOTOS`
+  (galerie, skutečné fotky jsou před záběry z videí) nebo `HERO_PHOTOS` (pozadí úvodu, když
+  neběží video).
+- **Sestava** – fotka kapely je `assets/photos/kapela.jpg`, portréty `assets/photos/clenove/`
+  (400 × 540 px). Kdo kde na fotce stojí a texty o členech jsou ve zdrojovém skriptu stránek
+  (`MEMBERS`); jména a nástroje pro chat jsou ve `script.js` (`MEMBERS`).
+  U Petra Hájka zatím chybí víc informací – stačí doplnit pár vět.
+- **Booking telefon** – 778 885 465 (`BOOKING_PHONE` ve `script.js`, v HTML na stránce
+  Kontakt, v patičce, v menu na mobilu a v sekci „Zahrajeme i u vás“).
+- **Logo** – originální logo kapely. Písmena a „Hard rock“ jsou převedené do vektorů
+  (`assets/logo.svg`, ostré v jakékoli velikosti), žena je výřez `assets/logo-woman.webp`.
+  V hlavičce je jen nápis SARAH, na úvodu, na obalu alba a v patičce celé logo.
 
 Hlavička a patička jsou v každé stránce stejné – při změně menu upravte všechny.
+
+## Chat
+
+Tlačítko „Máte dotaz?“ vpravo dole otevře asistenta kapely. Odpovídá na jednoduché dotazy
+(kdy hrajete, jak vás pozvat, kdo je v kapele, kde si vás poslechnout, album, historie)
+z údajů ve `script.js` – nic si nevymýšlí, a co neví, odkáže na telefon 778 885 465.
+Rozhovor vydrží při přechodu mezi stránkami.
+
+Aby odpovídala skutečná umělá inteligence (Claude), stačí nasadit server ze složky
+`chat-worker/` a jeho adresu vložit do `CHAT_API` ve `script.js` – návod je
+v `chat-worker/README.md`. Potřebuje API klíč od Anthropicu (platí se podle použití).
 
 ## Vzhled
 
@@ -50,12 +69,13 @@ reflektorů a kapela hraje naživo v pozadí. Jedno písmo (Archivo), velké a d
 - **Naše cesta** – roky 1992, 2012, 2014, 2023 a dnes na lince, která se při posouvání vybarví.
 - **Naživo** – velká obrazovka a seznam videí vedle.
 - **Album** – při posouvání vyjíždí z obalu deska.
-- **Sestava** – jako poděkování na zadní straně obalu desky: nástroj, jméno, jedna věta.
+- **O nás** – fotka kapely: po najetí myší se ostatní ztlumí jako pod reflektorem a kliknutím
+  se otevře stránka člena. Na mobilu jsou pod fotkou jména s portréty.
+- **Chat** – asistent kapely vpravo dole (viz výše).
 - Mezi stránkami se plynule prolíná (View Transitions v Chrome, Edge a Safari).
 - **Trsátko místo kurzoru** – červené trsátko, které se naklání podle pohybu myši.
 - Menší náhledy z YouTube mají v sobě černé pruhy – web je automaticky ořízne.
 
-Logo SARAH je překreslené jako SVG (sdílený symbol `#sarah-logo` na začátku každé stránky).
 Úvodní stránka obsahuje strukturovaná data pro vyhledávače (kapela, členové, album).
 
 ## Výkon
@@ -70,8 +90,9 @@ při „omezit pohyb“ v systému se všechny animace vypnou.
 Obsah je z veřejných zdrojů (Bandzone, Hardmusicbase, Českobudějovický deník,
 Musicgate, YouTube, Wikipedie). Zkontrolujte hlavně:
 
-- bia členů (Przeczek: Motorband, Bloody Rose, Starý Extract; Franc: Seven 1996–2006;
-  Troup: Kambodža 2022–2024) a doplňte info o Josefu Jakešovi
+- bia členů (Franc: Seven 1996–2006; Troup: Kambodža 2022–2024) a doplňte info
+  o Petru Hájkovi a Josefu Jakešovi
+- složení kapely na albu Sarah 2012 (Troup, Przeczek, Jakeš, Holčapek)
 - přesné datum Seven Festu 2023 (zatím jen „duben 2023“)
 - repertoár na stránce Hudba
 

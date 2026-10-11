@@ -28,17 +28,25 @@ const HERO_PHOTOS = [
   // "assets/photos/hero-1.jpg",
 ];
 
-// Členové: portrét na výšku (ideálně 900 × 1200 px) – ukáže se na stránce Kapela
-const MEMBER_PHOTOS = {
-  troup: "",    // "assets/photos/clenove/troup.jpg"
-  przeczek: "",
-  jakes: "",
-  franc: "",
-};
-
-// Galerie na stránce Foto a video, např.
+// Galerie na stránce Foto a video (skutečné fotky jsou první, za nimi záběry z videí), např.
 // { src: "assets/photos/koncert-1.jpg", caption: "Seven Fest 2023" }
-const PHOTOS = [];
+const PHOTOS = [
+  { src: "assets/photos/kapela.jpg", caption: "Sarah: Petr Hájek, Slávek Franc, Zdeněk Troup a Josef Jakeš" },
+];
+
+/* SESTAVA a KONTAKT – používá je asistent v chatu (portréty jsou v assets/photos/clenove/) */
+const MEMBERS = [
+  { name: "Petr Hájek", does: "hraje na kytaru", role: "kytara", page: "petr-hajek.html", words: ["petr", "hajek", "kytar", "kytaris", "guitar"] },
+  { name: "Slávek Franc", does: "hraje na bicí", role: "bicí", page: "slavek-franc.html", words: ["slavek", "franc", "bici", "bubn", "bubenik", "drum"] },
+  { name: "Zdeněk Troup", does: "zpívá a kapelu v roce 1992 založil", role: "zpěv", page: "zdenek-troup.html", words: ["zdenek", "troup", "zpev", "zpevak", "zpiva", "spiva", "vokal", "sing"] },
+  { name: "Josef Jakeš", does: "hraje na baskytaru", role: "baskytara", page: "josef-jakes.html", words: ["josef", "jakes", "bask", "basa", "basak", "basist", "bass"] },
+];
+const BOOKING_PHONE = "778 885 465";
+const FACEBOOK = "https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504";
+const BANDZONE = "https://bandzone.cz/sarah";
+
+/* Volitelně: adresa serveru s Claude (složka chat-worker/). Prázdné = asistent odpovídá jen z údajů výše. */
+const CHAT_API = "";
 
 /* -------------------------------------------------------------------------- */
 
@@ -329,16 +337,16 @@ function initAlbum() {
 
 /* --- Gallery + lightbox --------------------------------------------------- */
 function galleryItems() {
-  if (PHOTOS.length) return PHOTOS.map((p) => ({ src: p.src, full: p.full || p.src, caption: p.caption || "" }));
-  return VIDEOS.flatMap((v) => ["hqdefault", "hq1", "hq2", "hq3"].map((k, i) => ({
+  const photos = PHOTOS.map((p) => ({ src: p.src, full: p.full || p.src, caption: p.caption || "" }));
+  const frames = VIDEOS.flatMap((v) => ["hqdefault", "hq1", "hq2", "hq3"].map((k, i) => ({
     src: yt(v.id, k), full: yt(v.id, i === 0 ? "maxresdefault" : k), caption: `${v.title}, ${v.meta.charAt(0).toLowerCase()}${v.meta.slice(1)}`,
   })));
+  return [...photos, ...frames];
 }
 
 function renderGallery() {
   const grid = $("[data-gallery]");
   if (!grid) return;
-  grid.classList.toggle("gallery--photos", PHOTOS.length > 0);
   galleryItems().forEach((it) => {
     const b = document.createElement("button");
     b.type = "button";
@@ -406,16 +414,165 @@ function renderGallery() {
   });
 }
 
-/* --- Member photos (shown only when there is a real photo) ---------------- */
-function initMembers() {
-  $$("[data-member]").forEach((card) => {
-    const src = MEMBER_PHOTOS[card.dataset.member];
-    const box = $(".member__photo", card);
-    if (!src || !box) return;
-    const img = Object.assign(new Image(), { alt: "", loading: "lazy", decoding: "async", width: 900, height: 1200, src });
-    img.addEventListener("error", () => { box.hidden = true; });
-    box.append(img);
-    box.hidden = false;
+/* --- Chat assistant ------------------------------------------------------- */
+// Answers simple questions from the band's own data above (concerts, line-up, phone, album).
+// With CHAT_API set, questions go to a small server with Claude (chat-worker/); the answers
+// below are then the fallback when that server can't be reached.
+const fold = (t) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+const esc = (t) => t.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const TEL_HTML = () => `<a href="tel:+420${BOOKING_PHONE.replace(/\s/g, "")}">${BOOKING_PHONE}</a>`;
+const FB_HTML = (label = "Facebooku") => `<a href="${FACEBOOK}" target="_blank" rel="noopener">${label}</a>`;
+
+function gigsAnswer() {
+  const { upcoming, past } = splitGigs();
+  if (upcoming.length) {
+    const g = upcoming[0];
+    const more = upcoming.length > 1 ? ` Potom ještě ${upcoming.length - 1}× další.` : "";
+    return [`Nejbližší koncert: <b>${gigDate(g)}</b>, ${g.venue}${g.city ? ` (${g.city})` : ""}.${more}`,
+      'Všechny termíny jsou na stránce <a href="koncerty.html">Koncerty</a>.'];
+  }
+  const last = past[0];
+  return [`Nové termíny právě domlouváme. Jakmile budou, najdete je na stránce <a href="koncerty.html">Koncerty</a> a na ${FB_HTML()}.`,
+    ...(last ? [`Naposledy jsme hráli ${gigDate(last)}: ${last.venue}.`] : [])];
+}
+
+const INTENTS = [
+  { id: "booking", words: ["objedn", "booking", "pozvat", "pozvani", "pozvem", "zahrat na", "zahrali na", "zahrajete na", "svatb", "oslav", "narozenin", "firemn", "vecir", "ples", "zabav", "rezerv", "domluv", "cena", "cenu", "ceny", "kolik stoj", "kolik by", "kolik chcete", "honorar", "zaplat", "najmout", "u nas"],
+    answer: () => [`Rádi přijedeme! Zavolejte na ${TEL_HTML()} a domluvíme termín, program i cenu.`,
+      'Hrajeme v klubech, na festivalech, letních parketech i na soukromých a firemních akcích. Víc na stránce <a href="kontakt.html">Booking a kontakt</a>.'] },
+  { id: "contact", words: ["kontakt", "telefon", "cislo", "zavolat", "zavolam", "volat", "email", "mail", "napsat", "napis", "sms", "spojit", "ozvat"],
+    answer: () => [`Nejrychlejší je zavolat: ${TEL_HTML()} (booking a domluva koncertů).`, `Nebo nám napište zprávu na ${FB_HTML("Facebook")}.`] },
+  { id: "gigs", words: ["koncert", "hrajete", "zahrajete", "vystoup", "termin", "kdy hraj", "kde hraj", "kdy budete", "kde budete", "akce", "program", "vstupen", "listk", "tour", "turne", "nejblizsi", "pristi", "kdy vas", "kde vas"],
+    answer: gigsAnswer },
+  { id: "member", words: MEMBERS.flatMap((m) => m.words), answer: (text) => {
+    const m = MEMBERS.find((x) => x.words.some((w) => hit(text, w)));
+    return [`<a href="${m.page}">${m.name}</a> ${m.does}.`, `Víc o něm najdete na jeho stránce, stačí kliknout na jméno.`];
+  } },
+  { id: "members", words: ["clen", "sestav", "kdo hraje", "kdo je v", "kdo jste", "kdo tam", "muzikant", "kapelnik"],
+    answer: () => [`Hrajeme ve čtyřech: ${MEMBERS.map((m) => `<a href="${m.page}">${m.name}</a> (${m.role})`).join(", ")}.`,
+      'Na stránce <a href="kapela.html">O nás</a> můžete kliknout na kohokoli z nás na fotce.'] },
+  { id: "history", words: ["zalozen", "zalozil", "vznik", "histori", "jak dlouho", "od kdy", "kolik let", "1992", "pribeh", "zacat", "zacal"],
+    answer: () => ["Sarah založil zpěvák Zdeněk Troup na přelomu let 1992 a 1993 v Českých Budějovicích.",
+      'V roce 2012 vyšlo album Sarah, v roce 2014 si kapela dala pauzu a v roce 2023 se vrátila na pódia. Celý příběh je na stránce <a href="kapela.html">O nás</a>.'] },
+  { id: "album", words: ["album", "alba", "desk", "cd", "nahravk", "pisn", "pisnick", "skladb", "poslech", "spotify", "bandzone", "youtube", "video", "klip"],
+    answer: () => ["Naše album se jmenuje <b>Sarah</b> (2012) a má jedenáct vlastních písní, třeba Srdce-lhář nebo Na křídlech černých vran.",
+      `Poslechnout si ho můžete na <a href="${BANDZONE}" target="_blank" rel="noopener">Bandzone</a>, záznamy z koncertů jsou na stránce <a href="media.html">Foto a video</a>.`] },
+  { id: "style", words: ["styl", "zanr", "jakou hudb", "jakou muzik", "co hrajete", "cover", "ac dc", "acdc", "metallic", "accept", "scorpions", "repertoar", "rock"],
+    answer: () => ["Hrajeme hard rock: hlavně vlastní písně, přímočaré, melodické a nahlas.",
+      'K nim přidáváme covery AC/DC, Metallicy, Accept a Scorpions. Co zazní naživo, najdete na stránce <a href="hudba.html">Hudba</a>.'] },
+  { id: "photos", words: ["fotk", "foto", "obrazk", "galeri"],
+    answer: () => [`Fotky a videa jsou na stránce <a href="media.html">Foto a video</a>. Máte fotky z našeho koncertu? Pošlete nám je přes ${FB_HTML("Facebook")}.`] },
+  { id: "where", words: ["odkud", "budejovic", "mesto", "z jakeho"],
+    answer: () => ["Jsme z Českých Budějovic a hrajeme hlavně po jižních Čechách."] },
+  { id: "hello", words: ["ahoj", "cau", "cus", "nazdar", "zdravim", "dobry den", "dobry vecer", "hello", "hi", "hey"],
+    answer: () => ["Ahoj! Zeptejte se třeba, kdy hrajeme, jak nás pozvat na akci nebo kdo je v kapele."] },
+  { id: "thanks", words: ["dik", "dekuj", "super", "parad", "skvel", "fajn", "thanks", "nashled"],
+    answer: () => [`Rádo se stalo! Kdybyste nás chtěli na akci, volejte ${TEL_HTML()}.`] },
+];
+const FALLBACK = () => [`Na tohle vám spolehlivě neodpovím. Zeptejte se přímo kapely: zavolejte na ${TEL_HTML()} nebo napište na ${FB_HTML("Facebook")}.`];
+const CHIPS = ["Kdy hrajete?", "Jak vás pozvat na akci?", "Kdo je v kapele?", "Kde si vás poslechnout?"];
+
+// a keyword with a space must appear as written; a single word matches the start of any word
+function hit(text, w) { return w.includes(" ") ? ` ${text} `.includes(` ${w}`) : text.split(" ").some((t) => t.startsWith(w)); }
+
+function localAnswer(question) {
+  const text = fold(question);
+  let best = null, score = 0;
+  INTENTS.forEach((it) => {
+    const n = it.words.filter((w) => hit(text, w)).length;
+    if (n > score) { best = it; score = n; }
+  });
+  return best ? best.answer(text) : FALLBACK();
+}
+
+function initChat() {
+  const box = $("[data-chat]");
+  if (!box) return;
+  const openBtn = $(".chat__open", box), panel = $(".chat__panel", box), log = $(".chat__log", box);
+  const chips = $(".chat__chips", box), form = $(".chat__form", box), input = $("input", form);
+  let history = [];
+  try { history = JSON.parse(sessionStorage.getItem("sarah-chat") || "[]"); } catch (e) { history = []; }
+  const save = () => { try { sessionStorage.setItem("sarah-chat", JSON.stringify(history.slice(-30))); } catch (e) { /* storage blocked */ } };
+
+  const bubble = (who, html) => {
+    const el = document.createElement("div");
+    el.className = `chat__msg chat__msg--${who}`;
+    el.innerHTML = html;
+    log.append(el);
+    log.scrollTop = log.scrollHeight;
+    return el;
+  };
+  const render = (m) => bubble(m.who, m.who === "me" ? `<p>${esc(m.text)}</p>` : m.html);
+  const renderChips = () => {
+    chips.replaceChildren(...CHIPS.map((c) => {
+      const b = Object.assign(document.createElement("button"), { type: "button", textContent: c });
+      b.addEventListener("click", () => ask(c));
+      return b;
+    }));
+  };
+  const greet = () => {
+    if (history.length) { history.forEach(render); return; }
+    const html = "<p>Ahoj! Jsem asistent kapely Sarah. Poradím vám s koncerty, kapelou, hudbou i s tím, jak nás pozvat na akci.</p>";
+    history.push({ who: "bot", html, text: "Ahoj! Jsem asistent kapely Sarah." });
+    render(history[0]);
+    save();
+  };
+
+  async function remoteAnswer(question) {
+    const messages = history.slice(-8).map((m) => ({ role: m.who === "me" ? "user" : "assistant", content: m.text }));
+    messages.push({ role: "user", content: question });
+    while (messages.length && messages[0].role !== "user") messages.shift();
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 20000);
+    try {
+      const res = await fetch(CHAT_API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages }), signal: ctrl.signal });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!data.answer) throw new Error("empty answer");
+      // the server's text is shown as text; only the booking number becomes a link
+      return data.answer.split(/\n{2,}/).map((p) => esc(p).replace(BOOKING_PHONE, TEL_HTML()));
+    } finally { clearTimeout(t); }
+  }
+
+  async function ask(question) {
+    question = question.trim().slice(0, 300);
+    if (!question) return;
+    const me = { who: "me", text: question };
+    render(me);
+    const typing = bubble("bot", '<span class="chat__typing" aria-label="Píšu odpověď"><i></i><i></i><i></i></span>');
+    let paras;
+    if (CHAT_API) {
+      try { paras = await remoteAnswer(question); } catch (e) { paras = localAnswer(question); }
+    } else {
+      await new Promise((r) => setTimeout(r, motion() ? 550 : 0));
+      paras = localAnswer(question);
+    }
+    const html = paras.map((p) => `<p>${p}</p>`).join("");
+    typing.innerHTML = html;
+    log.scrollTop = log.scrollHeight;
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    history.push(me, { who: "bot", html, text: tmp.textContent });
+    save();
+  }
+
+  const setOpen = (open) => {
+    panel.hidden = !open;
+    box.classList.toggle("is-open", open);
+    openBtn.setAttribute("aria-expanded", String(open));
+    if (open) {
+      if (!log.children.length) { greet(); renderChips(); }
+      input.focus();
+    } else openBtn.focus();
+  };
+  openBtn.addEventListener("click", () => setOpen(true));
+  $(".chat__close", box).addEventListener("click", () => setOpen(false));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) setOpen(false); });
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const q = input.value;
+    input.value = "";
+    ask(q);
   });
 }
 
@@ -472,5 +629,5 @@ renderPlaylist();
 initHeroVideo();
 initAlbum();
 renderGallery();
-initMembers();
+initChat();
 initPick();
