@@ -239,8 +239,10 @@ function initStage() {
   $(".stage__cue", stage)?.addEventListener("click", go);
   // phones: the show starts as soon as the page moves; the glide waits until the finger is off
   // and the flick has settled
-  window.addEventListener("touchstart", () => { holding = true; if (glide) stopGlide(); }, { passive: true });
-  const settle = () => { clearTimeout(idle); idle = setTimeout(() => { if (!holding && !glide) glideOn(); }, 160); };
+  // (only after a swipe: a link jump or a dragged scrollbar keeps its own way)
+  let swiped = false;
+  window.addEventListener("touchstart", () => { holding = true; swiped = true; if (glide) stopGlide(); }, { passive: true });
+  const settle = () => { if (!swiped) return; clearTimeout(idle); idle = setTimeout(() => { if (!holding && !glide) glideOn(); }, 160); };
   const release = () => { holding = false; if (t0 && !settled) settle(); };
   window.addEventListener("touchend", release, { passive: true });
   window.addEventListener("touchcancel", release, { passive: true });
