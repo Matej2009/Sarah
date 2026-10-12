@@ -61,14 +61,16 @@ v `chat-worker/README.md`. Potřebuje API klíč od Anthropicu (platí se podle 
 Web je pódium: černá scéna, logo SARAH visí jako backdrop, červené a jantarové světlo
 reflektorů a kapela hraje naživo v pozadí. Jedno písmo (Archivo), velké a dobře čitelné.
 
-- **Úvod: světla na pódium** – přes celou obrazovku banner s kapelou. Při posouvání dolů
-  červené pozadí potemní a postupně se rozsvítí reflektory: nejdřív na logo, pak na Petra,
+- **Úvod: světla na pódium** – přes celou obrazovku banner s kapelou. Stačí jednou posunout
+  dolů (kolečkem, šipkou, prstem nebo kliknout na „Posouvejte dolů“) a scéna se přehraje sama
+  a stránka sama dojede tam, kde je kapela klikací (posun nahoru ji kdykoli zastaví).
+  Červené pozadí potemní a postupně se rozsvítí reflektory: nejdřív na logo, pak na Petra,
   Slávka, Zdeňka a Josefa – každý reflektor se přihoupne ze strany, naskočí s pár záškuby
   jako unavené světlo, dopadne bílým zábleskem a obraz sebou lehce cukne; občas ještě
-  zabliká. Scéna jde za kolečkem myši plynule, ne po skocích. Když svítí všichni, všechna
-  světla naráz zazáří a objeví se jména a každý je odkaz na svou stránku; po najetí
-  myší jeho světlo zesílí a ostatní potemní. Na mobilu kamera přejíždí od jednoho k druhému
-  a nakonec ukáže celou kapelu se jmény.
+  zabliká. Když svítí všichni, všechna světla naráz zazáří a objeví se jména a každý je
+  odkaz na svou stránku; po najetí myší jeho světlo zesílí a ostatní potemní. Na mobilu
+  kamera přejíždí od jednoho k druhému a nakonec ukáže celou kapelu se jmény. Po návratu
+  úplně nahoru se scéna vrátí na začátek a dá se pustit znovu.
 - **Pustit se zvukem** – jantarové tlačítko pustí Křídla živě z Jílovic (YouTube se načte až
   po kliknutí a zůstane skryté, na obrazovce dál svítí pódium). Malý přepínač zvuku pak
   zůstane vlevo dole. Když se přehrávač nespustí, stejná písnička se pustí na velké obrazovce

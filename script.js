@@ -107,7 +107,7 @@ function initIntro() {
 }
 
 /* --- Opening scene: the room goes dark, the lights come on, then the band is clickable --- */
-// Scrolling through the (tall) opening section drives it: the red background fades to dark,
+// The first scroll starts it and it then plays on its own: the red background fades to dark,
 // then the logo and each member get a spotlight that stutters on like a tired stage light.
 // When everyone is lit, each of them links to his own page.
 function initStage() {
@@ -126,10 +126,16 @@ function initStage() {
   const CENTER = { logo: 0.5, hajek: 0.21, franc: 0.405, troup: 0.58, jakes: 0.78 }; // across the photo
   const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
   const ramp = (p, a, b) => clamp01((p - a) / (b - a));
-  let target = 0, cur = -1, last = 0, raf = 0, finale = 0;
+  // the whole show, once it starts (phones take longer: the camera visits each of them)
+  const SHOW = () => (narrow.matches ? 4400 : 3000);
+  const READY = () => (narrow.matches ? 0.86 : 0.7);
   const lit = lights.map(() => false);
-  let ready = false;
+  let ready = false, cur = -1, last = 0, raf = 0, finale = 0, idle = 0;
+  let t0 = 0, glide = null, settled = false, holding = false;
 
+  const track = () => { const r = stage.getBoundingClientRect(); return { top: r.top + window.scrollY, run: r.height - window.innerHeight }; };
+  const scrollP = () => { const { top, run } = track(); return run > 0 ? clamp01((window.scrollY - top) / run) : 1; };
+  const atTop = () => window.scrollY <= track().top + 2;
   // the camera jolts a little each time a light hits
   const punch = () => { cam.classList.remove("is-hit"); void cam.offsetWidth; cam.classList.add("is-hit"); };
 
@@ -144,10 +150,9 @@ function initStage() {
       if (on !== lit[i]) { lit[i] = on; l.classList.toggle("is-lit", on); if (on && down) hit = true; }
     });
     if (hit) punch();
-    stage.classList.toggle("is-started", p > 0.02);
-    const nowReady = p >= (mob ? 0.86 : 0.7);
-    if (nowReady !== ready) {
-      ready = nowReady;
+    stage.classList.toggle("is-started", p > 0.005 || t0 > 0);
+    if (p >= READY() !== ready) {
+      ready = !ready;
       stage.classList.toggle("is-ready", ready);
       // everyone lit: all the lights blaze up together once
       if (ready && down) {
@@ -173,23 +178,88 @@ function initStage() {
     frame.style.setProperty("--lift", `${(-back * window.innerHeight * 0.2).toFixed(1)}px`);
   }
 
-  // the scene follows the scroll with a short glide, so wheel steps don't jump
+  // where the scene should be now: once started it plays on its own; scrolling faster only hurries it
+  function target(now) {
+    if (!t0) return scrollP();
+    const time = clamp01((now - t0) / SHOW());
+    return glide ? time : Math.max(time, scrollP());
+  }
+
   function tick(now) {
+    raf = 0;
     const dt = Math.min(64, now - last);
     last = now;
+    if (glide) {
+      const k = clamp01((now - glide.start) / glide.ms);
+      window.scrollTo(0, glide.from + (glide.to - glide.from) * ease(k));
+      if (k >= 1) stopGlide();
+    }
+    const goal = target(now);
     const prev = cur;
-    cur += (target - cur) * (1 - Math.exp(-dt / 90));
-    if (Math.abs(target - cur) < 0.0005) cur = target;
+    cur += (goal - cur) * (1 - Math.exp(-dt / 90));
+    if (Math.abs(goal - cur) < 0.0005) cur = goal;
     draw(cur, cur > prev);
-    raf = cur === target ? 0 : requestAnimationFrame(tick);
+    if (glide || cur !== goal || (t0 && now - t0 < SHOW())) kick();
   }
+  function kick() { if (!raf) { if (!last || performance.now() - last > 100) last = performance.now(); raf = requestAnimationFrame(tick); } }
+
+  function play() {
+    if (t0) return;
+    t0 = performance.now();
+    kick();
+  }
+  // the page then glides down to where the band is lit and clickable, so the next scroll goes on
+  function glideOn() {
+    if (settled) return;
+    settled = true;
+    const { top, run } = track();
+    const to = top + run * READY();
+    if (window.scrollY >= to - 2) return;
+    root.style.scrollBehavior = "auto"; // the page's smooth scrolling would fight every step
+    glide = { from: window.scrollY, to, start: performance.now(), ms: Math.max(700, READY() * SHOW() - (performance.now() - t0)) };
+    kick();
+  }
+  function stopGlide() { glide = null; root.style.scrollBehavior = ""; }
+  const go = () => { if (!t0 && scrollP() < READY()) { play(); glideOn(); return true; } return false; };
+
+  // computer: the first turn of the wheel down (or arrow / page down / space) starts the show
+  window.addEventListener("wheel", (e) => {
+    if (e.ctrlKey) return;
+    if (glide) { if (e.deltaY > 0) e.preventDefault(); else stopGlide(); return; }
+    if (e.deltaY > 0 && go()) e.preventDefault();
+  }, { passive: false });
+  window.addEventListener("keydown", (e) => {
+    if (glide) { stopGlide(); return; }
+    const t = e.target;
+    if (t !== document.body && t !== root) return;
+    if (["ArrowDown", "PageDown", " "].includes(e.key) && go()) e.preventDefault();
+  });
+  $(".stage__cue", stage)?.addEventListener("click", go);
+  // phones: the show starts as soon as the page moves; the glide waits until the finger is off
+  // and the flick has settled
+  window.addEventListener("touchstart", () => { holding = true; if (glide) stopGlide(); }, { passive: true });
+  const settle = () => { clearTimeout(idle); idle = setTimeout(() => { if (!holding && !glide) glideOn(); }, 160); };
+  const release = () => { holding = false; if (t0 && !settled) settle(); };
+  window.addEventListener("touchend", release, { passive: true });
+  window.addEventListener("touchcancel", release, { passive: true });
+  window.addEventListener("pointerdown", (e) => { if (glide && e.pointerType === "mouse") stopGlide(); });
+
   onScroll(() => {
-    const r = stage.getBoundingClientRect();
-    const run = r.height - window.innerHeight;
-    target = run > 0 ? clamp01(-r.top / run) : 1;
-    // first paint or a resize: draw at once, no glide, no flashes
-    if (cur < 0 || cur === target) { cur = target; draw(cur, false); return; }
-    if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
+    const now = performance.now();
+    if (cur < 0) {
+      // first paint: a page reloaded further down shows the finished scene at once
+      if (scrollP() > 0.01) { t0 = now - SHOW(); settled = true; }
+      cur = target(now);
+      draw(cur, false);
+      return;
+    }
+    if (!glide) {
+      if (!t0 && !atTop()) play();
+      // back at the very top: the scene resets and can play again
+      else if (t0 && atTop() && !holding) { t0 = 0; settled = false; }
+      if (t0 && !settled) settle();
+    }
+    kick();
   });
 }
 
