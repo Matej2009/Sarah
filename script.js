@@ -114,6 +114,7 @@ function initStage() {
   const stage = $("[data-stage]");
   if (!stage) return;
   const frame = $(".stage__frame", stage);
+  const cam = $(".stage__cam", stage);
   const lights = $$("[data-light]", stage);
   if (!motion()) {
     stage.classList.add("is-static", "is-ready");
@@ -125,32 +126,70 @@ function initStage() {
   const CENTER = { logo: 0.5, hajek: 0.21, franc: 0.405, troup: 0.58, jakes: 0.78 }; // across the photo
   const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
   const ramp = (p, a, b) => clamp01((p - a) / (b - a));
-  onScroll(() => {
-    const r = stage.getBoundingClientRect();
-    const run = r.height - window.innerHeight;
-    const p = run > 0 ? clamp01(-r.top / run) : 1;
+  let target = 0, cur = -1, last = 0, raf = 0, finale = 0;
+  const lit = lights.map(() => false);
+  let ready = false;
+
+  // the camera jolts a little each time a light hits
+  const punch = () => { cam.classList.remove("is-hit"); void cam.offsetWidth; cam.classList.add("is-hit"); };
+
+  function draw(p, down) {
     const mob = narrow.matches;
     // when each light switches on: the logo first, then the band from left to right
-    const at = mob ? [0.14, 0.26, 0.41, 0.56, 0.71] : [0.2, 0.32, 0.44, 0.56, 0.68];
-    stage.style.setProperty("--dim", ease(ramp(p, 0.02, mob ? 0.12 : 0.18)).toFixed(3));
-    lights.forEach((l, i) => l.classList.toggle("is-lit", p >= at[i]));
+    const at = mob ? [0.1, 0.22, 0.36, 0.5, 0.64] : [0.14, 0.25, 0.36, 0.47, 0.58];
+    stage.style.setProperty("--dim", ease(ramp(p, 0.02, mob ? 0.1 : 0.16)).toFixed(3));
+    let hit = false;
+    lights.forEach((l, i) => {
+      const on = p >= at[i];
+      if (on !== lit[i]) { lit[i] = on; l.classList.toggle("is-lit", on); if (on && down) hit = true; }
+    });
+    if (hit) punch();
     stage.classList.toggle("is-started", p > 0.02);
-    stage.classList.toggle("is-ready", p >= (mob ? 0.9 : 0.8));
+    const nowReady = p >= (mob ? 0.86 : 0.7);
+    if (nowReady !== ready) {
+      ready = nowReady;
+      stage.classList.toggle("is-ready", ready);
+      // everyone lit: all the lights blaze up together once
+      if (ready && down) {
+        stage.classList.add("is-finale");
+        clearTimeout(finale);
+        finale = setTimeout(() => stage.classList.remove("is-finale"), 700);
+      }
+    }
     if (!mob) {
       ["--pan", "--zoom", "--lift"].forEach((v) => frame.style.removeProperty(v));
       return;
     }
     // phones: the camera moves to each of them just before his light comes on, then pulls back
     let c = CENTER.logo;
-    lights.forEach((l, i) => { if (i) c += (CENTER[l.dataset.light] - c) * ease(ramp(p, at[i] - 0.09, at[i] - 0.01)); });
+    lights.forEach((l, i) => { if (i) c += (CENTER[l.dataset.light] - c) * ease(ramp(p, at[i] - 0.08, at[i] - 0.01)); });
     const fw = frame.offsetWidth;
-    const back = ease(ramp(p, 0.78, 0.88));
+    const back = ease(ramp(p, 0.72, 0.84));
     const fit = Math.min(1, window.innerWidth / (0.84 * fw));
     c += (0.49 - c) * back;
     frame.style.setProperty("--pan", `${((0.5 - c) * fw).toFixed(1)}px`);
     frame.style.setProperty("--zoom", (1 + (fit - 1) * back).toFixed(4));
     // pulled back, the band moves up to sit under the list of names
     frame.style.setProperty("--lift", `${(-back * window.innerHeight * 0.2).toFixed(1)}px`);
+  }
+
+  // the scene follows the scroll with a short glide, so wheel steps don't jump
+  function tick(now) {
+    const dt = Math.min(64, now - last);
+    last = now;
+    const prev = cur;
+    cur += (target - cur) * (1 - Math.exp(-dt / 90));
+    if (Math.abs(target - cur) < 0.0005) cur = target;
+    draw(cur, cur > prev);
+    raf = cur === target ? 0 : requestAnimationFrame(tick);
+  }
+  onScroll(() => {
+    const r = stage.getBoundingClientRect();
+    const run = r.height - window.innerHeight;
+    target = run > 0 ? clamp01(-r.top / run) : 1;
+    // first paint or a resize: draw at once, no glide, no flashes
+    if (cur < 0 || cur === target) { cur = target; draw(cur, false); return; }
+    if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
   });
 }
 

@@ -63,8 +63,10 @@ reflektorů a kapela hraje naživo v pozadí. Jedno písmo (Archivo), velké a d
 
 - **Úvod: světla na pódium** – přes celou obrazovku banner s kapelou. Při posouvání dolů
   červené pozadí potemní a postupně se rozsvítí reflektory: nejdřív na logo, pak na Petra,
-  Slávka, Zdeňka a Josefa – každý naskočí s pár záškuby jako unavené světlo a občas ještě
-  zabliká. Když svítí všichni, objeví se jména a každý je odkaz na svou stránku; po najetí
+  Slávka, Zdeňka a Josefa – každý reflektor se přihoupne ze strany, naskočí s pár záškuby
+  jako unavené světlo, dopadne bílým zábleskem a obraz sebou lehce cukne; občas ještě
+  zabliká. Scéna jde za kolečkem myši plynule, ne po skocích. Když svítí všichni, všechna
+  světla naráz zazáří a objeví se jména a každý je odkaz na svou stránku; po najetí
   myší jeho světlo zesílí a ostatní potemní. Na mobilu kamera přejíždí od jednoho k druhému
   a nakonec ukáže celou kapelu se jmény.
 - **Pustit se zvukem** – jantarové tlačítko pustí Křídla živě z Jílovic (YouTube se načte až
