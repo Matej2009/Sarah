@@ -61,10 +61,6 @@ v `chat-worker/README.md`. Potřebuje API klíč od Anthropicu (platí se podle 
 Web je pódium: černá scéna, logo SARAH visí jako backdrop, červené a jantarové světlo
 reflektorů a kapela hraje naživo v pozadí. Jedno písmo (Archivo), velké a dobře čitelné.
 
-- **Web ve vývoji** – vedle loga svítí na každé stránce oranžový štítek „Web ve vývoji“
-  (s blikající tečkou jako u nahrávání) a v patičce je věta, že se web ještě doplňuje. Až bude
-  hotovo, stačí ve zdrojovém skriptu stránek smazat `devtag` v hlavičce a `footer__dev`
-  v patičce.
 - **Úvod: světla na pódium** – přes celou obrazovku banner s kapelou. Stačí jednou posunout
   dolů (kolečkem, šipkou, prstem nebo kliknout na „Posouvejte dolů“) a scéna se přehraje sama
   a stránka sama dojede tam, kde je kapela klikací (posun nahoru ji kdykoli zastaví).
