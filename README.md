@@ -29,8 +29,10 @@ Data jsou nahoře ve `script.js`:
   a na stránce Koncerty (s odpočtem), po datu se přesune do „Odehráno“. Chat ho zná taky.
 - **Videa** – pole `VIDEOS` (id z YouTube adresy za `watch?v=`).
 - **Fotky** – nahrajte do `assets/photos/` (JPG, do 300 kB) a doplňte do `PHOTOS`
-  (galerie, skutečné fotky jsou před záběry z videí) nebo `HERO_PHOTOS` (pozadí úvodu, když
-  neběží video).
+  (galerie, skutečné fotky jsou před záběry z videí).
+- **Úvodní banner** – `assets/photos/banner.jpg` (1600 × 592). Kde na něm kdo stojí (světla
+  a klikací místa) je ve zdrojovém skriptu stránek v `STAGE`, kam kamera na mobilu jede je
+  ve `script.js` v `initStage` (`CENTER`). Při výměně banneru je potřeba obojí upravit.
 - **Sestava** – fotka kapely je `assets/photos/kapela.jpg`, portréty `assets/photos/clenove/`
   (400 × 540 px). Kdo kde na fotce stojí a texty o členech jsou ve zdrojovém skriptu stránek
   (`MEMBERS`); jména a nástroje pro chat jsou ve `script.js` (`MEMBERS`).
@@ -59,13 +61,16 @@ v `chat-worker/README.md`. Potřebuje API klíč od Anthropicu (platí se podle 
 Web je pódium: černá scéna, logo SARAH visí jako backdrop, červené a jantarové světlo
 reflektorů a kapela hraje naživo v pozadí. Jedno písmo (Archivo), velké a dobře čitelné.
 
-- **Rozsvícení pódia** (úvodní stránka, jednou za návštěvu) – na tmavé scéně se logo rozsvítí
-  jako backdrop, když naskočí světla, pak se rozjede záznam z koncertu. Jakýkoli pohyb myší
-  kolečkem, dotek nebo klávesa ho přeskočí.
-- **Kapela hraje v pozadí** – záznam Křídla z Jílovic běží potichu za logem (YouTube). Velké
-  jantarové tlačítko **Pustit se zvukem** zapne zvuk; kapela pak hraje dál i při posouvání stránky.
-  Když se video nenačte, tlačítko pustí stejnou písničku na velké obrazovce v sekci Naživo.
-  Video se mění v `index.html` (`data-video`, `data-start`).
+- **Úvod: světla na pódium** – přes celou obrazovku banner s kapelou. Při posouvání dolů
+  červené pozadí potemní a postupně se rozsvítí reflektory: nejdřív na logo, pak na Petra,
+  Slávka, Zdeňka a Josefa – každý naskočí s pár záškuby jako unavené světlo a občas ještě
+  zabliká. Když svítí všichni, objeví se jména a každý je odkaz na svou stránku; po najetí
+  myší jeho světlo zesílí a ostatní potemní. Na mobilu kamera přejíždí od jednoho k druhému
+  a nakonec ukáže celou kapelu se jmény.
+- **Pustit se zvukem** – jantarové tlačítko pustí Křídla živě z Jílovic (YouTube se načte až
+  po kliknutí a zůstane skryté, na obrazovce dál svítí pódium). Malý přepínač zvuku pak
+  zůstane vlevo dole. Když se přehrávač nespustí, stejná písnička se pustí na velké obrazovce
+  v sekci Naživo. Video se mění v `index.html` (`data-audio`, `data-start`).
 - **Naše cesta** – roky 1992, 2012, 2014, 2023 a dnes na lince, která se při posouvání vybarví.
 - **Naživo** – velká obrazovka a seznam videí vedle.
 - **Album** – při posouvání vyjíždí z obalu deska.
@@ -81,8 +86,7 @@ reflektorů a kapela hraje naživo v pozadí. Jedno písmo (Archivo), velké a d
 ## Výkon
 
 Žádné knihovny. Animuje se jen transform/opacity/clip-path, smyčky běží jen pro viditelné
-prvky. YouTube se načítá až po kliknutí na video (kromě tichého videa v úvodu, které se při
-šetření dat nenačítá), obrázky líně. Efekty u kurzoru jen s myší;
+prvky. YouTube se načítá až po kliknutí (i zvuk v úvodu), obrázky líně. Efekty u kurzoru jen s myší;
 při „omezit pohyb“ v systému se všechny animace vypnou.
 
 ## Ověřit s kapelou

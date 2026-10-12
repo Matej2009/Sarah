@@ -20,13 +20,7 @@ const VIDEOS = [
   { id: "Vr9Ju-DKftQ", title: "Sarah naživo", meta: "Záznam z koncertu" },
 ];
 
-/* SKUTEČNÉ FOTKY (např. z Facebooku kapely) – nahrajte do assets/photos/ a vyplňte.
-   Dokud je seznam prázdný, použijí se záběry z videí kapely. */
-
-// Úvodní stránka: velké fotky na pozadí (na šířku, ideálně 1920 px)
-const HERO_PHOTOS = [
-  // "assets/photos/hero-1.jpg",
-];
+/* FOTKY – nahrajte do assets/photos/ (úvodní banner je assets/photos/banner.jpg) */
 
 // Galerie na stránce Foto a video (skutečné fotky jsou první, za nimi záběry z videí), např.
 // { src: "assets/photos/koncert-1.jpg", caption: "Seven Fest 2023" }
@@ -112,88 +106,121 @@ function initIntro() {
   setTimeout(() => ["wheel", "touchstart", "keydown", "pointerdown"].forEach((t) => window.removeEventListener(t, skip)), 3000);
 }
 
-/* --- Hero: real photos or video frames, slow crossfade -------------------- */
-function initHero() {
-  const box = $(".hero__media");
-  if (!box) return;
-  if (HERO_PHOTOS.length) {
-    $$("img", box).forEach((img) => img.remove());
-    box.prepend(...HERO_PHOTOS.map((src, i) => {
-      const img = new Image();
-      Object.assign(img, { alt: "", decoding: "async", width: 1920, height: 1080 });
-      if (i === 0) { img.src = src; img.fetchPriority = "high"; } else img.dataset.src = src;
-      return img;
-    }));
+/* --- Opening scene: the room goes dark, the lights come on, then the band is clickable --- */
+// Scrolling through the (tall) opening section drives it: the red background fades to dark,
+// then the logo and each member get a spotlight that stutters on like a tired stage light.
+// When everyone is lit, each of them links to his own page.
+function initStage() {
+  const stage = $("[data-stage]");
+  if (!stage) return;
+  const frame = $(".stage__frame", stage);
+  const lights = $$("[data-light]", stage);
+  if (!motion()) {
+    stage.classList.add("is-static", "is-ready");
+    stage.style.setProperty("--dim", "1");
+    lights.forEach((l) => l.classList.add("is-lit"));
+    return;
   }
-  const slides = $$("img", box);
-  let cur = 0;
-  const show = (i) => {
-    cur = i % slides.length;
-    slides.forEach((s, j) => {
-      s.classList.toggle("is-active", j === cur);
-      if (j === cur && !s.getAttribute("src") && s.dataset.src) s.src = s.dataset.src;
-    });
-  };
-  show(0);
-  if (slides.length > 1 && motion()) setInterval(() => { if (!document.hidden && !box.classList.contains("has-video")) show(cur + 1); }, 7000);
-
-  // while scrolling away, the stage drifts slower than the page and the logo fades
-  if (!motion()) return;
-  const hero = box.closest(".hero"), content = $(".hero__content", hero);
+  const narrow = window.matchMedia("(max-width: 700px), (max-aspect-ratio: 1/1)");
+  const CENTER = { logo: 0.5, hajek: 0.21, franc: 0.405, troup: 0.58, jakes: 0.78 }; // across the photo
+  const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
+  const ramp = (p, a, b) => clamp01((p - a) / (b - a));
   onScroll(() => {
-    const h = hero.offsetHeight, y = Math.min(window.scrollY, h);
-    box.style.transform = `translate3d(0, ${(y * 0.28).toFixed(1)}px, 0)`;
-    content.style.opacity = String(Math.max(0, 1 - y / (h * 0.7)).toFixed(3));
+    const r = stage.getBoundingClientRect();
+    const run = r.height - window.innerHeight;
+    const p = run > 0 ? clamp01(-r.top / run) : 1;
+    const mob = narrow.matches;
+    // when each light switches on: the logo first, then the band from left to right
+    const at = mob ? [0.14, 0.26, 0.41, 0.56, 0.71] : [0.2, 0.32, 0.44, 0.56, 0.68];
+    stage.style.setProperty("--dim", ease(ramp(p, 0.02, mob ? 0.12 : 0.18)).toFixed(3));
+    lights.forEach((l, i) => l.classList.toggle("is-lit", p >= at[i]));
+    stage.classList.toggle("is-started", p > 0.02);
+    stage.classList.toggle("is-ready", p >= (mob ? 0.9 : 0.8));
+    if (!mob) {
+      ["--pan", "--zoom", "--lift"].forEach((v) => frame.style.removeProperty(v));
+      return;
+    }
+    // phones: the camera moves to each of them just before his light comes on, then pulls back
+    let c = CENTER.logo;
+    lights.forEach((l, i) => { if (i) c += (CENTER[l.dataset.light] - c) * ease(ramp(p, at[i] - 0.09, at[i] - 0.01)); });
+    const fw = frame.offsetWidth;
+    const back = ease(ramp(p, 0.78, 0.88));
+    const fit = Math.min(1, window.innerWidth / (0.84 * fw));
+    c += (0.49 - c) * back;
+    frame.style.setProperty("--pan", `${((0.5 - c) * fw).toFixed(1)}px`);
+    frame.style.setProperty("--zoom", (1 + (fit - 1) * back).toFixed(4));
+    // pulled back, the band moves up to sit under the list of names
+    frame.style.setProperty("--lift", `${(-back * window.innerHeight * 0.2).toFixed(1)}px`);
   });
 }
 
-/* --- Hero: the band plays live behind the logo ---------------------------- */
-// The sound button turns the sound on. If the video can't play here (blocked, data saver),
-// the button plays the same song on the big screen in the "Naživo" section instead.
-function initHeroVideo() {
-  const slot = $("[data-video]");
+/* --- Sound: the band plays Křídla live once you ask for it --------------- */
+// The YouTube player loads only after the click and stays out of sight, so the opening scene
+// stays on screen. A small switch then follows you down the page. If the player doesn't start
+// (blocked, offline), the same song plays on the big screen in the "Naživo" section instead.
+function initSound() {
+  const slot = $("[data-audio]");
   const btn = $("[data-sound]");
   if (!slot || !btn) return;
-  const media = slot.closest(".hero__media");
-  const label = $(".sound__text b", btn);
-  let f = null, soundOn = false;
+  const dock = Object.assign(document.createElement("button"), { type: "button", className: "sound-dock", hidden: true });
+  dock.innerHTML = '<span class="sound__bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>Ztlumit</span>';
+  document.body.append(dock);
+  let f = null, playing = false, paused = false, timer = 0;
   const cmd = (func, args = []) => f?.contentWindow?.postMessage(JSON.stringify({ event: "command", func, args }), "*");
-  const setSound = (on) => {
-    soundOn = on;
-    btn.setAttribute("aria-pressed", String(on));
-    label.textContent = on ? "Ztlumit zvuk" : "Pustit se zvukem";
-    if (on) { cmd("unMute"); cmd("setVolume", [80]); cmd("playVideo"); } else cmd("mute");
+  const sync = () => {
+    const on = playing && !paused;
+    [btn, dock].forEach((b) => b.setAttribute("aria-pressed", String(on)));
+    $(".sound__text b", btn).textContent = on ? "Ztlumit zvuk" : "Pustit se zvukem";
+    $("span:last-child", dock).textContent = on ? "Ztlumit" : "Pustit";
+    dock.setAttribute("aria-label", on ? "Ztlumit zvuk" : "Pustit zvuk");
+    dock.hidden = !playing;
   };
-  btn.addEventListener("click", () => {
-    if (media.classList.contains("has-video")) { setSound(!soundOn); return; }
+  const bigScreen = () => {
     const big = $("[data-playlist] .video__btn");
     if (!big) return;
     big.closest(".playlist").scrollIntoView({ behavior: motion() ? "smooth" : "auto", block: "center" });
     big.click();
-  });
-  // another video started playing on the page: the background band goes quiet
-  document.addEventListener("sarah:video", () => { if (soundOn) setSound(false); });
-
-  const conn = navigator.connection || {};
-  if (!motion() || conn.saveData) return;
-  const id = slot.dataset.video;
-  const params = new URLSearchParams({ autoplay: 1, mute: 1, controls: 0, loop: 1, playlist: id, playsinline: 1, rel: 0, modestbranding: 1, iv_load_policy: 3, disablekb: 1, start: slot.dataset.start || 0, enablejsapi: 1, origin: location.origin });
-  f = document.createElement("iframe");
-  f.src = `https://www.youtube-nocookie.com/embed/${id}?${params}`;
-  f.title = "Sarah naživo";
-  f.allow = "autoplay; encrypted-media";
-  f.tabIndex = -1;
-  slot.append(f);
-  // fade the video in only once the player reports it is really playing (never show an error screen)
-  f.addEventListener("load", () => f.contentWindow?.postMessage(JSON.stringify({ event: "listening", id: 1, channel: "widget" }), "*"));
+  };
+  const start = () => {
+    const id = slot.dataset.audio;
+    const params = new URLSearchParams({ autoplay: 1, controls: 0, loop: 1, playlist: id, playsinline: 1, rel: 0, start: slot.dataset.start || 0, enablejsapi: 1, origin: location.origin });
+    f = Object.assign(document.createElement("iframe"), { src: `https://www.youtube-nocookie.com/embed/${id}?${params}`, title: "Sarah naživo, zvuk", tabIndex: -1 });
+    f.allow = "autoplay; encrypted-media";
+    f.setAttribute("aria-hidden", "true");
+    f.addEventListener("load", () => f?.contentWindow?.postMessage(JSON.stringify({ event: "listening", id: 1, channel: "widget" }), "*"));
+    slot.append(f);
+    btn.setAttribute("aria-busy", "true");
+    timer = setTimeout(() => {
+      if (playing) return;
+      f.remove();
+      f = null;
+      btn.removeAttribute("aria-busy");
+      bigScreen();
+    }, 6000);
+  };
   window.addEventListener("message", (e) => {
-    if (e.source !== f.contentWindow || media.classList.contains("has-video")) return;
+    if (!f || e.source !== f.contentWindow || playing) return;
     let data;
     try { data = typeof e.data === "string" ? JSON.parse(e.data) : e.data; } catch (err) { return; }
-    if (data?.info?.playerState === 1) media.classList.add("has-video");
+    if (data?.info?.playerState !== 1) return;
+    playing = true;
+    clearTimeout(timer);
+    btn.removeAttribute("aria-busy");
+    cmd("unMute");
+    cmd("setVolume", [80]);
+    sync();
   });
-  // off screen and muted there is no reason to play; with the sound on the band keeps playing
-  new IntersectionObserver(([e]) => { if (!soundOn) cmd(e.isIntersecting ? "playVideo" : "pauseVideo"); }).observe(slot.closest(".hero"));
+  const toggle = () => {
+    if (!f) { start(); return; }
+    if (!playing) return;
+    paused = !paused;
+    cmd(paused ? "pauseVideo" : "playVideo");
+    sync();
+  };
+  btn.addEventListener("click", toggle);
+  dock.addEventListener("click", toggle);
+  // another video started on the page: the band in the background goes quiet
+  document.addEventListener("sarah:video", () => { if (playing && !paused) { paused = true; cmd("pauseVideo"); sync(); } });
 }
 
 /* --- Gigs ----------------------------------------------------------------- */
@@ -623,10 +650,10 @@ function initMisc() {
 initNav();
 initIntro();
 initMisc();
-initHero();
+initStage();
 renderGigs();
 renderPlaylist();
-initHeroVideo();
+initSound();
 initAlbum();
 renderGallery();
 initChat();
