@@ -116,6 +116,7 @@ function initStage() {
   const frame = $(".stage__frame", stage);
   const cam = $(".stage__cam", stage);
   const lights = $$("[data-light]", stage);
+  const names = $(".stage__names", stage);
   if (!motion()) {
     stage.classList.add("is-static", "is-ready");
     stage.style.setProperty("--dim", "1");
@@ -174,8 +175,9 @@ function initStage() {
     c += (0.49 - c) * back;
     frame.style.setProperty("--pan", `${((0.5 - c) * fw).toFixed(1)}px`);
     frame.style.setProperty("--zoom", (1 + (fit - 1) * back).toFixed(4));
-    // pulled back, the band moves up to sit under the list of names
-    frame.style.setProperty("--lift", `${(-back * window.innerHeight * 0.2).toFixed(1)}px`);
+    // pulled back, the band moves up to stand just above the list of names
+    const room = names ? window.innerHeight - names.offsetTop + 14 : window.innerHeight * 0.2;
+    frame.style.setProperty("--lift", `${(-back * room).toFixed(1)}px`);
   }
 
   // where the scene should be now: once started it plays on its own; scrolling faster only hurries it
@@ -259,6 +261,138 @@ function initStage() {
       else if (t0 && atTop() && !holding) { t0 = 0; settled = false; }
       if (t0 && !settled) settle();
     }
+    kick();
+  });
+}
+
+/* --- The follow spot: a light on whoever you point at ---------------------- */
+// Once the band is lit, pointing at someone swings one more spotlight onto him (it springs a
+// little, like a light operator catching up), the others dim and his name says it opens.
+// Between them the light just follows the mouse. Phones have no pointer, so the light tours the
+// band and a tap swings it onto that person before his page opens.
+function initSpotlight() {
+  const stage = $("[data-stage]");
+  const follow = stage && $(".stage__follow", stage);
+  if (!follow) return;
+  const frame = $(".stage__frame", stage);
+  const beam = $(".stage__follow-beam", follow);
+  const spots = $$("[data-spot]", stage);
+  const names = $$("[data-member]", stage);
+  const lights = $$("[data-light]", stage);
+  const num = (el, v) => parseFloat(el.style.getPropertyValue(v));
+  const POOL = {};
+  lights.forEach((l) => { POOL[l.dataset.light] = { x: num(l, "--x"), y: num(l, "--y"), rx: num(l, "--rx") * 0.95, ry: num(l, "--ry") * 0.95, b: 1.5 }; });
+  const AREA = spots.map((s) => ({ key: s.dataset.spot, l: num(s, "--l"), r: num(s, "--l") + num(s, "--w") }));
+  const KEYS = AREA.map((a) => a.key);
+  const PROPS = ["x", "y", "rx", "ry", "b"];
+  const P = { x: 50, y: 50, rx: 8, ry: 22, b: 1.3 };
+  const V = { x: 0, y: 0, rx: 0, ry: 0, b: 0 };
+  let pointer = null, picked = null, toured = null, focused = null, shown = false;
+  let raf = 0, last = 0, tourTimer = 0, tourIndex = 0, wasReady = false;
+
+  function aim() {
+    if (!stage.classList.contains("is-ready")) return null;
+    if (picked) return { key: picked, ...POOL[picked] };
+    if (pointer) {
+      const r = frame.getBoundingClientRect();
+      const x = ((pointer.x - r.left) / r.width) * 100;
+      const y = ((pointer.y - r.top) / r.height) * 100;
+      if (x < 0 || x > 100 || y < 0 || y > 100) return null;
+      const who = y > 14 && AREA.find((a) => x >= a.l && x <= a.r);
+      return who ? { key: who.key, ...POOL[who.key] } : { key: null, x, y, rx: 8, ry: 22, b: 1.3 };
+    }
+    return toured ? { key: toured, ...POOL[toured] } : null;
+  }
+
+  function focus(key) {
+    if (key === focused) return;
+    focused = key;
+    spots.forEach((el) => el.classList.toggle("is-focus", el.dataset.spot === key));
+    names.forEach((el) => el.classList.toggle("is-focus", el.dataset.member === key));
+    lights.forEach((el) => el.classList.toggle("is-focus", el.dataset.light === key));
+  }
+
+  function paint() {
+    PROPS.forEach((k) => follow.style.setProperty(k === "b" ? "--fb" : `--f${k}`, k === "b" ? P.b.toFixed(3) : `${P[k].toFixed(2)}%`));
+    // the beam comes from a rig high above the middle of the screen
+    const r = frame.getBoundingClientRect();
+    const fw = frame.offsetWidth, fh = frame.offsetHeight, s = r.width / fw;
+    const rigX = (window.innerWidth / 2 - r.left) / s, rigY = -(r.top + 60) / s;
+    const dx = (P.x / 100) * fw - rigX, dy = (P.y / 100) * fh - rigY;
+    const w = (P.rx / 100) * fw * 1.6;
+    beam.style.cssText = `left:${(rigX - w / 2).toFixed(1)}px;top:${rigY.toFixed(1)}px;width:${w.toFixed(1)}px;height:${Math.hypot(dx, dy).toFixed(1)}px;transform:rotate(${Math.atan2(-dx, dy).toFixed(4)}rad)`;
+  }
+
+  function tick(now) {
+    raf = 0;
+    const dt = Math.min(0.05, (now - last) / 1000 || 0.016);
+    last = now;
+    const t = aim();
+    focus(t ? t.key : null);
+    stage.classList.toggle("is-following", Boolean(t));
+    if (!t) { shown = false; return; }
+    let moving = false;
+    if (!shown || !motion()) {
+      // it appears right where you point; after that it chases
+      PROPS.forEach((k) => { P[k] = t[k]; V[k] = 0; });
+      shown = true;
+    } else {
+      PROPS.forEach((k) => {
+        V[k] += (170 * (t[k] - P[k]) - 20 * V[k]) * dt;
+        P[k] += V[k] * dt;
+        if (Math.abs(t[k] - P[k]) > 0.02 || Math.abs(V[k]) > 0.05) moving = true;
+      });
+    }
+    paint();
+    if (moving) kick();
+  }
+  function kick() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } }
+
+  // phones: while nobody is picked, the light walks along the band, name by name
+  function tour() {
+    clearTimeout(tourTimer);
+    if (finePointer || !motion() || picked || !stage.classList.contains("is-ready")) { toured = null; kick(); return; }
+    toured = KEYS[tourIndex++ % KEYS.length];
+    kick();
+    tourTimer = setTimeout(tour, 2300);
+  }
+
+  new MutationObserver(() => {
+    const ready = stage.classList.contains("is-ready");
+    if (ready !== wasReady) {
+      wasReady = ready;
+      clearTimeout(tourTimer);
+      if (ready) tourTimer = setTimeout(tour, 900);
+      else { toured = null; tourIndex = 0; }
+    }
+    kick();
+  }).observe(stage, { attributes: true, attributeFilter: ["class"] });
+
+  document.addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") { pointer = { x: e.clientX, y: e.clientY }; kick(); } }, { passive: true });
+  document.documentElement.addEventListener("mouseleave", () => { pointer = null; kick(); });
+  window.addEventListener("scroll", () => { if (shown || pointer) kick(); }, { passive: true });
+  stage.addEventListener("focusin", (e) => { const s = e.target.closest("[data-spot]"); if (s) { pointer = null; toured = s.dataset.spot; kick(); } });
+  stage.addEventListener("focusout", () => { if (finePointer) { toured = null; kick(); } });
+
+  // a click swings the light onto him (if it isn't there yet), flares, then his page opens
+  function pick(e, key, href) {
+    if (e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || !motion()) return;
+    e.preventDefault();
+    const wait = focused === key ? 260 : 620;
+    picked = key;
+    clearTimeout(tourTimer);
+    stage.classList.add("is-picked");
+    kick();
+    setTimeout(() => { window.location.href = href; }, wait);
+  }
+  spots.forEach((s) => s.addEventListener("click", (e) => pick(e, s.dataset.spot, s.href)));
+  names.forEach((a) => a.addEventListener("click", (e) => pick(e, a.dataset.member, a.href)));
+  // coming back with the back button: the page may be restored as it was left
+  window.addEventListener("pageshow", (e) => {
+    if (!e.persisted) return;
+    picked = null;
+    stage.classList.remove("is-picked");
+    if (stage.classList.contains("is-ready")) tour();
     kick();
   });
 }
@@ -760,6 +894,7 @@ initNav();
 initIntro();
 initMisc();
 initStage();
+initSpotlight();
 renderGigs();
 renderPlaylist();
 initSound();

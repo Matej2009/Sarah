@@ -68,9 +68,13 @@ reflektorů a kapela hraje naživo v pozadí. Jedno písmo (Archivo), velké a d
   Slávka, Zdeňka a Josefa – každý reflektor se přihoupne ze strany, naskočí s pár záškuby
   jako unavené světlo, dopadne bílým zábleskem a obraz sebou lehce cukne; občas ještě
   zabliká. Když svítí všichni, všechna světla naráz zazáří a objeví se jména a každý je
-  odkaz na svou stránku; po najetí myší jeho světlo zesílí a ostatní potemní. Na mobilu
-  kamera přejíždí od jednoho k druhému a nakonec ukáže celou kapelu se jmény. Po návratu
-  úplně nahoru se scéna vrátí na začátek a dá se pustit znovu.
+  odkaz na svou stránku. Pak je tu ještě **sledovací reflektor**: na koho ukážete myší, na
+  toho se plynule přehoupne (s malým dokmitem jako u osvětlovače), ostatní potemní a jeho
+  jmenovka se rozsvítí s „Otevřít profil →“; mezi nimi světlo jen jde za myší. Po kliknutí
+  světlo ještě jednou zazáří a otevře se jeho stránka. Na mobilu kamera přejíždí od jednoho
+  k druhému, nakonec ukáže celou kapelu se jmény pod ní a reflektor sám obchází kapelu,
+  jméno po jménu; klepnutí na člena nebo jeho jméno na něj přehodí světlo a otevře jeho
+  stránku. Po návratu úplně nahoru se scéna vrátí na začátek a dá se pustit znovu.
 - **Pustit se zvukem** – jantarové tlačítko pustí Křídla živě z Jílovic (YouTube se načte až
   po kliknutí a zůstane skryté, na obrazovce dál svítí pódium). Malý přepínač zvuku pak
   zůstane vlevo dole. Když se přehrávač nespustí, stejná písnička se pustí na velké obrazovce

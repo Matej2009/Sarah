@@ -152,19 +152,25 @@ p { margin: 0 0 1em; }
 .stage.is-ready .stage__spot:hover .stage__tag { transition-delay: 0s; }
 .stage__tag b { font-size: clamp(1rem, 1.45vw, 1.4rem); font-weight: 800; font-stretch: 110%; line-height: 1.15; text-shadow: 0 2px 12px rgba(0, 0, 0, .9); }
 .stage__tag span { color: var(--amber); font-size: clamp(.85rem, 1.05vw, 1.02rem); font-weight: 600; text-shadow: 0 2px 10px rgba(0, 0, 0, .9); }
-.stage__spot:hover .stage__tag, .stage__spot:focus-visible .stage__tag { background: var(--amber); color: #1d1406; }
-.stage__spot:hover .stage__tag b, .stage__spot:hover .stage__tag span, .stage__spot:focus-visible .stage__tag span { color: #1d1406; text-shadow: none; }
-/* pointing at one of them: his light burns brighter, the others step back */
-.stage.is-ready .stage__frame:has(.stage__spot:hover) .stage__light:not(.stage__light--logo) .stage__lit { filter: brightness(.55) saturate(.8); }
-.stage.is-ready .stage__frame:has(.stage__spot:hover) .stage__light:not(.stage__light--logo) .stage__beam { opacity: .3; }
-.stage.is-ready .stage__frame:has([data-spot="hajek"]:hover) [data-light="hajek"] .stage__lit,
-.stage.is-ready .stage__frame:has([data-spot="franc"]:hover) [data-light="franc"] .stage__lit,
-.stage.is-ready .stage__frame:has([data-spot="troup"]:hover) [data-light="troup"] .stage__lit,
-.stage.is-ready .stage__frame:has([data-spot="jakes"]:hover) [data-light="jakes"] .stage__lit { filter: brightness(1.35) saturate(1.12); }
-.stage.is-ready .stage__frame:has([data-spot="hajek"]:hover) [data-light="hajek"] .stage__beam,
-.stage.is-ready .stage__frame:has([data-spot="franc"]:hover) [data-light="franc"] .stage__beam,
-.stage.is-ready .stage__frame:has([data-spot="troup"]:hover) [data-light="troup"] .stage__beam,
-.stage.is-ready .stage__frame:has([data-spot="jakes"]:hover) [data-light="jakes"] .stage__beam { opacity: 1; }
+.stage__tag small { display: block; max-height: 0; overflow: hidden; opacity: 0; font-size: .85rem; font-weight: 700; letter-spacing: .02em; transition: max-height .3s var(--ease), opacity .25s, margin .3s; }
+.stage__tag small::after { content: " →"; }
+/* the one you point at: his name lights up and says it opens */
+.stage__spot.is-focus .stage__tag, .stage__spot:focus-visible .stage__tag { background: var(--amber); color: #1d1406; transform: scale(1.06); transition-delay: 0s; }
+.stage__spot.is-focus .stage__tag :is(b, span, small), .stage__spot:focus-visible .stage__tag :is(b, span, small) { color: #1d1406; text-shadow: none; }
+.stage__spot.is-focus .stage__tag small, .stage__spot:focus-visible .stage__tag small { max-height: 1.4em; opacity: 1; margin-top: 2px; }
+/* the follow spot: one more light, swinging onto whoever you point at, while the others dim */
+.stage__follow { position: absolute; inset: 0; z-index: 1; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+.stage.is-following .stage__follow { opacity: 1; }
+.stage__follow-lit { position: absolute; inset: 0; background: url("assets/photos/banner.jpg") center / 100% 100%; filter: brightness(var(--fb, 1.3)) saturate(1.12) contrast(1.04);
+  -webkit-mask-image: radial-gradient(ellipse var(--frx, 8%) var(--fry, 22%) at var(--fx, 50%) var(--fy, 50%), #000 38%, transparent 78%);
+          mask-image: radial-gradient(ellipse var(--frx, 8%) var(--fry, 22%) at var(--fx, 50%) var(--fy, 50%), #000 38%, transparent 78%); }
+.stage__follow-beam { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 50% 0; filter: blur(9px); }
+.stage__follow-beam::before { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(255, 244, 226, 0), rgba(255, 244, 226, .1) 45%, rgba(255, 244, 226, .24)); clip-path: polygon(47% 0, 53% 0, 100% 100%, 0 100%); }
+.stage.is-following .stage__light:not(.stage__light--logo):not(.is-focus) .stage__lit { filter: brightness(.5) saturate(.75); }
+.stage.is-following .stage__light:not(.stage__light--logo):not(.is-focus) .stage__beam { opacity: .2; }
+.stage.is-following .stage__shade { opacity: calc(var(--dim) * .96); }
+/* picked: a last flare before his page opens */
+.motion .stage.is-picked .stage__follow-lit { animation: blaze .5s ease-out; }
 
 .stage__intro { position: absolute; left: 0; right: 0; bottom: clamp(22px, 5vh, 56px); z-index: 4; display: grid; justify-items: center; gap: 16px; padding: 0 var(--gutter); transition: opacity .45s, transform .45s var(--ease); }
 .stage__intro .hero__actions { margin: 0; }
@@ -506,9 +512,10 @@ p { margin: 0 0 1em; }
   @supports (height: 100svh) { .stage__sticky { --fw: 168svh; } }
   .stage__tag { display: none; }
   .stage__hint { top: calc(var(--nav-h) + 14px); font-size: 1rem; }
-  .stage__names { list-style: none; position: absolute; left: var(--gutter); right: var(--gutter); top: calc(var(--nav-h) + 50px); z-index: 4; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .35s .15s, transform .35s .15s var(--ease); }
+  .stage__names { list-style: none; position: absolute; left: var(--gutter); right: var(--gutter); bottom: calc(84px + env(safe-area-inset-bottom, 0px)); z-index: 4; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .35s .15s, transform .35s .15s var(--ease); }
   .stage.is-ready .stage__names { opacity: 1; transform: none; pointer-events: auto; }
-  .stage__names a { display: grid; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: rgba(20, 17, 15, .86); text-decoration: none; }
+  .stage__names a { display: grid; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: rgba(20, 17, 15, .86); text-decoration: none; transition: background-color .3s, border-color .3s, transform .3s var(--ease); }
+  .stage__names a.is-focus { border-color: var(--amber); background: rgba(58, 38, 12, .92); transform: scale(1.03); }
   .stage__names b { font-size: 1.02rem; line-height: 1.25; }
   .stage__names span { color: var(--amber); font-size: .92rem; font-weight: 600; }
   .stage.is-static .stage__names { top: auto; bottom: 16px; opacity: 1; pointer-events: auto; transform: none; }
