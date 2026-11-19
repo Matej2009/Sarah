@@ -1,0 +1,76 @@
+# SARAH — web kapely (sarahcb.cz)
+
+Web hardrockové kapely Sarah z Českých Budějovic. Čisté HTML, CSS a JS bez knihoven,
+hostuje se na GitHub Pages z větve `main` (doména v souboru `CNAME`).
+
+Vzhled: světlý a čistý, jako časopis. Teplá bílá, černé písmo, jedna červená barva,
+velké fotky kapely. Nadpisy písmem Barlow Condensed, text písmem Inter; obě písma jsou
+přímo na webu (`assets/fonts/`), takže web neposílá data návštěvníků Googlu. Web sám
+nepoužívá cookies ani měření návštěvnosti; YouTube se načte až po kliknutí na video
+(v režimu se zvýšenou ochranou soukromí).
+
+```
+index.html          Úvod: fotka kapely, další koncert, o kapele, sestava, video, album, booking
+koncerty.html       Nadcházející a odehrané koncerty
+hudba.html          Album Sarah (2012) a co hrajeme naživo
+videa.html          Videa z koncertů
+kapela.html         Příběh, sestava, historie
+kontakt.html        Booking (778 885 465), odkazy, co nabízíme, ke stažení pro pořadatele a média
+petr-hajek.html …   Stránky členů (kytara, bicí, zpěv, baskytara)
+404.html            Chybová stránka (stará adresa media.html vede na videa.html)
+assets/css/site.css Vzhled
+assets/js/site.js   Menu na mobilu, koncerty, videa, kopírování textu, chat
+assets/js/data.js   Data pro prohlížeč (vyrábí ho tools/build.py, neupravovat ručně)
+assets/img/         Logo, fotky kapely, portréty členů
+assets/press/       Logo ke stažení (PNG)
+assets/fonts/       Písma
+tools/build.py      VEŠKERÝ obsah webu a šablony stránek
+chat-worker/        Volitelný server, díky kterému chat odpovídá pomocí Claude (návod uvnitř)
+```
+
+## Jak upravit obsah
+
+Všechny texty, koncerty, videa a údaje o členech jsou nahoře v `tools/build.py`.
+Po úpravě spusťte
+
+```
+python3 tools/build.py
+```
+
+a nahrajte (commitněte) změněné soubory. Skript nepotřebuje nic instalovat.
+
+- **Koncerty** – `GIGS`. Budoucí termín se ukáže v „Nadcházející“ a na úvodní stránce
+  jako „Další koncert“; po datu se sám přesune do „Odehráno“. Chat ho zná taky.
+  U koncertu s přesným datem se do stránky přidají i údaje pro Google (MusicEvent).
+- **Videa** – `VIDEOS` (id z YouTube adresy za `watch?v=`). První video je i na úvodní stránce.
+- **Členové** – `MEMBERS`: jméno, nástroj, krátký popis, životopis, fakta. U Petra Hájka
+  zatím chybí víc informací – stačí doplnit pár vět do `bio`.
+  Portréty jsou v `assets/img/members/` (420 × 560 px, výřezy z úvodní fotky).
+- **Telefon na booking** – `PHONE` (778 885 465) a `TEL`.
+- **Texty** – `STORY`, `TIMELINE`, `ALBUM`, `LIVE_SONGS`, `OFFER`, `PRESS_BIO`.
+- **Odkazy** – `LINKS` (Facebook, Bandzone, GoOut, YouTube).
+- **Ke stažení pro pořadatele** – `PRESS_FILES`.
+
+## Chat
+
+Tlačítko „Máte dotaz?“ vpravo dole otevře asistenta kapely. Odpovídá na jednoduché dotazy
+(kdy hrajete, jak vás pozvat, kdo je v kapele, kde si vás poslechnout, album, historie,
+logo a fotky) z údajů kapely – nic si nevymýšlí, a co neví, odkáže na telefon
+778 885 465. Rozhovor vydrží při přechodu mezi stránkami. Aby odpovídala umělá inteligence
+(Claude), stačí nasadit server ze složky `chat-worker/` (návod v `chat-worker/README.md`).
+
+## Ověřit s kapelou
+
+Obsah je z veřejných zdrojů (Bandzone, Hardmusicbase, Českobudějovický deník, Musicgate,
+YouTube). Zkontrolujte hlavně:
+
+- bia členů (Franc: Seven 1996–2006; Troup: Kambodža 2022–2024) a doplňte info
+  o Petru Hájkovi a Josefu Jakešovi
+- složení kapely na albu Sarah 2012 (Troup, Przeczek, Jakeš, Holčapek)
+- repertoár na stránce Hudba
+
+## Doména
+
+DNS u GoDaddy: 4× A záznam `@` → 185.199.108.153 / .109.153 / .110.153 / .111.153,
+CNAME `www` → matej2009.github.io. Na GitHubu v Settings → Pages musí být zapnuté
+publikování z větve `main` (složka `/`) a „Enforce HTTPS“.
