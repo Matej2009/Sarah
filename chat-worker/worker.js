@@ -16,7 +16,8 @@ Odpovídej jen podle údajů níže. Když něco nevíš (cenu koncertu, technic
 - Historie: 2012 album, 2014 pauza (Zdeněk Troup odešel), 2023 návrat na pódia (v dubnu Seven Fest v Ševětíně, v září Jílovice). Naposledy hráli 26. září 2026 na Letním parketu v Jílovicích s kapelou Blamage.
 - Slávek Franc hrál v letech 1996–2006 v budějovické kapele Seven. Zdeněk Troup zpíval v letech 2022–2024 i v kapele Kambodža. Josef Jakeš hrál na albu Sarah.
 - Booking a domluva koncertů: telefon 778 885 465. Kapela hraje v klubech, na festivalech, letních parketech i na soukromých a firemních akcích.
-- Stránky webu: Koncerty (koncerty.html, aktuální termíny), Hudba (hudba.html), Videa (videa.html), Kapela (kapela.html, každý člen má svou stránku), Booking a kontakt (kontakt.html, kde jsou i logo, fotky a text o kapele ke stažení pro pořadatele a média).`;
+- Stránky webu: Koncerty (koncerty.html, aktuální termíny), Hudba (hudba.html), Kapela (kapela.html, každý člen má svou stránku), Booking a kontakt (kontakt.html, kde jsou i logo, fotky a text o kapele ke stažení pro pořadatele a média).
+- Videa z koncertů na webu teď nejsou; písně jsou k poslechu na bandzone.cz/sarah.`;
 
 const NOT_SURE = "Na tohle vám spolehlivě neodpovím. Zavolejte prosím kapele na 778 885 465.";
 

@@ -1,4 +1,4 @@
-/* SARAH — page behaviour: menu, concerts, videos, copy button, chat.
+/* SARAH — page behaviour: menu, concerts, copy button, chat.
    The band's data (concerts, members, phone) comes from data.js, made by tools/build.py. */
 (() => {
   "use strict";
@@ -41,31 +41,6 @@
     if (next && next.dataset.end && ended(next.dataset.end)) {
       $(".quick__text > span", next).innerHTML = "<b>Termíny domlouváme</b><span>Sledujte nás na Facebooku</span>";
     }
-  }
-
-  /* --- Videos: a still from YouTube; the player loads only when you press play ----------- */
-  function initVideos() {
-    $$("[data-video]").forEach((btn) => {
-      const img = $("img", btn);
-      // the sharper still, when YouTube has one (a missing size comes back as a 120 × 90 placeholder)
-      if (img?.dataset.hd) {
-        const hd = new Image();
-        hd.onload = () => { if (hd.naturalWidth > 200) img.src = hd.src; };
-        hd.src = img.dataset.hd;
-      }
-      btn.addEventListener("click", () => {
-        const id = btn.dataset.video;
-        const frame = document.createElement("iframe");
-        frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`;
-        frame.title = btn.getAttribute("aria-label").replace("Přehrát video: ", "");
-        frame.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-        frame.allowFullscreen = true;
-        const holder = document.createElement("div");
-        holder.className = "video__frame";
-        holder.append(frame);
-        btn.replaceWith(holder);
-      }, { once: true });
-    });
   }
 
   /* --- "Kopírovat" next to the press text ------------------------------------------------- */
@@ -145,9 +120,11 @@
     { words: ["zalozen", "zalozil", "vznik", "histori", "jak dlouho", "od kdy", "kolik let", "1992", "pribeh", "zacat", "zacal"],
       answer: () => ["Sarah založil zpěvák Zdeněk Troup na přelomu let 1992 a 1993 v Českých Budějovicích.",
         'V roce 2012 vyšlo album Sarah, v roce 2014 si kapela dala pauzu a v roce 2023 se vrátila na pódia. Celý příběh je na stránce <a href="kapela.html">Kapela</a>.'] },
-    { words: ["album", "alba", "desk", "cd", "nahravk", "pisn", "pisnick", "skladb", "poslech", "spotify", "bandzone", "youtube", "video", "klip"],
+    { words: ["album", "alba", "desk", "cd", "nahravk", "pisn", "pisnick", "skladb", "poslech", "spotify", "bandzone"],
       answer: () => [`Naše album se jmenuje <b>Sarah</b> (${D.album.year}) a má ${D.album.tracks.length === 11 ? "jedenáct" : D.album.tracks.length} vlastních písní, třeba ${esc(D.album.tracks[0])} nebo ${esc(D.album.tracks[3])}.`,
-        `Poslechnout si ho můžete na <a href="${D.bandzone}" target="_blank" rel="noopener">Bandzone</a>, záznamy z koncertů jsou na stránce <a href="videa.html">Videa</a>.`] },
+        `Poslechnout si ho můžete na <a href="${D.bandzone}" target="_blank" rel="noopener">Bandzone</a>. Víc na stránce <a href="hudba.html">Hudba</a>.`] },
+    { words: ["video", "videa", "videi", "klip", "youtub", "zaznam"],
+      answer: () => [`Videa z koncertů tu teď nemáme. Písně si můžete poslechnout na <a href="${D.bandzone}" target="_blank" rel="noopener">Bandzone</a>, nebo přijďte naživo: termíny jsou na stránce <a href="koncerty.html">Koncerty</a>.`] },
     { words: ["styl", "zanr", "jakou hudb", "jakou muzik", "co hrajete", "cover", "ac dc", "ac/dc", "acdc", "metallic", "accept", "scorpions", "repertoar", "rock", "mrazik"],
       answer: () => ["Hrajeme hard rock: hlavně vlastní písně, přímočaré, melodické a nahlas.",
         'K nim přidáváme covery AC/DC, Metallicy, Accept a Scorpions, a na konci klidně Mrazíka. Víc na stránce <a href="hudba.html">Hudba</a>.'] },
@@ -269,7 +246,6 @@
 
   initMenu();
   initGigs();
-  initVideos();
   initCopy();
   initChat();
   $$("[data-year]").forEach((el) => { el.textContent = new Date().getFullYear(); });

@@ -5,21 +5,19 @@ hostuje se na GitHub Pages z větve `main` (doména v souboru `CNAME`).
 
 Vzhled: světlý a čistý, jako časopis. Teplá bílá, černé písmo, jedna červená barva,
 velké fotky kapely. Nadpisy písmem Barlow Condensed, text písmem Inter; obě písma jsou
-přímo na webu (`assets/fonts/`), takže web neposílá data návštěvníků Googlu. Web sám
-nepoužívá cookies ani měření návštěvnosti; YouTube se načte až po kliknutí na video
-(v režimu se zvýšenou ochranou soukromí).
+přímo na webu (`assets/fonts/`), takže web neposílá data návštěvníků Googlu. Web
+nepoužívá cookies ani měření návštěvnosti.
 
 ```
-index.html          Úvod: fotka kapely, další koncert, o kapele, sestava, video, album, booking
+index.html          Úvod: fotka kapely, další koncert, o kapele, sestava, album, booking
 koncerty.html       Nadcházející a odehrané koncerty
 hudba.html          Album Sarah (2012) a co hrajeme naživo
-videa.html          Videa z koncertů
 kapela.html         Příběh, sestava, historie
 kontakt.html        Booking (778 885 465), odkazy, co nabízíme, ke stažení pro pořadatele a média
 petr-hajek.html …   Stránky členů (kytara, bicí, zpěv, baskytara)
-404.html            Chybová stránka (stará adresa media.html vede na videa.html)
+404.html            Chybová stránka (staré adresy media.html a videa.html vedou na Hudbu)
 assets/css/site.css Vzhled
-assets/js/site.js   Menu na mobilu, koncerty, videa, kopírování textu, chat
+assets/js/site.js   Menu na mobilu, koncerty, kopírování textu, chat
 assets/js/data.js   Data pro prohlížeč (vyrábí ho tools/build.py, neupravovat ručně)
 assets/img/         Logo, fotky kapely, portréty členů
 assets/press/       Logo ke stažení (PNG)
@@ -42,13 +40,12 @@ a nahrajte (commitněte) změněné soubory. Skript nepotřebuje nic instalovat.
 - **Koncerty** – `GIGS`. Budoucí termín se ukáže v „Nadcházející“ a na úvodní stránce
   jako „Další koncert“; po datu se sám přesune do „Odehráno“. Chat ho zná taky.
   U koncertu s přesným datem se do stránky přidají i údaje pro Google (MusicEvent).
-- **Videa** – `VIDEOS` (id z YouTube adresy za `watch?v=`). První video je i na úvodní stránce.
 - **Členové** – `MEMBERS`: jméno, nástroj, krátký popis, životopis, fakta. U Petra Hájka
   zatím chybí víc informací – stačí doplnit pár vět do `bio`.
   Portréty jsou v `assets/img/members/` (420 × 560 px, výřezy z úvodní fotky).
 - **Telefon na booking** – `PHONE` (778 885 465) a `TEL`.
 - **Texty** – `STORY`, `TIMELINE`, `ALBUM`, `LIVE_SONGS`, `OFFER`, `PRESS_BIO`.
-- **Odkazy** – `LINKS` (Facebook, Bandzone, GoOut, YouTube).
+- **Odkazy** – `LINKS` (Facebook, Bandzone, GoOut).
 - **Ke stažení pro pořadatele** – `PRESS_FILES`.
 
 ## Chat

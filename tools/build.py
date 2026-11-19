@@ -95,13 +95,6 @@ GIGS = [
     {"date": "2023-04", "venue": "Seven Fest", "city": "KD Ševětín", "note": "oslava 30. narozenin kapely"},
 ]
 
-# YouTube videos (id = the part of the address after "watch?v=")
-VIDEOS = [
-    {"id": "YIDTwOcJh58", "title": "Křídla", "meta": "Živě v Jílovicích, 16. září 2023"},
-    {"id": "8QpXZPaKw-g", "title": "Vlaky", "meta": "Původní sestava po třiceti letech, 2023"},
-    {"id": "Vr9Ju-DKftQ", "title": "Sarah naživo", "meta": "Záznam z koncertu"},
-]
-
 OFFER = [
     ("Vlastní písně i známé covery", "Hard rock z vlastní tvorby a k tomu AC/DC, Metallica, Accept a Scorpions."),
     ("Program podle akce", "Od klubového setu po celovečerní koncert, venku i v sále."),
@@ -115,7 +108,6 @@ LINKS = [
     ("fb", FACEBOOK_ORIGINAL, "Facebook původní sestavy", "Návrat na pódia po 30 letech"),
     ("note", BANDZONE, "Bandzone", "Písně a texty"),
     ("ticket", GOOUT, "GoOut", "Vstupenky a akce"),
-    ("yt", f"https://www.youtube.com/watch?v={VIDEOS[0]['id']}", "YouTube", "Záznamy z koncertů"),
 ]
 
 PRESS_BIO = ("Sarah je hardrocková kapela z Českých Budějovic. Založil ji zpěvák Zdeněk Troup na přelomu let "
@@ -132,7 +124,6 @@ PRESS_FILES = [
 PAGES = [  # main menu
     ("koncerty.html", "Koncerty"),
     ("hudba.html", "Hudba"),
-    ("videa.html", "Videa"),
     ("kapela.html", "Kapela"),
     ("kontakt.html", "Kontakt"),
 ]
@@ -149,7 +140,6 @@ MON = ["led", "úno", "bře", "dub", "kvě", "čvn", "čvc", "srp", "zář", "ř
 
 ICONS = {
     "fb": '<path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.6-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H8v3h2.5V21z"/>',
-    "yt": '<path fill-rule="evenodd" d="M22.5 7.2a2.8 2.8 0 0 0-2-2C18.8 4.7 12 4.7 12 4.7s-6.8 0-8.5.5a2.8 2.8 0 0 0-2 2A29 29 0 0 0 1 12a29 29 0 0 0 .5 4.8 2.8 2.8 0 0 0 2 2c1.7.5 8.5.5 8.5.5s6.8 0 8.5-.5a2.8 2.8 0 0 0 2-2A29 29 0 0 0 23 12a29 29 0 0 0-.5-4.8zM9.8 15.1V8.9l5.7 3.1z"/>',
     "note": '<path d="M11 3h9v4.5h-6V17a4 4 0 1 1-3-3.87z"/>',
     "ticket": '<path d="M2 6.5h20V10a2 2 0 0 0 0 4v3.5H2V14a2 2 0 0 0 0-4zm13 1.5v1.6h1.6V8zm0 3.2v1.6h1.6v-1.6zm0 3.2V16h1.6v-1.6z"/>',
     "phone": '<path d="M6.6 10.8a15.2 15.2 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/>',
@@ -360,16 +350,6 @@ def members_grid(exclude=None):
     return f'        <div class="{cls}">\n{cards}\n        </div>\n'
 
 
-def video_card(v, big=False):
-    return f"""          <figure class="video{' video--big' if big else ''}">
-            <button class="video__frame" type="button" data-video="{v['id']}" aria-label="Přehrát video: {e(v['title'])}">
-              <img src="https://i.ytimg.com/vi/{v['id']}/hqdefault.jpg" data-hd="https://i.ytimg.com/vi/{v['id']}/maxresdefault.jpg" alt="" width="480" height="360" loading="lazy" decoding="async">
-              <span class="video__play">{icon("play")}</span>
-            </button>
-            <figcaption><b>{e(v['title'])}</b><span>{e(v['meta'])}</span></figcaption>
-          </figure>"""
-
-
 def album_block(full):
     tracks = ALBUM["tracks"] if full else ALBUM["tracks"][:6]
     items = "".join(f"<li>{e(t)}</li>" for t in tracks)
@@ -523,16 +503,6 @@ def home():
 {members_grid()}      </div>
     </section>
 
-    <section class="section section--dark">
-      <div class="container">
-        <div class="section__head">
-          <div><p class="label label--light">Naživo</p><h2 class="h2">Sarah na pódiu</h2></div>
-          <a class="link link--light" href="videa.html">Všechna videa{icon("arrow")}</a>
-        </div>
-{video_card(VIDEOS[0], big=True)}
-      </div>
-    </section>
-
     <section class="section">
       <div class="container">
 {album_block(full=False)}
@@ -564,7 +534,7 @@ def concerts():
 
 def music():
     songs = "".join(f"<li>{e(s)}</li>" for s in LIVE_SONGS)
-    body = (page_head("Hudba", "Písně a album", "Vlastní tvorba je srdcem kapely. Poslechněte si album, pusťte si záznam z koncertu, nebo přijďte naživo.")
+    body = (page_head("Hudba", "Písně a album", "Vlastní tvorba je srdcem kapely. Poslechněte si album, nebo přijďte naživo.")
             + f"""    <section class="section section--tight">
       <div class="container">
 {album_block(full=True)}
@@ -577,29 +547,12 @@ def music():
         <h2 class="h2">Co zazní na koncertě</h2>
         <p>Koncert stojí hlavně na vlastních písních. K nim přidáváme covery {", ".join(COVERS[:-1])} a {COVERS[-1]}, a na závěr klidně Mrazíka.</p>
         <ul class="chips">{songs}</ul>
-        <div class="btns"><a class="btn btn--dark" href="videa.html">Videa z koncertů</a></div>
+        <div class="btns"><a class="btn btn--dark" href="koncerty.html">Kde hrajeme</a></div>
       </div>
     </section>
 
 {booking_band()}""")
     return page("Hudba — SARAH", "Album Sarah (2012) a písně, které kapela Sarah hraje naživo.", "hudba.html", body, current="hudba.html")
-
-
-def videos():
-    cards = "\n".join(video_card(v) for v in VIDEOS)
-    yt = ext(f"https://www.youtube.com/watch?v={VIDEOS[0]['id']}", "Videa na YouTube" + icon("arrow"), "link")
-    body = (page_head("Videa", "Z koncertů", "Záznamy z pódia. Video se načte až po kliknutí.")
-            + f"""    <section class="section section--tight">
-      <div class="container">
-        <div class="videos">
-{cards}
-        </div>
-        <p class="more">{yt}</p>
-      </div>
-    </section>
-
-{booking_band()}""")
-    return page("Videa — SARAH", "Videa z koncertů hardrockové kapely Sarah.", "videa.html", body, current="videa.html")
 
 
 def band():
@@ -740,7 +693,7 @@ def member_page(i):
 
 
 def not_found():
-    redirect = """  <script>(function(){var m={"media":"/videa.html"};var p=location.pathname.replace(/^\\/|\\.html$/g,"");if(m[p])location.replace(m[p]);})()</script>
+    redirect = """  <script>(function(){var m={"media":"/hudba.html","videa":"/hudba.html"};var p=location.pathname.replace(/^\\/|\\.html$/g,"");if(m[p])location.replace(m[p]);})()</script>
 """
     body = """    <section class="lost">
       <div class="container">
@@ -773,7 +726,7 @@ def sitemap(pages):
 
 
 def main():
-    out = {"index.html": home(), "koncerty.html": concerts(), "hudba.html": music(), "videa.html": videos(),
+    out = {"index.html": home(), "koncerty.html": concerts(), "hudba.html": music(),
            "kapela.html": band(), "kontakt.html": contact(), "404.html": not_found()}
     for i, m in enumerate(MEMBERS):
         out[m["page"]] = member_page(i)
