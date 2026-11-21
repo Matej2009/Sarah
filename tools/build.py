@@ -160,7 +160,7 @@ PAGES = [  # main menu
 # ============================================================================================
 
 e = html.escape
-VERSION = "3"
+VERSION = "4"
 MONTHS = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"]
 MONTHS_OF = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"]
 MON = ["led", "úno", "bře", "dub", "kvě", "čvn", "čvc", "srp", "zář", "říj", "lis", "pro"]
@@ -194,6 +194,8 @@ def ext(url, inner, cls=""):
 
 
 LOGO_WORD = '<svg viewBox="39 122 566 115" aria-hidden="true"><use href="assets/img/logo.svg#word"/></svg>'
+LOGO_HEAD = ('<svg viewBox="39 28 566 212" aria-hidden="true"><use href="assets/img/logo.svg#word"/>'
+             '<image href="assets/img/logo-woman.webp" x="233" y="30" width="358" height="165"/></svg>')
 LOGO_FULL = ('<svg viewBox="39 28 566 273" aria-hidden="true"><use href="assets/img/logo.svg#word"/>'
              '<image href="assets/img/logo-woman.webp" x="233" y="30" width="358" height="165"/>'
              '<use href="assets/img/logo.svg#script"/></svg>')
@@ -275,7 +277,7 @@ def header(current=None):
     links = "\n".join(f'        <a href="{href}"{here if href == current else ""}>{label}</a>' for href, label in PAGES)
     return f"""  <header class="header" data-header>
     <div class="container header__inner">
-      <a class="header__logo" href="index.html" aria-label="Sarah, úvodní stránka">{LOGO_WORD}</a>
+      <a class="header__logo" href="index.html" aria-label="Sarah, úvodní stránka">{LOGO_HEAD}</a>
       <nav class="header__nav" id="menu" aria-label="Hlavní navigace">
 {links}
         <a class="header__call" href="{TEL}">{icon("phone")}{PHONE}</a>
