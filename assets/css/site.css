@@ -169,14 +169,10 @@ button { font: inherit; color: inherit; }
 
 /* members: name set on the portrait */
 .members { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 20px); }
-.members--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .member { position: relative; display: block; overflow: hidden; color: var(--ink); text-decoration: none; background: #2a0505; }
 .member__photo { display: block; }
 .member__photo img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; filter: grayscale(.25) contrast(1.06); transition: transform .7s var(--ease), filter .4s; }
 .member::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, transparent 45%, rgba(8, 7, 7, .92) 100%); }
-.member::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; height: 3px; background: var(--red); transform: scaleX(0); transform-origin: left; transition: transform .35s var(--ease); }
-.member:hover .member__photo img { transform: scale(1.05); filter: grayscale(0) contrast(1.08); }
-.member:hover::before { transform: scaleX(1); }
 .member__name { position: absolute; left: 20px; right: 16px; bottom: 44px; z-index: 1; font-family: var(--display); font-size: 1.75rem; font-weight: 700; line-height: 1; text-transform: uppercase; transition: color .2s; }
 .member__role { position: absolute; left: 20px; bottom: 18px; z-index: 1; color: var(--red-hot); font-size: .76rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
 
@@ -299,26 +295,6 @@ button { font: inherit; color: inherit; }
 .timeline p { margin: 2px 0 0; color: var(--muted); }
 
 /* --- Member page ------------------------------------------------------------------------- */
-.person { padding: clamp(32px, 5vw, 56px) 0 clamp(80px, 10vw, 136px); background: radial-gradient(60% 70% at 15% 30%, rgba(215, 20, 28, .16), transparent 70%); }
-.crumbs { display: flex; gap: 10px; margin-bottom: clamp(24px, 4vw, 40px); color: var(--muted); font-size: .9rem; letter-spacing: .04em; }
-.crumbs a { color: var(--ink); font-weight: 600; text-decoration: none; }
-.crumbs a:hover { color: var(--red-hot); }
-.person__grid { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); align-items: center; gap: clamp(36px, 6vw, 88px); }
-.person__photo { position: relative; isolation: isolate; }
-.person__photo::before { content: ""; position: absolute; inset: 16px -16px -16px 16px; z-index: -1; border: 2px solid var(--red); }
-.person__photo img { width: 100%; box-shadow: 0 40px 70px -30px rgba(0, 0, 0, .9); }
-.person__text .display { margin-bottom: 20px; }
-.person__text .lead { color: var(--ink); }
-.mfacts { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 0; }
-.mfacts div { padding: 12px 18px; border: 1px solid var(--line-2); background: var(--white); }
-.mfacts dt { color: var(--muted); font-size: .72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
-.mfacts dd { margin: 2px 0 0; color: var(--ink); font-family: var(--display); font-size: 1.3rem; font-weight: 700; text-transform: uppercase; }
-.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; max-width: 520px; margin-top: 40px; border: 1px solid var(--line); background: var(--line); }
-.pager a { display: grid; padding: 16px 18px; background: var(--white); color: var(--ink); text-decoration: none; transition: background-color .2s; }
-.pager a:hover { background: var(--panel); }
-.pager a:last-child { text-align: right; }
-.pager small { color: var(--muted); font-size: .82rem; letter-spacing: .06em; text-transform: uppercase; }
-.pager b { font-family: var(--display); font-size: 1.35rem; text-transform: uppercase; }
 
 .lost { display: grid; align-items: center; min-height: 64vh; padding: 64px 0; background: radial-gradient(60% 70% at 70% 40%, rgba(215, 20, 28, .2), transparent 70%); }
 
@@ -402,13 +378,11 @@ button { font: inherit; color: inherit; }
   .header__nav > a[aria-current="page"] { color: var(--red-hot); }
   .header__nav > a:not(.header__call)::after { display: none; }
   .header__call { margin-top: 20px; padding: 0; border: 0; font-size: 1.6rem; }
-  .split, .columns, .album, .contact, .person__grid, .band__inner { grid-template-columns: 1fr; }
+  .split, .columns, .album, .contact, .band__inner { grid-template-columns: 1fr; }
   .band__inner { align-items: start; }
   .album__art { max-width: 420px; }
-  .person__photo { max-width: 380px; }
   .members { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .members--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .split__photo::before, .person__photo::before { inset: 10px -10px -10px 10px; }
+  .split__photo::before { inset: 10px -10px -10px 10px; }
 }
 
 @media (max-width: 640px) {
@@ -419,7 +393,6 @@ button { font: inherit; color: inherit; }
   .quick { grid-template-columns: 1fr; }
   .quick__item--accent { grid-column: auto; }
   .facts b { font-size: 2.2rem; }
-  .members--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .member__name { left: 14px; bottom: 36px; font-size: 1.35rem; }
   .member__role { left: 14px; bottom: 14px; font-size: .68rem; }
   .tracks { columns: 1; }

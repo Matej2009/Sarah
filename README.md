@@ -5,20 +5,20 @@ hostuje se na GitHub Pages z větve `main` (doména v souboru `CNAME`).
 
 Vzhled: tvrdý rock, ale čistý. Téměř černé pozadí, jedna krvavě červená barva, velké fotky
 kapely (úvodní fotka přechází do černé, jména členů jsou přímo na portrétech), ostré rohy
-a jemné zrno jako na fotce z koncertu. Historie původní Sarah je jen na stránce Historie
+a jemné zrno jako na fotce z koncertu. Historie kapely (původní sestava) je jen na stránce Historie
 v horním menu. Nadpisy písmem Barlow Condensed, text písmem Inter; obě písma jsou
 přímo na webu (`assets/fonts/`), takže web neposílá data návštěvníků Googlu. Web
 nepoužívá cookies ani měření návštěvnosti.
 
 ```
-index.html          Úvod: fotka kapely, další koncert, nová Sarah, sestava, odkaz na historii, booking
-koncerty.html       Nadcházející a odehrané koncerty dnešní sestavy
-kapela.html         Dnešní kapela a sestava
-historie.html       Původní Sarah 1992–2023: příběh, rok po roku, album Sarah (2012) s recenzí,
+index.html          Úvod: fotka kapely, další koncert, o kapele, sestava, booking
+koncerty.html       Nadcházející a odehrané koncerty
+kapela.html         Kapela a sestava
+historie.html       Historie 1992–2023, původní sestava: příběh, rok po roku, album Sarah (2012) s recenzí,
                     videa původní sestavy, její písně a koncerty, odkazy
 kontakt.html        Booking (778 885 465), odkazy, co nabízíme, ke stažení pro pořadatele a média
-petr-hajek.html …   Stránky členů (kytara, bicí, zpěv, baskytara)
-404.html            Chybová stránka (staré adresy hudba.html, media.html a videa.html vedou na Historii)
+404.html            Chybová stránka (staré adresy hudba.html, media.html a videa.html vedou na Historii,
+                    staré stránky členů na Kapelu)
 assets/css/site.css Vzhled
 assets/js/site.js   Menu na mobilu, koncerty, videa (Historie), kopírování textu, chat
 assets/js/data.js   Data pro prohlížeč (vyrábí ho tools/build.py, neupravovat ručně)
@@ -40,17 +40,17 @@ python3 tools/build.py
 
 a nahrajte (commitněte) změněné soubory. Skript nepotřebuje nic instalovat.
 
-- **Koncerty** – `GIGS` (jen dnešní sestava). Budoucí termín se ukáže v „Nadcházející“ a na
+- **Koncerty** – `GIGS` (koncerty kapely; ty původní sestavy jsou v `HISTORY_GIGS`). Budoucí termín se ukáže v „Nadcházející“ a na
   úvodní stránce jako „Další koncert“; po datu se sám přesune do „Odehráno“. Chat ho zná taky.
   U koncertu s přesným datem se do stránky přidají i údaje pro Google (MusicEvent).
-- **Historie (původní Sarah)** – `HISTORY_STORY`, `TIMELINE`, `ALBUM`, `QUOTE` (recenze Deníku),
+- **Historie (původní sestava)** – `HISTORY_STORY`, `TIMELINE`, `ALBUM`, `QUOTE` (recenze Deníku),
   `HISTORY_SONGS`, `HISTORY_VIDEOS` (id z YouTube za `watch?v=`), `HISTORY_GIGS`, `HISTORY_LINKS`.
   Všechno se ukáže na `historie.html`, na úvodní stránce je jen krátký odkaz.
-- **Členové** – `MEMBERS`: jméno, nástroj, krátký popis, životopis, fakta. U Petra Hájka
-  zatím chybí víc informací – stačí doplnit pár vět do `bio`.
+- **Členové** – `MEMBERS`: jen jméno, nástroj a slova, podle kterých člena pozná chat.
+  Životopisy ani historii jednotlivých členů web záměrně neuvádí a členové nemají vlastní stránky.
   Portréty jsou v `assets/img/members/` (420 × 560 px, výřezy z úvodní fotky).
-- **Telefon na booking** – `PHONE` (778 885 465) a `TEL`.
-- **Texty o dnešní kapele** – `STORY`, `FACTS`, `OFFER`, `PRESS_BIO`.
+- **Telefon na booking** – `PHONE` (778 885 465), `TEL` a `BOOKER` (telefon má bubeník Miroslav „Slávek“ Franc).
+- **Texty o kapele** – `STORY`, `FACTS`, `OFFER`, `PRESS_BIO`.
 - **Odkazy** – `LINKS` (Facebook, GoOut); odkazy k historii jsou v `HISTORY_LINKS`.
 - **Ke stažení pro pořadatele** – `PRESS_FILES`.
 
@@ -67,10 +67,8 @@ logo a fotky) z údajů kapely – nic si nevymýšlí, a co neví, odkáže na 
 Obsah je z veřejných zdrojů (Bandzone, Hardmusicbase, Českobudějovický deník, Musicgate,
 YouTube). Zkontrolujte hlavně:
 
-- bia členů (Franc: Seven 1996–2006; Troup: Kambodža 2022–2024) a doplňte info
-  o Petru Hájkovi a Josefu Jakešovi
 - složení kapely na albu Sarah 2012 (Troup, Przeczek, Jakeš, Holčapek)
-- jestli dnešní sestava hraje některé písně původní Sarah (Historie) a které covery
+- jestli sestava hraje některé písně z doby původní sestavy (Historie) a které covery
 
 ## Doména
 

@@ -97,7 +97,6 @@
   const MONTHS_OF = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
   const telLink = () => `<a href="${D.tel}">${D.phone}</a>`;
   const fbLink = (label = "Facebooku") => `<a href="${D.facebook}" target="_blank" rel="noopener">${label}</a>`;
-  const memberLink = (m) => `<a href="${m.page}">${m.name}</a>`;
   const fold = (t) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9/]+/g, " ").trim();
   // a keyword with a space must appear as written; a single word matches the start of any word
   // (so Czech endings still match: Franc, Francem, Francovi), except words that only look alike
@@ -129,31 +128,33 @@
 
   const INTENTS = [
     { words: ["objedn", "booking", "pozvat", "pozvani", "pozvem", "zahrat na", "zahrali na", "zahrajete na", "svatb", "oslav", "narozenin", "firemn", "vecir", "ples", "zabav", "rezerv", "domluv", "cena", "cenu", "ceny", "kolik stoj", "kolik by", "kolik chcete", "honorar", "zaplat", "najmout", "u nas"],
-      answer: () => [`Rádi přijedeme! Zavolejte na ${telLink()} a domluvíme termín, program i cenu.`,
+      answer: () => [`Rádi přijedeme! Zavolejte na ${telLink()} (telefon má bubeník ${D.booker}) a domluvíme termín, program i cenu.`,
         'Hrajeme v klubech, na festivalech, letních parketech i na soukromých a firemních akcích. Víc na stránce <a href="kontakt.html">Booking a kontakt</a>.'] },
     { words: ["kontakt", "telefon", "cislo", "zavolat", "zavolam", "volat", "email", "mail", "napsat", "napis", "sms", "spojit", "ozvat"],
-      answer: () => [`Nejrychlejší je zavolat: ${telLink()} (booking a domluva koncertů).`, `Nebo nám napište zprávu na ${fbLink("Facebook")}.`] },
+      answer: () => [`Nejrychlejší je zavolat na ${telLink()}. Telefon má bubeník ${D.booker}, domlouvá koncerty kapely.`, `Nebo nám napište zprávu na ${fbLink("Facebook")}.`] },
     { words: ["koncert", "hrajete", "zahrajete", "vystoup", "termin", "kdy hraj", "kde hraj", "kdy budete", "kde budete", "akce", "program", "vstupen", "listk", "tour", "turne", "nejblizsi", "pristi", "kdy vas", "kde vas"],
       answer: gigsAnswer },
     { words: D.members.flatMap((m) => m.words), answer: (text) => {
       const m = D.members.find((x) => x.words.some((w) => hit(text, w)));
-      return [`${memberLink(m)} ${m.does}.`, "Víc o něm najdete na jeho stránce, stačí kliknout na jméno."];
+      return [`${m.name} ${m.does}.`, m.key === D.bookerKey
+        ? `Má na starosti i booking: ${telLink()}.`
+        : 'Celou sestavu najdete na stránce <a href="kapela.html#sestava">Kapela</a>.'];
     } },
     { words: ["clen", "sestav", "kdo hraje", "kdo je v", "kdo jste", "kdo tam", "muzikant", "kapelnik"],
-      answer: () => [`Hrajeme ve čtyřech: ${D.members.map((m) => `${memberLink(m)} (${m.instrument})`).join(", ")}.`,
-        'Všechny najdete na stránce <a href="kapela.html">Kapela</a>.'] },
+      answer: () => [`Hrajeme ve čtyřech: ${D.members.map((m) => `${m.name} (${m.instrument})`).join(", ")}.`,
+        'Fotky celé sestavy jsou na stránce <a href="kapela.html#sestava">Kapela</a>.'] },
     { words: ["zalozen", "zalozil", "vznik", "histori", "jak dlouho", "od kdy", "kolik let", "1992", "pribeh", "zacat", "zacal"],
-      answer: () => ["Jméno Sarah vzniklo v roce 1992, kdy kapelu založil zpěvák Zdeněk Troup. Dnes hrajeme v nové sestavě.",
-        'Původní Sarah vydala v roce 2012 album, v roce 2014 si dala pauzu a v roce 2023 se na pódiu sešla původní sestava. Celý příběh je na stránce <a href="historie.html">Historie</a>.'] },
+      answer: () => ["Sarah založil zpěvák Zdeněk Troup na přelomu let 1992 a 1993 v Českých Budějovicích.",
+        'V roce 2012 vyšlo album Sarah, v roce 2014 přišla pauza a v roce 2023 se na pódiu sešla původní sestava. Celý příběh je na stránce <a href="historie.html">Historie</a>.'] },
     { words: ["album", "alba", "desk", "cd", "nahravk", "pisn", "pisnick", "skladb", "poslech", "spotify", "bandzone"],
       answer: () => [`Album <b>Sarah</b> (${D.album.year}) natočila původní sestava kapely. Má ${D.album.tracks.length === 11 ? "jedenáct" : D.album.tracks.length} vlastních písní, třeba ${esc(D.album.tracks[0])} nebo ${esc(D.album.tracks[3])}.`,
-        `Poslechnout si ho můžete na <a href="${D.bandzone}" target="_blank" rel="noopener">Bandzone</a>. Album, písně a videa původní Sarah jsou na stránce <a href="historie.html">Historie</a>, dnešní sestavu uslyšíte naživo: <a href="koncerty.html">Koncerty</a>.`] },
+        `Poslechnout si ho můžete na <a href="${D.bandzone}" target="_blank" rel="noopener">Bandzone</a>. Víc o albu a záznamy z koncertů původní sestavy jsou na stránce <a href="historie.html">Historie</a>. Naživo nás uslyšíte na <a href="koncerty.html">koncertech</a>.`] },
     { words: ["video", "videa", "videi", "klip", "youtub", "zaznam"],
       answer: () => ['Záznamy z koncertů původní sestavy z roku 2023 jsou na stránce <a href="historie.html#videa">Historie</a>.',
-        'Dnešní sestavu nejlíp uslyšíte naživo: termíny jsou na stránce <a href="koncerty.html">Koncerty</a>.'] },
+        'Nejlíp nás ale uslyšíte naživo: termíny jsou na stránce <a href="koncerty.html">Koncerty</a>.'] },
     { words: ["styl", "zanr", "hudb", "muzik", "jakou hudb", "jakou muzik", "co hrajete", "cover", "ac dc", "ac/dc", "acdc", "metallic", "accept", "scorpions", "repertoar", "rock", "mrazik"],
-      answer: () => ["Hrajeme hard rock, nahlas a v nové sestavě. Program poskládáme podle akce.",
-        'Co hrála původní Sarah (vlastní písně a covery AC/DC, Metallicy, Accept a Scorpions), najdete na stránce <a href="historie.html#pisne">Historie</a>.'] },
+      answer: () => ["Hrajeme hard rock, nahlas a naživo. Program poskládáme podle akce.",
+        'Co hrála kapela v původní sestavě (vlastní písně a covery AC/DC, Metallicy, Accept a Scorpions), najdete na stránce <a href="historie.html#pisne">Historie</a>.'] },
     { words: ["fotk", "foto", "obrazk", "galeri", "logo", "plakat", "media", "novinar"],
       answer: () => ['Logo, fotky kapely a text o nás jsou ke stažení na stránce <a href="kontakt.html#pro-poradatele">Pro pořadatele a média</a>.',
         `Máte fotky z našeho koncertu? Pošlete nám je přes ${fbLink("Facebook")}.`] },

@@ -2,6 +2,8 @@
 window.SARAH = {
  "phone": "778 885 465",
  "tel": "tel:+420778885465",
+ "booker": "Miroslav „Slávek“ Franc",
+ "bookerKey": "franc",
  "facebook": "https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504",
  "bandzone": "https://bandzone.cz/sarah",
  "gigs": [
@@ -48,7 +50,6 @@ window.SARAH = {
    "name": "Petr Hájek",
    "instrument": "kytara",
    "does": "hraje na kytaru",
-   "page": "petr-hajek.html",
    "words": [
     "petr",
     "hajek",
@@ -62,9 +63,10 @@ window.SARAH = {
    "name": "Slávek Franc",
    "instrument": "bicí",
    "does": "hraje na bicí",
-   "page": "slavek-franc.html",
    "words": [
     "slavek",
+    "miroslav",
+    "mirek",
     "franc",
     "bici",
     "bubn",
@@ -76,8 +78,7 @@ window.SARAH = {
    "key": "troup",
    "name": "Zdeněk Troup",
    "instrument": "zpěv",
-   "does": "zpívá a kapelu v roce 1992 založil",
-   "page": "zdenek-troup.html",
+   "does": "zpívá",
    "words": [
     "zdenek",
     "troup",
@@ -94,7 +95,6 @@ window.SARAH = {
    "name": "Josef Jakeš",
    "instrument": "baskytara",
    "does": "hraje na baskytaru",
-   "page": "josef-jakes.html",
    "words": [
     "josef",
     "jakes",

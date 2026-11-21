@@ -21,6 +21,8 @@ TODAY = datetime.date.today()
 
 PHONE = "778 885 465"
 TEL = "tel:+420778885465"
+BOOKER = "Miroslav „Slávek“ Franc"   # the booking phone is his (drums)
+BOOKER_KEY = "franc"
 FACEBOOK = "https://www.facebook.com/SARAH-%C4%8Deske-bud%C4%9Bjovice-104011628504"
 FACEBOOK_ORIGINAL = "https://www.facebook.com/p/SARAH-%C4%8CB-p%C5%AFvodn%C3%AD-sestava-1992-61551588285638/"
 BANDZONE = "https://bandzone.cz/sarah"
@@ -32,34 +34,20 @@ DESCRIPTION = ("Sarah je hardrocková kapela z Českých Budějovic. Koncerty, s
                "na telefonu 778 885 465.")
 
 MEMBERS = [
-    {"key": "hajek", "page": "petr-hajek.html", "name": "Petr Hájek", "role": "Kytara", "instrument": "kytara",
-     "does": "hraje na kytaru", "short": "Kytarista Sarah.",
-     "bio": ["Petr Hájek hraje v Sarah na kytaru."], "facts": [],
+    {"key": "hajek", "name": "Petr Hájek", "role": "Kytara", "instrument": "kytara", "does": "hraje na kytaru",
      "words": ["petr", "hajek", "kytar", "kytaris", "guitar"]},
-    {"key": "franc", "page": "slavek-franc.html", "name": "Slávek Franc", "role": "Bicí", "instrument": "bicí",
-     "does": "hraje na bicí", "short": "Bubeník s kořeny v budějovickém metalu.",
-     "bio": ["Za bicími drží celou kapelu pohromadě. V letech 1996–2006 hrál v zakládající sestavě budějovické "
-             "progresivně metalové kapely Seven, která dnes pořádá Seven Fest v Ševětíně."],
-     "facts": [("Seven", "1996–2006")],
-     "words": ["slavek", "franc", "bici", "bubn", "bubenik", "drum"]},
-    {"key": "troup", "page": "zdenek-troup.html", "name": "Zdeněk Troup", "role": "Zpěv", "instrument": "zpěv",
-     "does": "zpívá a kapelu v roce 1992 založil", "short": "Zakladatel kapely a její hlas od roku 1992.",
-     "bio": ["Sarah dal dohromady na přelomu let 1992 a 1993 a zpíval v ní do roku 2014. K třicetinám kapely "
-             "ji v roce 2023 znovu postavil na pódium.",
-             "V letech 2022–2024 zpíval i v budějovické kapele Kambodža."],
-     "facts": [("Sarah", "od 1992"), ("Kambodža", "2022–2024")],
+    {"key": "franc", "name": "Slávek Franc", "role": "Bicí", "instrument": "bicí", "does": "hraje na bicí",
+     "words": ["slavek", "miroslav", "mirek", "franc", "bici", "bubn", "bubenik", "drum"]},
+    {"key": "troup", "name": "Zdeněk Troup", "role": "Zpěv", "instrument": "zpěv", "does": "zpívá",
      "words": ["zdenek", "troup", "zpev", "zpevak", "zpiva", "spiva", "vokal", "sing"]},
-    {"key": "jakes", "page": "josef-jakes.html", "name": "Josef Jakeš", "role": "Baskytara", "instrument": "baskytara",
-     "does": "hraje na baskytaru", "short": "Basová páteř kapely, hrál i na albu Sarah.",
-     "bio": ["Spolu s bicími drží rytmus, na kterém stojí riffy i Troupův zpěv. Hrál na albu Sarah z roku 2012."],
-     "facts": [("Album Sarah", "2012")],
+    {"key": "jakes", "name": "Josef Jakeš", "role": "Baskytara", "instrument": "baskytara", "does": "hraje na baskytaru",
      "words": ["josef", "jakes", "bask", "basa", "basak", "basist", "bass"]},
 ]
 
 # --- Today's band -----------------------------------------------------------------------------
 STORY = [
-    "Dnešní Sarah je v podstatě nová kapela: nová sestava, nová energie a stejné jméno. Na pódiu stojí "
-    "Petr Hájek, Slávek Franc, Zdeněk Troup a Josef Jakeš.",
+    "Sarah je hardrocková kapela z Českých Budějovic. Na pódiu stojí Petr Hájek, Slávek Franc, "
+    "Zdeněk Troup a Josef Jakeš.",
     "Hrajeme hard rock nahlas, v klubech, na festivalech, letních parketech i na soukromých akcích. "
     "Přijedeme připravení a odehrajeme to naplno.",
 ]
@@ -82,12 +70,12 @@ TIMELINE = [
     ("2012", "Album Sarah", "Jedenáct vlastních písní. Deník desce předpověděl úspěch u publika."),
     ("2014", "Pauza", "Zakladatel Zdeněk Troup odchází a Sarah na čas utichá."),
     ("2023", "Původní sestava po třiceti letech", "V dubnu Seven Fest v Ševětíně, v září Jílovice."),
-    ("Dnes", "Nová Sarah", "Nová sestava: Petr Hájek, Slávek Franc, Zdeněk Troup a Josef Jakeš."),
+    ("Dnes", "Sarah dnes", "Hrají Petr Hájek, Slávek Franc, Zdeněk Troup a Josef Jakeš."),
 ]
 
 ALBUM = {
     "title": "Sarah", "year": 2012,
-    "intro": "Jedenáct vlastních písní, které původní Sarah natočila v roce 2012 v sestavě Zdeněk Troup, "
+    "intro": "Jedenáct vlastních písní, které Sarah natočila v roce 2012 v sestavě Zdeněk Troup, "
              "Martin Przeczek, Josef Jakeš a Rosťa Holčapek. Českobudějovický deník desku přirovnal "
              "k Iron Maiden, Accept i Pražskému výběru.",
     "tracks": ["Srdce-lhář", "Nechápu", "Jinej svět", "Na křídlech černých vran", "V prázdným těle", "Tisíce lží",
@@ -102,7 +90,7 @@ COVERS = ["AC/DC", "Metallica", "Accept", "Scorpions"]
 HISTORY_VIDEOS = [
     {"id": "YIDTwOcJh58", "title": "Křídla", "meta": "Původní sestava, Jílovice, 16. září 2023"},
     {"id": "8QpXZPaKw-g", "title": "Vlaky", "meta": "Původní sestava po třiceti letech, 2023"},
-    {"id": "Vr9Ju-DKftQ", "title": "Sarah naživo", "meta": "Záznam z koncertu původní Sarah"},
+    {"id": "Vr9Ju-DKftQ", "title": "Sarah naživo", "meta": "Záznam z koncertu původní sestavy"},
 ]
 
 # Concerts of the original line-up (shown on historie.html, not among today's concerts)
@@ -132,13 +120,13 @@ LINKS = [
 ]
 HISTORY_LINKS = [
     ("fb", FACEBOOK_ORIGINAL, "Facebook původní sestavy", "Návrat na pódia po 30 letech, 2023"),
-    ("note", BANDZONE, "Bandzone", "Album Sarah a písně původní Sarah"),
+    ("note", BANDZONE, "Bandzone", "Album Sarah a písně z let původní sestavy"),
     ("note", REVIEW, "Recenze alba Sarah", "Českobudějovický deník, červen 2012"),
 ]
 
-PRESS_BIO = ("Sarah je hardrocková kapela z Českých Budějovic v nové sestavě: Petr Hájek (kytara), Slávek Franc "
+PRESS_BIO = ("Sarah je hardrocková kapela z Českých Budějovic. Sestava: Petr Hájek (kytara), Slávek Franc "
              "(bicí), Zdeněk Troup (zpěv) a Josef Jakeš (baskytara). Hraje hard rock nahlas, v klubech, na "
-             "festivalech, letních parketech i na soukromých akcích. Booking: 778 885 465.")
+             "festivalech, letních parketech i na soukromých akcích. Booking: 778 885 465 (Miroslav Franc).")
 PRESS_FILES = [
     ("assets/press/sarah-logo.png", "Logo s ženou", "PNG 2000 px, průhledné pozadí, na tmavý podklad"),
     ("assets/img/logo.svg", "Logo, nápis", "SVG, vektor pro tisk"),
@@ -158,7 +146,7 @@ PAGES = [  # main menu
 # ============================================================================================
 
 e = html.escape
-VERSION = "5"
+VERSION = "6"
 MONTHS = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"]
 MONTHS_OF = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"]
 MON = ["led", "úno", "bře", "dub", "kvě", "čvn", "čvc", "srp", "zář", "říj", "lis", "pro"]
@@ -364,17 +352,16 @@ def page_head(label, title, lead):
 # ============================================================================================
 
 def member_card(m, heading="h3"):
-    return f"""          <a class="member" href="{m['page']}">
+    return f"""          <div class="member">
             <span class="member__photo"><img src="assets/img/members/{m['key']}.jpg" alt="{e(m['name'])}" width="420" height="560" loading="lazy" decoding="async"></span>
             <{heading} class="member__name">{e(m['name'])}</{heading}>
             <span class="member__role">{e(m['role'])}</span>
-          </a>"""
+          </div>"""
 
 
-def members_grid(exclude=None):
-    cards = "\n".join(member_card(m) for m in MEMBERS if m is not exclude)
-    cls = "members members--3" if exclude else "members"
-    return f'        <div class="{cls}">\n{cards}\n        </div>\n'
+def members_grid():
+    cards = "\n".join(member_card(m) for m in MEMBERS)
+    return f'        <div class="members">\n{cards}\n        </div>\n'
 
 
 def video_card(v, big=False):
@@ -403,7 +390,7 @@ def album_block(full):
             <span>{ALBUM['year']} · {len(ALBUM['tracks'])} písní</span>
           </div>
           <div class="album__text">
-            <p class="label">Album původní Sarah</p>
+            <p class="label">Album</p>
             <h2 class="h2">{e(ALBUM['title'])} <span class="muted">{ALBUM['year']}</span></h2>
             <p>{e(ALBUM['intro'])}</p>
             <ol class="tracks">{items}</ol>
@@ -483,7 +470,7 @@ def home():
         "image": f"{SITE}/assets/img/banner.jpg", "logo": f"{SITE}/assets/press/sarah-logo.png",
         "foundingLocation": {"@type": "Place", "name": "České Budějovice"}, "description": DESCRIPTION,
         "member": [{"@type": "OrganizationRole", "roleName": m["role"],
-                    "member": {"@type": "Person", "name": m["name"], "url": f"{SITE}/{m['page']}"}} for m in MEMBERS],
+                    "member": {"@type": "Person", "name": m["name"]}} for m in MEMBERS],
         "album": {"@type": "MusicAlbum", "name": ALBUM["title"], "datePublished": str(ALBUM["year"]),
                   "numTracks": len(ALBUM["tracks"]), "track": [{"@type": "MusicRecording", "name": t} for t in ALBUM["tracks"]]},
         "sameAs": [FACEBOOK, FACEBOOK_ORIGINAL, BANDZONE, GOOUT],
@@ -497,7 +484,7 @@ def home():
         <p class="label">Oficiální web kapely</p>
         <h1 class="display">{TAGLINE}</h1>
         <div class="hero__row">
-          <p class="lead">Nová sestava, stejné jméno a hard rock nahlas. Zahrajeme v klubu, na festivalu i na vaší akci.</p>
+          <p class="lead">Hard rock nahlas a naživo. Zahrajeme v klubu, na festivalu i na vaší akci.</p>
           <div class="btns">
             <a class="btn btn--accent" href="kontakt.html">Pozvěte nás na akci</a>
             <a class="btn btn--ghost" href="koncerty.html">Koncerty</a>
@@ -515,7 +502,7 @@ def home():
       {ext(FACEBOOK, f'<span class="quick__icon">{icon("fb")}</span><span class="quick__text"><small>Novinky</small><span><b>Facebook</b><span>Fotky a zprávy z kapely</span></span></span><span class="quick__go">{icon("arrow")}</span>', "quick__item")}
       <a class="quick__item quick__item--accent" href="{TEL}">
         <span class="quick__icon">{icon("phone")}</span>
-        <span class="quick__text"><small>Booking</small><span><b>{PHONE}</b><span>Volejte nebo pište SMS</span></span></span>
+        <span class="quick__text"><small>Booking</small><span><b>{PHONE}</b><span>Bubeník Miroslav Franc</span></span></span>
         <span class="quick__go">{icon("arrow")}</span>
       </a>
     </section>
@@ -528,7 +515,7 @@ def home():
           <h2 class="h2">Sarah</h2>
           <p>{e(STORY[0])}</p>
           <ul class="facts">{facts}</ul>
-          <a class="link" href="kapela.html">O dnešní kapele{icon("arrow")}</a>
+          <a class="link" href="kapela.html">O kapele{icon("arrow")}</a>
         </div>
       </div>
     </section>
@@ -578,11 +565,11 @@ def history():
                      "author": {"@type": "Organization", "name": QUOTE[1]}}}
     extra = f'  <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
     body = (page_head("Historie", "Sarah 1992–2023",
-                      "Dnešní Sarah je nová kapela v nové sestavě. Tady je příběh té původní: koncerty po jižních Čechách, "
-                      "album z roku 2012 a návrat původní sestavy po třiceti letech.")
+                      "Příběh Sarah v původní sestavě: koncerty po jižních Čechách, album z roku 2012 "
+                      "a návrat původní sestavy na pódium po třiceti letech.")
             + f"""    <section class="section section--tight">
       <div class="container columns">
-        <div><p class="label">Původní Sarah</p><h2 class="h2">Jak to začalo</h2></div>
+        <div><p class="label">Původní sestava</p><h2 class="h2">Jak to začalo</h2></div>
         <div class="prose">
 {story}
         </div>
@@ -620,7 +607,7 @@ def history():
       <div class="container columns">
         <div>
           <p class="label">Písně</p>
-          <h2 class="h2">Co hrála původní Sarah</h2>
+          <h2 class="h2">Co hrála původní sestava</h2>
           <p class="muted">Vlastní písně z koncertů původní sestavy. K nim covery {", ".join(COVERS[:-1])} a {COVERS[-1]}, a na závěr klidně Mrazík v kostýmech.</p>
         </div>
         <div>
@@ -637,7 +624,7 @@ def history():
       <div class="container columns">
         <div>
           <p class="label">Odkazy</p>
-          <h2 class="h2">Víc o původní Sarah</h2>
+          <h2 class="h2">Víc o původní sestavě</h2>
           <p class="muted">Album k poslechu, recenze a stránka, kde se původní sestava domlouvala na návrat.</p>
         </div>
         <div>
@@ -648,20 +635,20 @@ def history():
     <section class="section section--white">
       <div class="container">
         <div class="section__head">
-          <div><p class="label">Dnes</p><h2 class="h2">Nová sestava</h2></div>
-          <a class="link" href="kapela.html">O dnešní kapele{icon("arrow")}</a>
+          <div><p class="label">Dnes</p><h2 class="h2">Sestava</h2></div>
+          <a class="link" href="kapela.html">O kapele{icon("arrow")}</a>
         </div>
 {members_grid()}      </div>
     </section>
 
 {booking_band()}""")
-    return page("Historie — SARAH", "Historie původní kapely Sarah (1992–2023): album Sarah z roku 2012, písně, recenze "
+    return page("Historie — SARAH", "Historie kapely Sarah (1992–2023): album Sarah z roku 2012, písně, recenze "
                 "a videa z koncertů původní sestavy.", "historie.html", body, current="historie.html", extra=extra)
 
 
 def band():
     story = "\n".join(f"            <p>{e(p)}</p>" for p in STORY)
-    body = (page_head("O kapele", "Sarah", "Budějovický hard rock v nové sestavě.")
+    body = (page_head("O kapele", "Sarah", "Hard rock z Českých Budějovic.")
             + f"""    <section class="section section--tight">
       <div class="container">
         <figure class="wide"><img src="assets/img/kapela.jpg" alt="Kapela Sarah ve zkušebně: Petr Hájek, Slávek Franc, Zdeněk Troup a Josef Jakeš" width="1440" height="600" loading="lazy" decoding="async"><figcaption>Zleva Petr Hájek, Slávek Franc, Zdeněk Troup a Josef Jakeš.</figcaption></figure>
@@ -678,13 +665,12 @@ def band():
       <div class="container">
         <div class="section__head">
           <div><p class="label">Sestava</p><h2 class="h2">Kdo hraje v Sarah</h2></div>
-          <p class="muted">Klikněte na kohokoli z nás.</p>
         </div>
 {members_grid()}      </div>
     </section>
 
 {booking_band()}""")
-    return page("O kapele — SARAH", "Nová sestava hardrockové kapely Sarah z Českých Budějovic.", "kapela.html", body, current="kapela.html")
+    return page("O kapele — SARAH", "Kapela a sestava hardrockové kapely Sarah z Českých Budějovic.", "kapela.html", body, current="kapela.html")
 
 
 def contact():
@@ -698,7 +684,7 @@ def contact():
         <div class="callcard">
           <p class="label label--light">Booking a domluva koncertů</p>
           <a class="callcard__phone" href="{TEL}">{PHONE}</a>
-          <p>Zavolejte nebo pošlete SMS, ozveme se. Domluvíme termín, program i cenu.</p>
+          <p>Telefon má bubeník {BOOKER}. Zavolejte nebo pošlete SMS, domluvíme termín, program i cenu.</p>
           <a class="btn btn--accent btn--lg" href="{TEL}">{icon("phone")}Zavolat</a>
         </div>
         <div class="contact__side">
@@ -743,51 +729,8 @@ def contact():
                 "kontakt.html", body, current="kontakt.html")
 
 
-def member_page(i):
-    m = MEMBERS[i]
-    prev, nxt = MEMBERS[i - 1], MEMBERS[(i + 1) % len(MEMBERS)]
-    bio = "\n".join(f"            <p>{e(p)}</p>" for p in m["bio"])
-    facts = ""
-    if m["facts"]:
-        facts = ('            <dl class="mfacts">'
-                 + "".join(f"<div><dt>{e(a)}</dt><dd>{e(b)}</dd></div>" for a, b in m["facts"]) + "</dl>\n")
-    image = f"assets/img/members/{m['key']}.jpg"
-    body = f"""    <section class="person">
-      <div class="container">
-        <nav class="crumbs" aria-label="Drobečková navigace"><a href="kapela.html">Kapela</a><span aria-hidden="true">/</span><span aria-current="page">{e(m['name'])}</span></nav>
-        <div class="person__grid">
-          <div class="person__photo"><img src="{image}" alt="{e(m['name'])}" width="420" height="560" fetchpriority="high"></div>
-          <div class="person__text">
-            <p class="label">{e(m['role'])}</p>
-            <h1 class="display">{e(m['name'])}</h1>
-            <p class="lead">{e(m['short'])}</p>
-{bio}
-{facts}            <nav class="pager" aria-label="Další členové">
-              <a href="{prev['page']}"><small>Předchozí</small><b>{e(prev['name'])}</b></a>
-              <a href="{nxt['page']}"><small>Další</small><b>{e(nxt['name'])}</b></a>
-            </nav>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--white">
-      <div class="container">
-        <div class="section__head">
-          <div><p class="label">Sestava</p><h2 class="h2">Další v kapele</h2></div>
-          <a class="link" href="kapela.html">O kapele{icon("arrow")}</a>
-        </div>
-{members_grid(exclude=m)}      </div>
-    </section>
-
-{booking_band()}"""
-    title = f"{m['name']} ({m['instrument']}) — SARAH"
-    desc = f"{m['name']}, {m['instrument']} v hardrockové kapele Sarah z Českých Budějovic. {m['short']}"
-    return page(title, desc, m["page"], body, current="kapela.html", image=image)
-
-
 def not_found():
-    redirect = """  <script>(function(){var m={"media":"/historie.html","videa":"/historie.html","hudba":"/historie.html"};var p=location.pathname.replace(/^\\/|\\.html$/g,"");if(m[p])location.replace(m[p]);})()</script>
+    redirect = """  <script>(function(){var m={"media":"/historie.html","videa":"/historie.html","hudba":"/historie.html","petr-hajek":"/kapela.html#sestava","slavek-franc":"/kapela.html#sestava","zdenek-troup":"/kapela.html#sestava","josef-jakes":"/kapela.html#sestava"};var p=location.pathname.replace(/^\\/|\\.html$/g,"");if(m[p])location.replace(m[p]);})()</script>
 """
     body = """    <section class="lost">
       <div class="container">
@@ -803,11 +746,11 @@ def not_found():
 
 def data_js():
     data = {
-        "phone": PHONE, "tel": TEL, "facebook": FACEBOOK, "bandzone": BANDZONE,
+        "phone": PHONE, "tel": TEL, "booker": BOOKER, "bookerKey": BOOKER_KEY, "facebook": FACEBOOK, "bandzone": BANDZONE,
         "gigs": GIGS,
         "album": {"year": ALBUM["year"], "tracks": ALBUM["tracks"]},
         "historyGigs": HISTORY_GIGS,
-        "members": [{k: m[k] for k in ("key", "name", "instrument", "does", "page", "words")} for m in MEMBERS],
+        "members": [{k: m[k] for k in ("key", "name", "instrument", "does", "words")} for m in MEMBERS],
         # optional: address of the chat server from chat-worker/ (empty = answers from the data here)
         "chatApi": "",
     }
@@ -823,8 +766,6 @@ def sitemap(pages):
 def main():
     out = {"index.html": home(), "koncerty.html": concerts(), "historie.html": history(),
            "kapela.html": band(), "kontakt.html": contact(), "404.html": not_found()}
-    for i, m in enumerate(MEMBERS):
-        out[m["page"]] = member_page(i)
     out["sitemap.xml"] = sitemap([p for p in out if p.endswith(".html")])
     out["assets/js/data.js"] = data_js()
     for name, text in out.items():
