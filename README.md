@@ -9,15 +9,16 @@ přímo na webu (`assets/fonts/`), takže web neposílá data návštěvníků G
 nepoužívá cookies ani měření návštěvnosti.
 
 ```
-index.html          Úvod: fotka kapely, další koncert, o kapele, sestava, album, booking
-koncerty.html       Nadcházející a odehrané koncerty
-hudba.html          Album Sarah (2012) a co hrajeme naživo
-kapela.html         Příběh, sestava, historie
+index.html          Úvod: fotka kapely, další koncert, nová Sarah, sestava, odkaz na historii, booking
+koncerty.html       Nadcházející a odehrané koncerty dnešní sestavy
+kapela.html         Dnešní kapela a sestava
+historie.html       Původní Sarah 1992–2023: příběh, rok po roku, album Sarah (2012) s recenzí,
+                    videa původní sestavy, její písně a koncerty, odkazy
 kontakt.html        Booking (778 885 465), odkazy, co nabízíme, ke stažení pro pořadatele a média
 petr-hajek.html …   Stránky členů (kytara, bicí, zpěv, baskytara)
-404.html            Chybová stránka (staré adresy media.html a videa.html vedou na Hudbu)
+404.html            Chybová stránka (staré adresy hudba.html, media.html a videa.html vedou na Historii)
 assets/css/site.css Vzhled
-assets/js/site.js   Menu na mobilu, koncerty, kopírování textu, chat
+assets/js/site.js   Menu na mobilu, koncerty, videa (Historie), kopírování textu, chat
 assets/js/data.js   Data pro prohlížeč (vyrábí ho tools/build.py, neupravovat ručně)
 assets/img/         Logo, fotky kapely, portréty členů
 assets/press/       Logo ke stažení (PNG)
@@ -37,15 +38,18 @@ python3 tools/build.py
 
 a nahrajte (commitněte) změněné soubory. Skript nepotřebuje nic instalovat.
 
-- **Koncerty** – `GIGS`. Budoucí termín se ukáže v „Nadcházející“ a na úvodní stránce
-  jako „Další koncert“; po datu se sám přesune do „Odehráno“. Chat ho zná taky.
+- **Koncerty** – `GIGS` (jen dnešní sestava). Budoucí termín se ukáže v „Nadcházející“ a na
+  úvodní stránce jako „Další koncert“; po datu se sám přesune do „Odehráno“. Chat ho zná taky.
   U koncertu s přesným datem se do stránky přidají i údaje pro Google (MusicEvent).
+- **Historie (původní Sarah)** – `HISTORY_STORY`, `TIMELINE`, `ALBUM`, `QUOTE` (recenze Deníku),
+  `HISTORY_SONGS`, `HISTORY_VIDEOS` (id z YouTube za `watch?v=`), `HISTORY_GIGS`, `HISTORY_LINKS`.
+  Všechno se ukáže na `historie.html`, na úvodní stránce je jen krátký odkaz.
 - **Členové** – `MEMBERS`: jméno, nástroj, krátký popis, životopis, fakta. U Petra Hájka
   zatím chybí víc informací – stačí doplnit pár vět do `bio`.
   Portréty jsou v `assets/img/members/` (420 × 560 px, výřezy z úvodní fotky).
 - **Telefon na booking** – `PHONE` (778 885 465) a `TEL`.
-- **Texty** – `STORY`, `TIMELINE`, `ALBUM`, `LIVE_SONGS`, `OFFER`, `PRESS_BIO`.
-- **Odkazy** – `LINKS` (Facebook, Bandzone, GoOut).
+- **Texty o dnešní kapele** – `STORY`, `FACTS`, `OFFER`, `PRESS_BIO`.
+- **Odkazy** – `LINKS` (Facebook, GoOut); odkazy k historii jsou v `HISTORY_LINKS`.
 - **Ke stažení pro pořadatele** – `PRESS_FILES`.
 
 ## Chat
@@ -64,7 +68,7 @@ YouTube). Zkontrolujte hlavně:
 - bia členů (Franc: Seven 1996–2006; Troup: Kambodža 2022–2024) a doplňte info
   o Petru Hájkovi a Josefu Jakešovi
 - složení kapely na albu Sarah 2012 (Troup, Przeczek, Jakeš, Holčapek)
-- repertoár na stránce Hudba
+- jestli dnešní sestava hraje některé písně původní Sarah (Historie) a které covery
 
 ## Doména
 

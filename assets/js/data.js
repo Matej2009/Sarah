@@ -10,18 +10,6 @@ window.SARAH = {
    "venue": "Letní parket Jílovice",
    "city": "Jílovice u Českých Budějovic",
    "note": "s kapelou Blamage"
-  },
-  {
-   "date": "2023-09-16",
-   "venue": "Jílovice",
-   "city": "Jílovice u Českých Budějovic",
-   "note": "původní sestava, 30 let kapely"
-  },
-  {
-   "date": "2023-04",
-   "venue": "Seven Fest",
-   "city": "KD Ševětín",
-   "note": "oslava 30. narozenin kapely"
   }
  ],
  "album": {
@@ -40,6 +28,20 @@ window.SARAH = {
    "Pohřebiště citů"
   ]
  },
+ "historyGigs": [
+  {
+   "date": "2023-09-16",
+   "venue": "Jílovice",
+   "city": "Jílovice u Českých Budějovic",
+   "note": "původní sestava, 30 let kapely"
+  },
+  {
+   "date": "2023-04",
+   "venue": "Seven Fest",
+   "city": "KD Ševětín",
+   "note": "oslava 30. narozenin kapely"
+  }
+ ],
  "members": [
   {
    "key": "hajek",
