@@ -3,8 +3,10 @@
 Web hardrockové kapely Sarah z Českých Budějovic. Čisté HTML, CSS a JS bez knihoven,
 hostuje se na GitHub Pages z větve `main` (doména v souboru `CNAME`).
 
-Vzhled: světlý a čistý, jako časopis. Teplá bílá, černé písmo, jedna červená barva,
-velké fotky kapely. Nadpisy písmem Barlow Condensed, text písmem Inter; obě písma jsou
+Vzhled: tvrdý rock, ale čistý. Téměř černé pozadí, jedna krvavě červená barva, velké fotky
+kapely (úvodní fotka přechází do černé, jména členů jsou přímo na portrétech), ostré rohy
+a jemné zrno jako na fotce z koncertu. Historie původní Sarah je jen na stránce Historie
+v horním menu. Nadpisy písmem Barlow Condensed, text písmem Inter; obě písma jsou
 přímo na webu (`assets/fonts/`), takže web neposílá data návštěvníků Googlu. Web
 nepoužívá cookies ani měření návštěvnosti.
 

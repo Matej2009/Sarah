@@ -28,8 +28,8 @@ GOOUT = "https://goout.net/en/sarah/pzodprf/"
 REVIEW = "https://ceskobudejovicky.denik.cz/volny-cas/recenze-nova-deska-rockovych-sarah-u-publika-zaboduje-20120611.html"
 
 TAGLINE = "Hard rock z Českých Budějovic"
-DESCRIPTION = ("Sarah je hardrocková kapela z Českých Budějovic v nové sestavě, jméno nese od roku 1992. "
-               "Koncerty, kapela, historie původní Sarah a booking na telefonu 778 885 465.")
+DESCRIPTION = ("Sarah je hardrocková kapela z Českých Budějovic. Koncerty, sestava a booking "
+               "na telefonu 778 885 465.")
 
 MEMBERS = [
     {"key": "hajek", "page": "petr-hajek.html", "name": "Petr Hájek", "role": "Kytara", "instrument": "kytara",
@@ -61,10 +61,9 @@ STORY = [
     "Dnešní Sarah je v podstatě nová kapela: nová sestava, nová energie a stejné jméno. Na pódiu stojí "
     "Petr Hájek, Slávek Franc, Zdeněk Troup a Josef Jakeš.",
     "Hrajeme hard rock nahlas, v klubech, na festivalech, letních parketech i na soukromých akcích. "
-    "Jméno Sarah nese kapela od roku 1992, kdy ji Zdeněk Troup založil. Příběh původní Sarah, její album "
-    "a záznamy z koncertů najdete v Historii.",
+    "Přijedeme připravení a odehrajeme to naplno.",
 ]
-FACTS = [("4", "muzikanti v nové sestavě"), ("1992", "kdy jméno Sarah vzniklo"), ("30+", "let historie kapely")]
+FACTS = [("4", "muzikanti v sestavě"), ("ČB", "domov v Českých Budějovicích"), ("Live", "kluby, festivaly, parkety")]
 
 # --- History: the original Sarah (1992–2023) --------------------------------------------------
 # Everything below is about the band before today's line-up: the album, the songs, the 2023 reunion
@@ -138,9 +137,8 @@ HISTORY_LINKS = [
 ]
 
 PRESS_BIO = ("Sarah je hardrocková kapela z Českých Budějovic v nové sestavě: Petr Hájek (kytara), Slávek Franc "
-             "(bicí), Zdeněk Troup (zpěv) a Josef Jakeš (baskytara). Jméno Sarah nese od roku 1992, kdy kapelu "
-             "založil zpěvák Zdeněk Troup. Původní Sarah vydala v roce 2012 album Sarah a v roce 2023 se "
-             "k třicetinám na pódiu sešla původní sestava. Booking: 778 885 465.")
+             "(bicí), Zdeněk Troup (zpěv) a Josef Jakeš (baskytara). Hraje hard rock nahlas, v klubech, na "
+             "festivalech, letních parketech i na soukromých akcích. Booking: 778 885 465.")
 PRESS_FILES = [
     ("assets/press/sarah-logo.png", "Logo s ženou", "PNG 2000 px, průhledné pozadí, na tmavý podklad"),
     ("assets/img/logo.svg", "Logo, nápis", "SVG, vektor pro tisk"),
@@ -160,7 +158,7 @@ PAGES = [  # main menu
 # ============================================================================================
 
 e = html.escape
-VERSION = "4"
+VERSION = "5"
 MONTHS = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"]
 MONTHS_OF = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"]
 MON = ["led", "úno", "bře", "dub", "kvě", "čvn", "čvc", "srp", "zář", "říj", "lis", "pro"]
@@ -250,7 +248,7 @@ def head(title, description, path, image="assets/img/banner.jpg", extra="", base
 {base_tag}  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{e(title)}</title>
   <meta name="description" content="{e(description)}">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#0b0a0a">
   <link rel="canonical" href="{url}">
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -296,7 +294,7 @@ def footer():
     <div class="container footer__grid">
       <div class="footer__brand">
         <a class="footer__logo" href="index.html" aria-label="Sarah, úvodní stránka">{LOGO_FULL}</a>
-        <p>Hardrocková kapela z Českých Budějovic. Na pódiích od roku 1992.</p>
+        <p>Hardrocková kapela z Českých Budějovic. Hrajeme nahlas.</p>
       </div>
       <div>
         <h2 class="footer__title">Web</h2>
@@ -427,32 +425,6 @@ def quote_block():
 """
 
 
-def history_teaser():
-    facts = "".join(f"<li><b>{n}</b><span>{e(t)}</span></li>" for n, t in (
-        ("2012", "album Sarah, 11 vlastních písní"), ("2023", "původní sestava po třiceti letech"),
-        (str(len(HISTORY_VIDEOS)), "videa z koncertů")))
-    return f"""    <section class="section">
-      <div class="container album">
-        <a class="album__art" href="historie.html" aria-label="Historie kapely Sarah">
-          {LOGO_FULL}
-          <span>1992–2023</span>
-        </a>
-        <div class="album__text">
-          <p class="label">Historie</p>
-          <h2 class="h2">Původní Sarah <span class="muted">1992–2023</span></h2>
-          <p>Než vznikla dnešní sestava, hrála Sarah přes dvacet let po jižních Čechách. V roce 2012 vydala album Sarah a v roce 2023 se k třicetinám na pódiu sešla původní sestava. Album, písně a záznamy z koncertů jsou v Historii.</p>
-          <ul class="facts">{facts}</ul>
-          <p class="minquote">„{e(QUOTE[0])}“ <span>{e(QUOTE[1])}, {e(QUOTE[2])}</span></p>
-          <div class="btns">
-            <a class="btn btn--dark" href="historie.html">Celá historie{icon("arrow")}</a>
-            {ext(BANDZONE, icon("play") + "Album na Bandzone", "btn btn--ghost")}
-          </div>
-        </div>
-      </div>
-    </section>
-"""
-
-
 def booking_band():
     return f"""    <section class="band">
       <div class="container band__inner">
@@ -522,7 +494,7 @@ def home():
     body = f"""    <section class="hero">
       <div class="hero__photo"><img src="assets/img/banner.jpg" alt="{e(alt)}" width="1600" height="592" fetchpriority="high"></div>
       <div class="container hero__text">
-        <p class="label">České Budějovice · od roku 1992</p>
+        <p class="label">Oficiální web kapely</p>
         <h1 class="display">{TAGLINE}</h1>
         <div class="hero__row">
           <p class="lead">Nová sestava, stejné jméno a hard rock nahlas. Zahrajeme v klubu, na festivalu i na vaší akci.</p>
@@ -540,11 +512,7 @@ def home():
         <span class="quick__text"><small>Další koncert</small><span>{next_gig}</span></span>
         <span class="quick__go">{icon("arrow")}</span>
       </a>
-      <a class="quick__item" href="historie.html">
-        <span class="quick__icon">{icon("note")}</span>
-        <span class="quick__text"><small>Historie</small><span><b>Sarah 1992–2023</b><span>Album, písně a videa původní Sarah</span></span></span>
-        <span class="quick__go">{icon("arrow")}</span>
-      </a>
+      {ext(FACEBOOK, f'<span class="quick__icon">{icon("fb")}</span><span class="quick__text"><small>Novinky</small><span><b>Facebook</b><span>Fotky a zprávy z kapely</span></span></span><span class="quick__go">{icon("arrow")}</span>', "quick__item")}
       <a class="quick__item quick__item--accent" href="{TEL}">
         <span class="quick__icon">{icon("phone")}</span>
         <span class="quick__text"><small>Booking</small><span><b>{PHONE}</b><span>Volejte nebo pište SMS</span></span></span>
@@ -574,7 +542,6 @@ def home():
 {members_grid()}      </div>
     </section>
 
-{history_teaser()}
 {booking_band()}"""
     return page("SARAH — hard rock z Českých Budějovic", DESCRIPTION, "", body, extra=extra)
 
@@ -699,10 +666,9 @@ def band():
       <div class="container">
         <figure class="wide"><img src="assets/img/kapela.jpg" alt="Kapela Sarah ve zkušebně: Petr Hájek, Slávek Franc, Zdeněk Troup a Josef Jakeš" width="1440" height="600" loading="lazy" decoding="async"><figcaption>Zleva Petr Hájek, Slávek Franc, Zdeněk Troup a Josef Jakeš.</figcaption></figure>
         <div class="columns">
-          <div><p class="label">Dnes</p><h2 class="h2">Nová Sarah</h2></div>
+          <div><p class="label">Kapela</p><h2 class="h2">Nová Sarah</h2></div>
           <div class="prose">
 {story}
-            <p><a class="link" href="historie.html">Historie původní Sarah 1992–2023{icon("arrow")}</a></p>
           </div>
         </div>
       </div>
@@ -717,7 +683,6 @@ def band():
 {members_grid()}      </div>
     </section>
 
-{history_teaser()}
 {booking_band()}""")
     return page("O kapele — SARAH", "Nová sestava hardrockové kapely Sarah z Českých Budějovic.", "kapela.html", body, current="kapela.html")
 
