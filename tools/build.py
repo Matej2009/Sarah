@@ -525,7 +525,7 @@ def home():
         <figure class="split__photo"><img src="assets/img/kapela.jpg" alt="Kapela Sarah ve zkušebně" width="1440" height="600" loading="lazy" decoding="async"></figure>
         <div class="split__text">
           <p class="label">O kapele</p>
-          <h2 class="h2">Nová Sarah</h2>
+          <h2 class="h2">Sarah</h2>
           <p>{e(STORY[0])}</p>
           <ul class="facts">{facts}</ul>
           <a class="link" href="kapela.html">O dnešní kapele{icon("arrow")}</a>
@@ -666,7 +666,7 @@ def band():
       <div class="container">
         <figure class="wide"><img src="assets/img/kapela.jpg" alt="Kapela Sarah ve zkušebně: Petr Hájek, Slávek Franc, Zdeněk Troup a Josef Jakeš" width="1440" height="600" loading="lazy" decoding="async"><figcaption>Zleva Petr Hájek, Slávek Franc, Zdeněk Troup a Josef Jakeš.</figcaption></figure>
         <div class="columns">
-          <div><p class="label">Kapela</p><h2 class="h2">Nová Sarah</h2></div>
+          <div><p class="label">Kapela</p><h2 class="h2">Kdo jsme</h2></div>
           <div class="prose">
 {story}
           </div>
